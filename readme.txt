@@ -31,15 +31,13 @@ Roost For Bloggers Wordpress Plugin Features:
 1. Visit 'Plugins > Add New'
 2. Search for 'Roost'
 3. Activate Roost from your Plugins page
-4. (a) Create your Free Roost for Bloggers account - (Click on "sign up for free)
-4. (b) Log In an Existing Account - Click "Log In" and enter your username and password
+4. (a) Create your Free Roost for Bloggers account - (Click on "sign up for free) OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
 
 = From WordPress.org =
 1. Download Roost For Bloggers Wordpress Plugin.
 2. Upload the 'Roost' directory to your '/wp-content/plugins/' directory.
 3. Activate Roost For Bloggers from your Plugins page.
-4. (a) Create your Free Roost for Bloggers account - (Click on "sign up for free)
-4. (b) Log In an Existing Account - Click "Log In" and enter your username and password
+4. (a) Create your Free Roost for Bloggers account - (Click on "sign up for free) OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
 
 = Using Features =
 
