@@ -90,9 +90,8 @@ No catch! We believe in providing a great service and making it accessible to ev
 
 == Screenshots ==
 
-1. Create your Roost For Bloggers Account.
-2. Log in to your Roost Account.
-3. Roost plugin from the Wordpress dashboard.
+1. Log in to your Roost Account.
+2. Roost plugin from the Wordpress dashboard.
 
 == Changelog ==
 
