@@ -3,7 +3,7 @@
 Plugin Name: Roost For Bloggers
 Plugin URI: http://www.roost.me/
 Description: Wordpress plugin for Roost.me Web-Push. Automate Push Notifications with new posts or send manually from the dashboard.
-Version: 1.0
+Version: 1.1
 Author: Roost.me
 Author URI: http://www.roost.me/
 License: GPL2
@@ -32,7 +32,7 @@ License: GPL2
 	add_filter('the_content', 'roostmyhtml');
 	add_action('publish_post', 'roostme');
 	register_activation_hook(__FILE__, 'roost_install');
-	register_deactivation_hook(__FILE__, 'roost_uninstall');
+	register_uninstall_hook(__FILE__, 'roost_uninstall');
 	
 	function roost_install(){
 	    global $wpdb;
@@ -58,14 +58,6 @@ License: GPL2
 	        $wpdb->query("INSERT INTO $table(appkey, appsecret, autopush, appusage, custommsg, custombartext, usecustomtext, customtext, textposition, username)
 	        VALUES('', '', 1, 0, '', '', '0', '', '', '' )");
 	    }
-	    register_sidebar(array(
-	        'name' => 'Roost Top',
-	        'id' => 'roost-top',
-	        'before_widget' => '<li>',
-	        'after_widget' => "</li>",
-	        'before_title' => "<h3>",
-	        'after_title' => "</h3>"
-	    ));
 	}
 	
 	function roost_uninstall(){
@@ -79,7 +71,7 @@ License: GPL2
 	    add_menu_page(
         	"Roost.me",
 	        "Roost.me",
-	        8,
+	        "manage_options",
     	    __FILE__,
         	"roost_admin_menu_list",
 	        ROOST_URL . "layout/images/roost_thumb_unselected.png"
@@ -94,7 +86,7 @@ License: GPL2
 	
 	add_action('admin_menu', 'roost_admin_menu');
 	
-	function remoteRequest($remoteData) {
+	function roost_remoteRequest($remoteData) {
 		$authCreds = '';
 		if(!empty($remoteData['appkey'])) {
 			$authCreds = 'Basic ' . base64_encode( $remoteData['appkey'] .':'.$remoteData['appsecret'] );
@@ -128,17 +120,17 @@ License: GPL2
 			'appsecret' => $roostPass,
 			'remoteContent' => json_encode($remoteContent)
 		);
-		return remoteRequest($remoteData);		
+		return roost_remoteRequest($remoteData);		
 	}
 	
-	function saveUsername($roostUser){
+	function roost_saveUsername($roostUser){
 	    global $wpdb;
 	    $table = $wpdb->prefix . "roostsettings";
 	    $sql = "Update " . $table . " set username='" . $roostUser . "'";
 	    $wpdb->query($sql);
 	}
 	
-	function updateKeys($formKeys){
+	function roost_updateKeys($formKeys){
 	    global $wpdb;
 	    $table = $wpdb->prefix . "roostsettings";
 	    $sql = "Update " . $table . " set appkey='" . $formKeys['Appkey'] . "'";
@@ -147,7 +139,7 @@ License: GPL2
 	    $wpdb->query($sql);
 	}
 	
-	function updateSettings($formData){	
+	function roost_updateSettings($formData){	
 	    global $wpdb;
 	    $table = $wpdb->prefix . "roostsettings";
 	    $sql = "Update " . $table . " set appusage='" . $formData['appusage'] . "'";
@@ -200,7 +192,7 @@ License: GPL2
 	        if ($appusage == 3) {
 	            $customhtml = $custommsg;
 	        }
-	        $content = $customhtml . $content . roostJS($appkey);
+	        $content = $customhtml . $content;
 	    }
 		if(!is_page() && !is_single()){
 			remove_filter('the_content', 'roostmyhtml');
@@ -248,12 +240,12 @@ License: GPL2
 			    	$alert = get_the_title($post_ID);
 			    }
 			    $url = $siteurl . "/?p=" . $post_ID;
-			    sendNotification($alert, $url, $appkey, $appsecret);
+			    roost_sendNotification($alert, $url, $appkey, $appsecret);
 			}	    
 		}
 	}
 	
-	function buildMsg($manualtext, $manuallink) {
+	function roost_buildMsg($manualtext, $manuallink) {
 		global $wpdb;
 		$table = $wpdb->prefix . "roostsettings";
 		$sql = "SELECT * FROM " . $table . " where 1";
@@ -266,10 +258,10 @@ License: GPL2
 		        $appsecret = $result->appsecret;
 		    }
 		}
-		sendNotification($manualtext, $manuallink, $appkey, $appsecret);
+		roost_sendNotification($manualtext, $manuallink, $appkey, $appsecret);
 	}
 	
-	function sendNotification($alert, $url, $appkey, $appsecret) {
+	function roost_sendNotification($alert, $url, $appkey, $appsecret) {
 		if(!$url){
 			$remoteContent = array(
 				'alert' => $alert	
@@ -286,23 +278,7 @@ License: GPL2
 			'appsecret' => $appsecret,
 			'remoteContent' => json_encode($remoteContent)
 		);
-		remoteRequest($remoteData);
-	}
-	
-	function roostJS($appkey) {
-		$roostJS = "<script>";
-		$roostJS = $roostJS . "var _roost = _roost || [];";
-		$roostJS = $roostJS . "_roost.push(['appkey','". $appkey ."']);";
-		$roostJS = $roostJS . "!function(d,s,id){";
-		$roostJS = $roostJS . "var js, fjs = d.getElementsByTagName(s)[0];";
-		$roostJS = $roostJS . "if(!d.getElementById(id)){";
-		$roostJS = $roostJS . "js=d.createElement(s); js.id=id;";
-		$roostJS = $roostJS . "js.src='//get.roost.me/js/roost.js';";
-		$roostJS = $roostJS . "fjs.parentNode.insertBefore(js,fjs);";
-		$roostJS = $roostJS . "}";
-		$roostJS = $roostJS . "}(document, 'script', 'roost-js');";
-		$roostJS = $roostJS . "</script>";
-		return $roostJS;
+		roost_remoteRequest($remoteData);
 	}
 	
 	function roostbtn($atts, $content = null) {
@@ -318,7 +294,7 @@ License: GPL2
 		if (isset($appkey) && $appkey != null && strlen($appkey) > 0) {
 			$roostButton = "<div class='roost-button' data-segments='" . $segments . "'></div>";
 		}
-		return $roostButton . roostJS($appkey);
+		return $roostButton;
 	}
 	add_shortcode('Roost', 'roostbtn');
 	
@@ -335,7 +311,7 @@ License: GPL2
 		if (isset($appkey) && $appkey != null && strlen($appkey) > 0) {
 			$roostButton = "<div class='roost-button-mobile' data-segments='" . $segments . "'></div>";
 		}
-		return $roostButton . roostJS($appkey);
+		return $roostButton;
 	}
 	add_shortcode('RoostMobile', 'roostmbtn');
 	
@@ -345,7 +321,7 @@ License: GPL2
 			$roostPass = $_POST['roostpasslogin'];
 			$logginIntoRoost = json_decode(wp_remote_retrieve_body(roostLogin($roostUser, $roostPass)), true);
 			if($logginIntoRoost['success'] === true) {
-				saveUsername($roostUser);
+				roost_saveUsername($roostUser);
 				if(count($logginIntoRoost['apps']) > 1){
 					//Work in the handling for multiple configs
 					$roostSites = $logginIntoRoost['apps'];
@@ -354,7 +330,7 @@ License: GPL2
 						"Appkey" => $logginIntoRoost['apps'][0]['key'],
 						"Appsecret" => $logginIntoRoost['apps'][0]['secret']
 					);
-					updateKeys($formKeys);				
+					roost_updateKeys($formKeys);				
 					$status = 'Logged in to Roost. You\'re Good to Go!';
 				}
 			} else {			
@@ -371,7 +347,7 @@ License: GPL2
 				"Appkey" => $roostSiteKey,
 				"Appsecret" => $roostSiteSecret
 			);
-			updateKeys($formKeys);
+			roost_updateKeys($formKeys);
 			$status = 'Logged in to Roost. You\'re Good to Go!';
 		}
 	    
@@ -381,8 +357,8 @@ License: GPL2
 		        "Appsecret" => ""
 		    );
 		    $roostUser = '';
-		    updateKeys($formKeys);
-		    saveUsername($roostUser);
+		    roost_updateKeys($formKeys);
+		    roost_saveUsername($roostUser);
 		    $status = 'Roost has been disconnected.';
 	    }
 	    
@@ -396,7 +372,7 @@ License: GPL2
 	            "textposition" => mysql_real_escape_string($_POST['textposition']),
 	            "customtext" => mysql_real_escape_string($_POST['customtext'])
 	        );
-	        updateSettings($formData);
+	        roost_updateSettings($formData);
 	        $status = 'Settings Saved.';
 	    }
 	
@@ -408,7 +384,7 @@ License: GPL2
 			} elseif (filter_var($manuallink, FILTER_VALIDATE_URL) === false){ 
 				$status = 'Please Enter a Valid URL. - (Must contain "http://" and your ".com" or respective domain.';
 			} else {
-				buildMsg($manualtext, $manuallink);
+				roost_buildMsg($manualtext, $manuallink);
 				$status = 'Message Sent.';	
 			}
 	    }
@@ -418,10 +394,28 @@ License: GPL2
 			if($manualtext == "") {
 				$status = 'Your Message Can Not Be Blank.';
 			} else {
-		        buildMsg($manualtext, "");        
+		        roost_buildMsg($manualtext, "");        
 		        $status = 'Message Sent.';
 	    	}
 	    }
-	    require_once('layout/admin.php');
+	    require_once('layout/admin.php');		
 	}
+				
+	function roost_load_scripts() {
+		global $wpdb;
+		$table = $wpdb->prefix . "roostsettings";
+		$sql = "SELECT * FROM " . $table . " where 1";
+		$results = $wpdb->get_results($sql);
+		if (count($results) > 0) {
+		    foreach ($results as $result) {
+		        $appkey = $result->appkey;
+		    }
+		}
+		if($appkey && !is_admin()) {
+			wp_enqueue_script( 'roostjs', ROOST_URL . 'layout/js/roostjs.js', array('jquery'), false, true );
+			wp_localize_script( 'roostjs', 'roostjsParams', array( 'appkey' => $appkey) );
+		}
+	}
+	add_action('wp_enqueue_scripts', 'roost_load_scripts');
+	
 ?>
