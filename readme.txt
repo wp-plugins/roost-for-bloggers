@@ -1,6 +1,6 @@
 === Roost For Bloggers ===
 Contributors: noticesoftware
-Tags: notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, web push, desktop push
+Tags: notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, web push, desktop push, safari, OS X, Mavericks, mac
 Requires at least: 3.0
 Tested up to: 3.7
 Stable tag: 1.1
@@ -102,11 +102,11 @@ No catch! We believe in providing a great service and making it accessible to ev
 
 == Changelog ==
 
-= 1.0 =
-* Initial Release
-
 = 1.1 =
 * Added support for Safari Web Push (Desktop Push Notifications) on OS X Mavericks
 * Prefixed functions to avoid conflicts
 * Updated settings to be removed on uninstall instead of deactivation
 * Included Roost JS on every page via wp_footer() - (Needed for Roost analytics such as page views and time on site)
+
+= 1.0 =
+* Initial Release
