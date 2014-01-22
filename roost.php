@@ -142,7 +142,7 @@ License: GPL2
 	    );
 	}
 	function roostAdminSS() {
-		wp_enqueue_style( 'rooststyle', ROOST_URL . 'layout/css/rooststyle.css' );
+		wp_enqueue_style( 'rooststyle', ROOST_URL . 'layout/css/rooststyle.css', '', '2.0' );
 		wp_enqueue_script( 'roostscript', ROOST_URL . 'layout/js/roostscript.js', array('jquery') );
 	}
 	
