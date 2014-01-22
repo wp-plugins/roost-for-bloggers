@@ -1,31 +1,26 @@
-=== Roost For Bloggers ===
+=== Roost Web Push ===
 Contributors: noticesoftware
-Tags: notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, web push, desktop push, safari, OS X, Mavericks, mac
+Tags: push, safari push, osx, notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple
 Requires at least: 3.0
-Tested up to: 3.7
-Stable tag: 1.1
+Tested up to: 3.8
+Stable tag: 2.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Roost - Use push notifications to drive traffic to your website.
+Drive traffic to your website with Safari Mavericks push notifications and Roost.
 
 == Description ==
 
-[Roost](http://roost.me/) For Bloggers Wordpress plugin provides direct engagement with your readers by sending push notifications to their mobile device, or web browser, when you create a new post. Notifications are sent with links, pushing readers back to your site.
+[Roost Web Push](http://roost.me/) provides direct engagement with your readers by sending push notifications to their web browser or mobile device.
 
-Your readers will be able to subscribe to receive notification using either one of the pre-built registration options, or a custom one that you define.
-
-Roost For Bloggers Wordpress Plugin Features:
+Push Plugin Features:
 
 * *NEW* Safari Web Push (Desktop Push Notifications) on OS X Mavericks
-* Free Roost For Bloggers account
-* Auto notifications when creating a new post
-* Custom text attached to your post notification
-* Manual notification from Wordpress admin section
-* Integrated Roost registration header or footer bar
-* Roost social button and mobile button for registration
-* Easy registration from both mobile devices and desktop browsers
 * Detailed analytics provided through the Roost dashboard
+* Auto notifications when creating a new post
+* Optional mobile push solution
+
+Free Roost For Bloggers account included.
 
 == Installation ==
 
@@ -43,20 +38,27 @@ Roost For Bloggers Wordpress Plugin Features:
 
 = Using Features =
 
-**Auto Push**
-Auto Push is what makes this plugin stellar. When you create a new post, your post's title and link will be sent to all of your subscribed readers. That's it. Really. You don't have to do anything else. (It works just like magic.)
-
 **Safari Web Push**
-To use Safari Web Push, simply activate the *Roost for Bloggers* plugin. When your site is viewed in a push-enabled browser and a Roost button or bar is clicked, the browser will prompt for permission. No additional setup is needed.
+To use Safari Web Push, simply activate the *Roost for Bloggers* plugin. When your site is viewed in a push-enabled browser, the browser will prompt for permission. No additional setup is needed.
 
-**Use Custom Text**
-When enabled, the text you enter here will be attached to the auto-pushed messages. You can choose to place this text before or after the auto message.
+**Auto Push**
+Auto Push is what makes this plugin stellar. When you create a new post, your post's title, link, and featured image (if one is attached) will be sent to all of your subscribed readers. That's it. Really. You don't have to do anything else. (It works just like magic.) When enabled, an auto push override check box is also placed on your post's admin page. If for some reason you do not want a notification to go out for that post, just check the box when publishing.
 
 **Send Manual Alert**
-You can send a manual alert to all subscribed users by entering your message text in the "Message" box and a link in the "Link" box.
+You can send a manual alert to all subscribed users by entering your message text in the "Notification Text" box and a link in the "Notification Link" box.
+
+**Activate all Roost Features**
+When checked, your site will automatically receive the newest (and coolest) features from Roost as we roll them out. (Like Chrome Web Push. *cough*)
+
+**Roost Analytics & Roost JS**
+Detailed metrics are provided in the dashboard. These metrics include subscribers, notifications sent, average time on site, and total page views.
+
+**Mobile Push Support**
+To enable mobile push support, check the box. The Roost Header bar, will be inserted onto your page. You can also insert the Roost Bar onto your theme pages with this shortcode:
+[RoostBar]
 
 **Roost Buttons**
-Two button types are provided, a social-style button and a mobile-style button. These need to be manually put into your theme templates or used on individual posts. We tried to make it as easy as possible...
+Two button types are available, a social-style button and a mobile-style button. These need to be manually put into your theme templates or used on individual posts. We tried to make it as easy as possible...
 
 To use the Roost social button, simply place this shortcode into your content:
 [Roost]
@@ -64,22 +66,21 @@ To use the Roost social button, simply place this shortcode into your content:
 The mobile style button is generated by using this shortcode:
 [RoostMobile]
 
-**Roost Analytics & Roost JS**
-Detailed metrics are provided in the Roost dashboard about your subscribers. These metrics include reads, pages view, messages received, and time on site.
-
 **Notes**
-To use any of the integrated registration options below, you will need to be using a Wordpress template that generates the *Content* section on pages. If you use a *static* page, such as a custom homepage, you will need to manually insert the empty containers. The Roost JS is inserted into the footer via the *wp_footer()* function. If your theme does not use this function, you will need to manually copy / paste the Roost JS code snippet.
-
-**Roost Header / Footer Bar**
-To enable the Roost Header / Footer bar, select it from the dropdown in the registration section of the Roost dashboard. A *Custom Text* box will appear. Here you are able to customize the text that is displayed on the bar.
-
-**Custom Registration**
-If you would like to handle your own registration code, choose this method. Anything you put in this box will be inserted into the *Content* section of each page.
-
+The Roost JS is inserted into the footer via the *wp_footer()* function. If your theme does not use this function, you will need to manually copy / paste the Roost JS code snippet.
 
 == Frequently Asked Questions ==
 
-= Why do subscribers have to download the Roost mobile app? =
+= Is it really this easy to use Safari Web Push on my site? =
+Yup! Cool right?
+
+= Do I need and Apple Developer Account or Google Play Developer account? =
+Nope. We've got you covered.
+
+= Do you support Google Chrome or Firefox for desktop push? =
+Almost. We will be releasing support for Google Chrome very soon. Firefox will follow. To take advantage of them as we include support, make sure to have *Activate all Roost Features* checked.
+
+= If I'm using Mobile Push Support, Why do subscribers have to download the Roost mobile app? =
 In order for a device to receive a true push notification, a native mobile app must be installed. That's where Roost comes in. We are there to provide that *native bridge.* We do not pull readers into our app, but push them back to your website. Notifications also stay in the Roost app, which makes them able to be viewed at any time.
 
 = Do my readers / subscribers have to create an account with Roost? =
@@ -98,9 +99,20 @@ No catch! We believe in providing a great service and making it accessible to ev
 == Screenshots ==
 
 1. Log in to your Roost Account.
-2. Roost plugin from the Wordpress dashboard.
+2. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
 
 == Changelog ==
+
+= 2.0 =
+* Automatically activate Safari Web Push with plugin
+* Simplified interface
+* Pulling All-Time stats for your Roost account into Wordpress Dashboard
+* Added a Roost Push override on post pages to prevent notification
+* Simplified install process - Plugin no longer creates it's own table
+* Added support for featured images from posts (For new Roost app - Soon in Apple App Store and Google Play)
+* Settings now all controled from server
+* Added Roost Bar shortcode
+* Fixed characther encoding issue on auto push notifications
 
 = 1.1 =
 * Added support for Safari Web Push (Desktop Push Notifications) on OS X Mavericks
@@ -110,3 +122,8 @@ No catch! We believe in providing a great service and making it accessible to ev
 
 = 1.0 =
 * Initial Release
+
+== Upgrade Notice ==
+
+= 2.0 =
+Bug fixes and analytics. Simplified interface and design update to match Wordpress 3.8 design.

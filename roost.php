@@ -1,9 +1,9 @@
 <?php
 /*
-Plugin Name: Roost For Bloggers
+Plugin Name: Roost Web Push
 Plugin URI: http://www.roost.me/
-Description: Wordpress plugin for Roost.me Web-Push. Automate Push Notifications with new posts or send manually from the dashboard.
-Version: 1.1
+Description: Drive traffic to your website with Safari Mavericks push notifications and Roost.
+Version: 2.0
 Author: Roost.me
 Author URI: http://www.roost.me/
 License: GPL2
@@ -27,68 +27,128 @@ License: GPL2
 	
 	$siteurl = get_option('siteurl');
 	define('ROOST_URL', plugin_dir_url(__FILE__));
-	require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
-	global $wpdb;
-	add_filter('the_content', 'roostmyhtml');
-	add_action('publish_post', 'roostme');
-	register_activation_hook(__FILE__, 'roost_install');
-	register_uninstall_hook(__FILE__, 'roost_uninstall');
-	
-	function roost_install(){
-	    global $wpdb;
-	    $table = $wpdb->prefix . "roostsettings";
-	    $sql = "CREATE TABLE " . $table . " (
-	        id INT NOT NULL AUTO_INCREMENT,
-	        appkey TEXT NOT NULL,
-	        appsecret TEXT NOT NULL,
-	        autopush INT NOT NULL,
-	        appusage INT NOT NULL,
-	        custommsg TEXT NOT NULL,
-	        custombartext TEXT NOT NULL,
-	        usecustomtext INT NOT NULL,
-	        customtext TEXT NOT NULL,
-	        textposition INT NOT NULL,
-	        username TEXT NOT NULL,
-	        PRIMARY KEY (id)
-	    );";
-	    $wpdb->query($sql);
-	    $sql = "SELECT * FROM " . $table . " where 1";
-	    $results = $wpdb->get_results($sql);
-	    if (count($results) == 0) {
-	        $wpdb->query("INSERT INTO $table(appkey, appsecret, autopush, appusage, custommsg, custombartext, usecustomtext, customtext, textposition, username)
-	        VALUES('', '', 1, 0, '', '', '0', '', '', '' )");
-	    }
+	global $roostVersion;
+	$roostVersion = "2.0";
+
+	register_activation_hook(__FILE__, 'roostInit');
+	register_uninstall_hook(__FILE__, 'roostUninstall');
+
+	add_action('admin_enqueue_scripts', 'roostAdminSS');
+	add_action('admin_menu', 'roostAdminMenu');
+	add_action('wp_enqueue_scripts', 'roostLoadScripts');		
+	add_action('publish_post', 'roostMe');
+	add_action('post_submitbox_misc_actions', 'roostOverride');
+
+	add_shortcode('RoostBar', 'roostBar');
+	add_shortcode('Roost', 'roostBtn');
+	add_shortcode('RoostMobile', 'roostmBtn');
+
+	function roostInit() {
+		global $wpdb;
+		$table = $wpdb->prefix . "roostsettings";		
+		if ($wpdb->get_var("SHOW TABLES LIKE '$table'") === $table) {		
+			roostUpgrade();
+		} else {
+			roostInstall();
+		}
 	}
 	
-	function roost_uninstall(){
-	    global $wpdb;
-	    $table = $wpdb->prefix . "roostsettings";
-	    $structure = "drop table if exists $table";
-	    $wpdb->query($structure);
+	function roostUpgrade() {
+		global $wpdb;
+		global $roostVersion;
+		$table = $wpdb->prefix . "roostsettings";
+		$sql = "SELECT * FROM " . $table . " where 1";
+		$results = $wpdb->get_results($sql);
+		foreach($results as $result) {	
+			$appKey = $result->appkey;
+			$appSecret = $result->appsecret;
+			$username = $result->username;
+			$autoPush = $result->autopush;
+			$appUsage = $result->appusage;
+			$customBarText = $result->custombartext;
+		}		
+		
+		if (!empty($appKey)) {
+			$roostSettings = array(
+				"appKey" => $appKey,
+				"appSecret" => $appSecret,
+				"username" => $username,
+				"version" => $roostVersion,
+				"autoPush" => $autoPush
+            );
+			
+			add_option('roost_settings', $roostSettings);		
+			
+			if ($appUsage == 1) {
+				$appUsage = 'TOP';
+			} elseif ($appUsage == 2) {
+				$appUsage = 'BOTTOM';
+			} else {
+				$appUsage = 'OFF';
+			}
+			
+			$remoteContent = array(
+				'roostBarSetting' => $appUsage
+			);
+			
+			if (strlen($customBarText) > 0) {
+				$remoteContent['roostBarText'] = $customBarText;
+			}
+			
+			$remoteData = array(
+				'method' => 'PUT',
+				'remoteAction' => 'app',
+				'appkey' => $appKey,
+				'appsecret' => $appSecret,
+				'remoteContent' => json_encode($remoteContent)
+			);
+			roostRemoteRequest($remoteData);		
+		}
+
+		$structure = "drop table if exists $table";
+		$wpdb->query($structure);
+		
+		roostInstall();
 	}
 	
-	function roost_admin_menu(){
+	function roostInstall() {
+		$roostSettings = get_option('roost_settings');
+		global $roostVersion;
+
+		if (empty($roostSettings)) {
+			$roostSettings = array(
+				"appKey" => '',
+				"appSecret" => '',
+				"username" => '',
+				"version" => $roostVersion,
+				"autoPush" => 1
+            );			
+			add_option('roost_settings', $roostSettings);
+		}
+	}
+	
+	function roostUninstall(){
+		delete_option('roost_settings');
+	}
+	
+	function roostAdminMenu(){
 	    add_menu_page(
         	"Roost.me",
 	        "Roost.me",
 	        "manage_options",
     	    __FILE__,
-        	"roost_admin_menu_list",
-	        ROOST_URL . "layout/images/roost_thumb_unselected.png"
+        	"roostAdminMenuList",
+	        ROOST_URL . "layout/images/roost_thumb.png"
 	    );
 	}
-	function roost_admin_ss() {
+	function roostAdminSS() {
 		wp_enqueue_style( 'rooststyle', ROOST_URL . 'layout/css/rooststyle.css' );
 		wp_enqueue_script( 'roostscript', ROOST_URL . 'layout/js/roostscript.js', array('jquery') );
 	}
 	
-	add_action( 'admin_enqueue_scripts', 'roost_admin_ss' );
-	
-	add_action('admin_menu', 'roost_admin_menu');
-	
-	function roost_remoteRequest($remoteData) {
+	function roostRemoteRequest($remoteData) {
 		$authCreds = '';
-		if(!empty($remoteData['appkey'])) {
+		if (!empty($remoteData['appkey'])) {
 			$authCreds = 'Basic ' . base64_encode( $remoteData['appkey'] .':'.$remoteData['appsecret'] );
 		}
 		$remoteURL = 'https://get.roost.me/api/' . $remoteData['remoteAction'];
@@ -101,240 +161,199 @@ License: GPL2
 	    );
 	    
 	    $remotePayload = array(
-	        'method'    => 'POST',
+	        'method'    => $remoteData['method'],
 	        'headers'   => $headers,
 	        'body'      => $remoteData['remoteContent']
 	    );
 	    $response = wp_remote_request($remoteURL, $remotePayload);
 	    return $response;
 	}
-	
+		
 	function roostLogin($roostUser, $roostPass){
 		$remoteContent = array(
 			'username' => $roostUser,
 			'password' => $roostPass
 		);
 		$remoteData = array(
+			'method' => 'POST',
 			'remoteAction' => 'accounts/details',
 			'appkey' => $roostUser,
 			'appsecret' => $roostPass,
 			'remoteContent' => json_encode($remoteContent)
 		);
-		return roost_remoteRequest($remoteData);		
+		return roostRemoteRequest($remoteData);		
 	}
 	
-	function roost_saveUsername($roostUser){
-	    global $wpdb;
-	    $table = $wpdb->prefix . "roostsettings";
-	    $sql = "Update " . $table . " set username='" . $roostUser . "'";
-	    $wpdb->query($sql);
+	function roostSaveUsername($roostUser){
+		$roostSettings = get_option('roost_settings');
+		$roostSettings['username'] = $roostUser;
+		update_option('roost_settings', $roostSettings);
 	}
 	
-	function roost_updateKeys($formKeys){
-	    global $wpdb;
-	    $table = $wpdb->prefix . "roostsettings";
-	    $sql = "Update " . $table . " set appkey='" . $formKeys['Appkey'] . "'";
-	    $wpdb->query($sql);
-	    $sql = "Update " . $table . " set appsecret='" . $formKeys['Appsecret'] . "'";
-	    $wpdb->query($sql);
+	function roostUpdateKeys($formKeys){
+		$roostSettings = get_option('roost_settings');
+		$roostSettings['appKey'] = $formKeys['appKey'];
+		$roostSettings['appSecret'] = $formKeys['appSecret'];
+		update_option('roost_settings', $roostSettings);
 	}
 	
-	function roost_updateSettings($formData){	
-	    global $wpdb;
-	    $table = $wpdb->prefix . "roostsettings";
-	    $sql = "Update " . $table . " set appusage='" . $formData['appusage'] . "'";
-	    $wpdb->query($sql);
-		$sql = "Update " . $table . " set custombartext='" . $formData['custombartext'] . "'";
-		$wpdb->query($sql);
-	    $sql = "Update " . $table . " set custommsg='" . $formData['custommsg'] . "'";
-	    $wpdb->query($sql);
-		$sql = "Update " . $table . " set autopush='" . $formData['autopush'] . "'";
-		$wpdb->query($sql);
-		$sql = "Update " . $table . " set usecustomtext='" . $formData['usecustomtext'] . "'";
-		$wpdb->query($sql);
-		$sql = "Update " . $table . " set textposition='" . $formData['textposition'] . "'";
-		$wpdb->query($sql);
-		$sql = "Update " . $table . " set customtext='" . $formData['customtext'] . "'";
-		$wpdb->query($sql);
+	function roostUpdateSettings($formData){	
+	   	$roostSettings = get_option('roost_settings');
+		$roostSettings['autoPush'] = $formData['autoPush'];
+		update_option('roost_settings', $roostSettings);
 	}
-	
-	function roostmyhtml($content){
-	    global $wpdb;
-	    $table = $wpdb->prefix . "roostsettings";
-	    $sql = "SELECT * FROM " . $table . " where 1";
-	    $results = $wpdb->get_results($sql);
-	    $appkey = "";
-	    $appsecret = "";
-	    $appusage = "";
-	    $custombartext= "";
-	    $custommsg = "";
-	    if (count($results) > 0) {
-	        foreach ($results as $result) {
-	            $appkey = $result->appkey;
-	            $appsecret = $result->appsecret;
-	            $appusage = $result->appusage;
-	            $custombartext = $result->custombartext;
-	            $custommsg = $result->custommsg;
-	        }
-	    }
-	
-	    if ($appusage != 0) {
-	        if ($appusage == 1 && isset($appkey) && $appkey != null && strlen($appkey) > 0) {
-					$customhtml = '<script>';
-					$customhtml = $customhtml . "(function(){var bar = document.createElement('div');bar.className='roost-bar';bar.setAttribute('data-message', '".$custombartext."');document.getElementsByTagName('body')[0].insertBefore(bar,document.getElementsByTagName('body')[0].firstChild);})();";
-					$customhtml = $customhtml . "</script>";
-			}
-	        if ($appusage == 2 && isset($appkey) && $appkey != null && strlen($appkey) > 0) {
-					$customhtml = '<script>';
-					$customhtml = $customhtml . "(function(){var bar = document.createElement('div');bar.className='roost-bar';bar.setAttribute('data-bottom', 'true');bar.setAttribute('data-message','". $custombartext."');document.getElementsByTagName('body')[0].insertBefore(bar,document.getElementsByTagName('body')[0].firstChild);})();";
-					$customhtml = $customhtml . "</script>";
-			}
-	        if ($appusage == 3) {
-	            $customhtml = $custommsg;
-	        }
-	        $content = $customhtml . $content;
-	    }
-		if(!is_page() && !is_single()){
-			remove_filter('the_content', 'roostmyhtml');
-	    }
-	    return $content;
+
+function roostFilterString($string) {
+	     $target = str_replace('&#8220;', '&quot;', $string);
+	     $target = str_replace('&#8221;', '&quot;', $string);
+	     $target = str_replace('&#8216;', '&#39;', $string);
+	     $target = str_replace('&#8217;', '&#39;', $string);
+	     $target = str_replace('&#8211;', '-', $string);
+	     return html_entity_decode($string, ENT_QUOTES);
 	}
-	
-	function roostme($post_ID){		
-		global $wpdb;
-		$table = $wpdb->prefix . "roostsettings";
-		$sql = "SELECT * FROM " . $table . " where 1";
-		$results = $wpdb->get_results($sql);
-		$appkey = "";
-		$appsecret = "";
-		$appusage = "";
-		$custombartext = "";
-		$autopush = "";
-		$usecustomtext = "";
-		$textposition = "";
-		$customtext = "";
-		if (count($results) > 0) {
-		    foreach ($results as $result) {
-		        $appkey = $result->appkey;
-		        $appsecret = $result->appsecret;
-		        $appusage = $result->appusage;
-		        $custombartext = $result->custombartext;
-		        $autopush = $result->autopush;
-		        $usecustomtext = $result->usecustomtext;
-		        $textposition = $result->textposition;
-		        $customtext = $result->customtext;
-		    }
+
+	function roostMe($post_ID){
+		$roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+		$appSecret = $roostSettings['appSecret'];
+		$autoPush = $roostSettings['autoPush'];
+		if (isset($_POST['roostOverride'])) {
+			$roostOverride = $_POST['roostOverride'];
 		}
-	
-		if ($autopush == 1 && strlen($appkey) > 0) {
+		if ($autoPush == 1 && strlen($appKey) > 0 && empty($roostOverride)) {
 			if( ( $_POST['post_status'] == 'publish' ) && ( $_POST['original_post_status'] != 'publish' ) ) {
 			    $siteurl = get_option('siteurl');
-			    $mypost = get_post($post_ID);
-				if ($usecustomtext == 1) {
-				    if ($textposition == 1 ) {
-				    	$alert = $customtext . ' ' . get_the_title($post_ID);
-				    } else {
-				    	$alert = get_the_title($post_ID) . ' ' . $customtext;	    	
-				    }
-			    } else {
-			    	$alert = get_the_title($post_ID);
-			    }
+		    	$alert = roostFilterString(get_the_title($post_ID));
 			    $url = $siteurl . "/?p=" . $post_ID;
-			    roost_sendNotification($alert, $url, $appkey, $appsecret);
-			}	    
+                if ( has_post_thumbnail($post_ID)) {
+                    $rawImage = wp_get_attachment_image_src(get_post_thumbnail_id($post_ID));
+                    $imageURL = $rawImage[0];
+                } else {
+                    $imageURL = false;
+                }
+                //roostSendNotification($alert, $url, $imageURL, $appKey, $appSecret);
+			}
 		}
 	}
 	
-	function roost_buildMsg($manualtext, $manuallink) {
-		global $wpdb;
-		$table = $wpdb->prefix . "roostsettings";
-		$sql = "SELECT * FROM " . $table . " where 1";
-		$results = $wpdb->get_results($sql);
-		$appkey = "";
-		$appsecret = "";
-		if (count($results) > 0) {
-		    foreach ($results as $result) {
-		        $appkey = $result->appkey;
-		        $appsecret = $result->appsecret;
-		    }
+	function roostOverride(){
+		$roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+        $autoPush = $roostSettings['autoPush'];
+		$roost_page_status = get_post_status(get_the_ID());
+		if((strlen($appKey) > 1) && ($autoPush == 1) && ($roost_page_status == 'auto-draft') || ($roost_page_status == 'draft')){
+		    echo '<div class="misc-pub-section misc-pub-section-last" id="roost-override">'
+		         . '<label><input type="checkbox" value="1" id="roostOverrideCheckbox" name="roostOverride" /> <strong>Do NOT</strong> send notification with <strong>Roost</strong></label>'
+		    .'</div>'
+		    ."<script>jQuery('.save-timestamp').on('click', function() {setTimeout(function(){var text = jQuery('#timestamp').text(); text = text.slice(0, text.indexOf(' ')); if(text === 'Schedule') { jQuery('#roost-override').hide(); jQuery('#roostOverrideCheckbox').prop('checked', true);} else { jQuery('#roost-override').show(); jQuery('#roostOverrideCheckbox').prop('checked', false);}}, 250);});</script>";
 		}
-		roost_sendNotification($manualtext, $manuallink, $appkey, $appsecret);
 	}
 	
-	function roost_sendNotification($alert, $url, $appkey, $appsecret) {
-		if(!$url){
-			$remoteContent = array(
-				'alert' => $alert	
-			);
-		} else {
-			$remoteContent = array(
-				'alert' => $alert,	
-				'url' => $url
-			);
+	function roostSendNotification($alert, $url, $imageURL, $appKey, $appSecret) {
+		$remoteContent = array(
+			'alert' => $alert	
+		);
+		if ($url){
+			$remoteContent['url'] = $url;
 		}
+        if ($imageURL) {
+            $remoteContent['imageURL'] = $imageURL;   
+        }
 		$remoteData = array(
+			'method' => 'POST',
 			'remoteAction' => 'push',
-			'appkey' => $appkey,
-			'appsecret' => $appsecret,
+			'appkey' => $appKey,
+			'appsecret' => $appSecret,
 			'remoteContent' => json_encode($remoteContent)
 		);
-		roost_remoteRequest($remoteData);
+		return roostRemoteRequest($remoteData);
 	}
-	
-	function roostbtn($atts, $content = null) {
-		global $wpdb;
-		$table = $wpdb->prefix . "roostsettings";
-		$sql = "SELECT * FROM " . $table . " where 1";
-		$results = $wpdb->get_results($sql);
-		foreach ($results as $result) {
-			$appkey = $result->appkey;
-			$appusage = $result->appusage;
-		}
-		$segments = $atts['segments'];
-		if (isset($appkey) && $appkey != null && strlen($appkey) > 0) {
-			$roostButton = "<div class='roost-button' data-segments='" . $segments . "'></div>";
-		}
+
+	function roostBar($atts, $content = null) {
+		$roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+		if (!empty($appKey) && strlen($appKey) > 0) {
+			$roostBar = "<div class='roost-bar'></div>";
+		} else {
+            return;   
+        }
+		return $roostBar;
+	}
+
+	function roostBtn($atts, $content = null) {
+		$roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+		if (!empty($appKey) && strlen($appKey) > 0) {
+			$roostButton = "<div class='roost-button'></div>";
+		} else {
+            return;   
+        }
 		return $roostButton;
 	}
-	add_shortcode('Roost', 'roostbtn');
 	
-	function roostmbtn($atts, $content = null) {
-		global $wpdb;
-		$table = $wpdb->prefix . "roostsettings";
-		$sql = "SELECT * FROM " . $table . " where 1";
-		$results = $wpdb->get_results($sql);
-		foreach ($results as $result) {
-			$appkey = $result->appkey;
-			$appusage = $result->appusage;
-		}
-		$segments = $atts['segments'];		
-		if (isset($appkey) && $appkey != null && strlen($appkey) > 0) {
-			$roostButton = "<div class='roost-button-mobile' data-segments='" . $segments . "'></div>";
-		}
+	function roostmBtn($atts, $content = null) {
+		$roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+		if (!empty($appKey) && strlen($appKey) > 0) {
+			$roostButton = "<div class='roost-button-mobile'></div>";
+		} else {
+            return;
+        }
 		return $roostButton;
 	}
-	add_shortcode('RoostMobile', 'roostmbtn');
 	
-	function roost_admin_menu_list() {
+    function getRoostServerSettings($appKey, $appSecret) {
+        $remoteData = array(
+            'method' => 'POST',
+            'remoteAction' => 'app',
+            'appkey' => $appKey,
+            'appsecret' => $appSecret,
+            'remoteContent' => ''
+        );
+		return json_decode(wp_remote_retrieve_body(roostRemoteRequest($remoteData)), true);	
+    }
+
+    function getRoostStats($appKey, $appSecret) {
+        $remoteData = array (
+            'method' => 'POST',
+            'remoteAction' => 'stats/app',
+            'appkey' => $appKey,
+            'appsecret' => $appSecret,
+            'remoteContent' => ''
+        );
+        return json_decode(wp_remote_retrieve_body(roostRemoteRequest($remoteData)), true);
+    }
+    
+	function roostAdminMenuList() {
+		$roostSettings = get_option('roost_settings');
+		if (empty($roostSettings)) {
+			roostUpgrade();
+        }        
+		$appKey = $roostSettings['appKey'];
+		$appSecret = $roostSettings['appSecret'];
+		if (!empty($appKey)) {
+			$roostServerSettings = getRoostServerSettings($appKey, $appSecret);	
+			$roostStats = getRoostStats($appKey, $appSecret);
+		}
+
 	    if (isset($_POST['roostlogin'])) {
 			$roostUser = $_POST['roostuserlogin'];
 			$roostPass = $_POST['roostpasslogin'];
 			$logginIntoRoost = json_decode(wp_remote_retrieve_body(roostLogin($roostUser, $roostPass)), true);
-			if($logginIntoRoost['success'] === true) {
-				roost_saveUsername($roostUser);
-				if(count($logginIntoRoost['apps']) > 1){
-					//Work in the handling for multiple configs
+			if ($logginIntoRoost['success'] === true) {
+				roostSaveUsername($roostUser);
+				if (count($logginIntoRoost['apps']) > 1){
 					$roostSites = $logginIntoRoost['apps'];
 				} else {
 					$formKeys = array(
-						"Appkey" => $logginIntoRoost['apps'][0]['key'],
-						"Appsecret" => $logginIntoRoost['apps'][0]['secret']
+						"appKey" => $logginIntoRoost['apps'][0]['key'],
+						"appSecret" => $logginIntoRoost['apps'][0]['secret']
 					);
-					roost_updateKeys($formKeys);				
-					$status = 'Logged in to Roost. You\'re Good to Go!';
+					roostUpdateKeys($formKeys);				
+					$status = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OSX Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats about your subscribers, and send manual push notifications to your subscribers.';
 				}
 			} else {			
-				$status = $logginIntoRoost['error'] . ' Please check your Username and Password.';
+				$status = 'Please check your Email or Username and Password.';
 			}	
 		}
 		
@@ -344,78 +363,100 @@ License: GPL2
 			$roostSiteKey = $roostSite[0];
 			$roostSiteSecret = $roostSite[1];
 			$formKeys = array(
-				"Appkey" => $roostSiteKey,
-				"Appsecret" => $roostSiteSecret
+				"appKey" => $roostSiteKey,
+				"appSecret" => $roostSiteSecret
 			);
-			roost_updateKeys($formKeys);
-			$status = 'Logged in to Roost. You\'re Good to Go!';
+			roostUpdateKeys($formKeys);
+					$status = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OSX Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats about your subscribers, and send manual push notifications to your subscribers.';
 		}
 	    
 	    if (isset($_POST['clearkey'])) {
 		    $formKeys = array(
-		        "Appkey" => "",
-		        "Appsecret" => ""
+		        "appKey" => "",
+		        "appSecret" => ""
 		    );
 		    $roostUser = '';
-		    roost_updateKeys($formKeys);
-		    roost_saveUsername($roostUser);
+		    roostUpdateKeys($formKeys);
+		    roostSaveUsername($roostUser);
 		    $status = 'Roost has been disconnected.';
 	    }
 	    
 	    if (isset($_POST['savesettings'])) {
 	        $formData = array(
-	            "appusage" => mysql_real_escape_string($_POST['appusage']),
-	            "custombartext" => mysql_real_escape_string($_POST['custombartext']),
-	            "custommsg" => $_POST['custommsg'],
-	            "autopush" => mysql_real_escape_string($_POST['autopush']),
-	            "usecustomtext" => mysql_real_escape_string($_POST['usecustomtext']),
-	            "textposition" => mysql_real_escape_string($_POST['textposition']),
-	            "customtext" => mysql_real_escape_string($_POST['customtext'])
+	            "autoPush" => $_POST['autoPush']
 	        );
-	        roost_updateSettings($formData);
+	        roostUpdateSettings($formData);
+	
+	        if (isset($_POST['mobilePush'])) {
+				if ($roostServerSettings['roostBarSetting'] != "TOP" || $roostServerSettings['roostBarSetting'] != "BOTTOM") {
+					$remoteContent['roostBarSetting'] = "TOP";
+				}
+			} else {
+				if ($roostServerSettings['roostBarSetting'] != "OFF") {
+					$remoteContent['roostBarSetting'] = "OFF";
+				}
+			}
+			
+			if (isset($_POST['autoUpdate'])) {
+				if ($roostServerSettings['autoUpdate'] != true) {
+					$remoteContent['autoUpdate'] = true;
+				}
+			} else {
+				if ($roostServerSettings['autoUpdate'] != false) {
+					$remoteContent['autoUpdate'] = false;
+				}
+			}
+            
+		    if(!empty($remoteContent)) {
+		        $remoteData = array(
+		        	'method' => 'PUT',
+		        	'remoteAction' => 'app',
+		        	'appkey' => $appKey,
+		        	'appsecret' => $appSecret,
+		        	'remoteContent' => json_encode($remoteContent)
+		        );
+		        roostRemoteRequest($remoteData);
+		    }
+	       	
+			$roostServerSettings = getRoostServerSettings($appKey, $appSecret);	
+			$roostStats = getRoostStats($appKey, $appSecret);
+            
 	        $status = 'Settings Saved.';
 	    }
-	
+		
 	    if (isset($_POST['manualpush'])) {
-	        $manualtext = $_POST['manualtext'];
-	        $manuallink = $_POST['manuallink'];
-			if($manualtext == "" || $manuallink == "") {
-				$status = 'Your Message or Link Can Not Be Blank.';
-			} elseif (filter_var($manuallink, FILTER_VALIDATE_URL) === false){ 
-				$status = 'Please Enter a Valid URL. - (Must contain "http://" and your ".com" or respective domain.';
-			} else {
-				roost_buildMsg($manualtext, $manuallink);
-				$status = 'Message Sent.';	
+	        $manualText = $_POST['manualtext'];
+	        $manualLink = $_POST['manuallink'];
+			if ($manualText == "" || $manualLink == "") {
+				$status = 'Your message or link can not be blank.';
+            } else {
+                $roostSettings = get_option('roost_settings');
+                $appKey = $roostSettings['appKey'];
+                $appSecret = $roostSettings['appSecret'];
+                if (strpos($manualLink, 'http') === false) {
+                    $manualLink = 'http://' . $manualLink;
+                }
+                $msgStatus = json_decode(wp_remote_retrieve_body(roostSendNotification($manualText, $manualLink, false, $appKey, $appSecret)), true);
+                if ($msgStatus['success'] === true) {
+                    $status = 'Message Sent.';
+                } else {
+                    $status = 'Message failed. Please make sure you have a vaild URL.';
+                }  
 			}
 	    }
-	    
-	    if (isset($_POST['manualpush2'])) {
-	        $manualtext = $_POST['manualtext2'];
-			if($manualtext == "") {
-				$status = 'Your Message Can Not Be Blank.';
-			} else {
-		        roost_buildMsg($manualtext, "");        
-		        $status = 'Message Sent.';
-	    	}
-	    }
+
 	    require_once('layout/admin.php');		
 	}
 				
-	function roost_load_scripts() {
-		global $wpdb;
-		$table = $wpdb->prefix . "roostsettings";
-		$sql = "SELECT * FROM " . $table . " where 1";
-		$results = $wpdb->get_results($sql);
-		if (count($results) > 0) {
-		    foreach ($results as $result) {
-		        $appkey = $result->appkey;
-		    }
-		}
-		if($appkey && !is_admin()) {
+	function roostLoadScripts() {
+		$roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+		if ($appKey && !is_admin()) {
 			wp_enqueue_script( 'roostjs', ROOST_URL . 'layout/js/roostjs.js', array('jquery'), false, true );
-			wp_localize_script( 'roostjs', 'roostjsParams', array( 'appkey' => $appkey) );
+			wp_localize_script( 'roostjs', 'roostjsParams', array( 'appkey' => $appKey) );
+		}
+		if(is_admin()){
+			wp_enqueue_script( 'roostGoogleFont', ROOST_URL . 'layout/js/roostGoogleFont.js', '', false, false );		
 		}
 	}
-	add_action('wp_enqueue_scripts', 'roost_load_scripts');
-	
 ?>
