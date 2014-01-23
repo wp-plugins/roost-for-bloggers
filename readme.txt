@@ -3,7 +3,7 @@ Contributors: noticesoftware
 Tags: push, safari push, osx, notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple
 Requires at least: 3.0
 Tested up to: 3.8
-Stable tag: 2.0
+Stable tag: 2.0.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -103,6 +103,9 @@ No catch! We believe in providing a great service and making it accessible to ev
 
 == Changelog ==
 
+= 2.0.1 =
+* Fixed bug that prevented notifications from sending
+
 = 2.0 =
 * Automatically activate Safari Web Push with plugin
 * Simplified interface
@@ -124,6 +127,9 @@ No catch! We believe in providing a great service and making it accessible to ev
 * Initial Release
 
 == Upgrade Notice ==
+
+= 2.0.1 =
+* Fixed bug that prevented notifications from sending
 
 = 2.0 =
 Bug fixes and analytics. Simplified interface and design update to match Wordpress 3.8 design.

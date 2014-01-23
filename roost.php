@@ -231,7 +231,7 @@ function roostFilterString($string) {
                 } else {
                     $imageURL = false;
                 }
-                //roostSendNotification($alert, $url, $imageURL, $appKey, $appSecret);
+                roostSendNotification($alert, $url, $imageURL, $appKey, $appSecret);
 			}
 		}
 	}
