@@ -495,7 +495,7 @@ input.type-text {
 }
 #roostUserLogo {
     display: inline-block;
-    top: 6px;
+    top: 7px;
     position:relative;
     border-radius: 3px;
     height: 24px;
@@ -503,7 +503,6 @@ input.type-text {
 }
 
 #roostUserLogo img {
-    border: 1px solid #cccccc;
     border-radius: 3px;
 }
 

@@ -139,7 +139,7 @@
                                     </div>
 -->
                                     <div class="roost-stats-metric">
-                                        <span class="roost-stat"><?php echo(number_format($roostStats['timeOnSite'])); ?><span id="roost-time-label"> mins</span></span>
+                                        <span class="roost-stat"><?php echo(number_format(($roostStats['timeOnSite'])/60000)); ?><span id="roost-time-label"> mins</span></span>
                                         <span class="roost-stat-label">Total time-on-site</span>                                  
                                     </div>
 

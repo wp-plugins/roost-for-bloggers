@@ -3,7 +3,7 @@
 Plugin Name: Roost Web Push
 Plugin URI: http://www.roost.me/
 Description: Drive traffic to your website with Safari Mavericks push notifications and Roost.
-Version: 2.0.1
+Version: 2.0.2
 Author: Roost.me
 Author URI: http://www.roost.me/
 License: GPL2
@@ -28,7 +28,7 @@ License: GPL2
 	$siteurl = get_option('siteurl');
 	define('ROOST_URL', plugin_dir_url(__FILE__));
 	global $roostVersion;
-	$roostVersion = "2.0";
+	$roostVersion = "2.0.2";
 
 	register_activation_hook(__FILE__, 'roostInit');
 	register_uninstall_hook(__FILE__, 'roostUninstall');
@@ -38,6 +38,7 @@ License: GPL2
 	add_action('wp_enqueue_scripts', 'roostLoadScripts');		
 	add_action('publish_post', 'roostMe');
 	add_action('post_submitbox_misc_actions', 'roostOverride');
+    add_action('wp_head', 'roostByLine', 1);
 
 	add_shortcode('RoostBar', 'roostBar');
 	add_shortcode('Roost', 'roostBtn');
@@ -124,13 +125,22 @@ License: GPL2
 				"autoPush" => 1
             );			
 			add_option('roost_settings', $roostSettings);
-		}
+		} else {
+            $roostSettings['version'] = $roostVersion;
+        	update_option('roost_settings', $roostSettings);
+        }
 	}
 	
 	function roostUninstall(){
 		delete_option('roost_settings');
 	}
 	
+    function roostByLine() {
+        global $roostVersion;
+        $byLine = "<!-- Push notifications for this website enabled by Roost. Support for Safari and Chrome Web Push. (v ". $roostVersion .") - http://roost.me/ -->";
+        echo "\n${byLine}\n";
+    }
+
 	function roostAdminMenu(){
 	    add_menu_page(
         	"Roost.me",
@@ -203,12 +213,13 @@ License: GPL2
 		update_option('roost_settings', $roostSettings);
 	}
 
-function roostFilterString($string) {
-	     $target = str_replace('&#8220;', '&quot;', $string);
-	     $target = str_replace('&#8221;', '&quot;', $string);
-	     $target = str_replace('&#8216;', '&#39;', $string);
-	     $target = str_replace('&#8217;', '&#39;', $string);
-	     $target = str_replace('&#8211;', '-', $string);
+    function roostFilterString($string) {
+	     $string = str_replace('&#8220;', '&quot;', $string);
+	     $string = str_replace('&#8221;', '&quot;', $string);
+	     $string = str_replace('&#8216;', '&#39;', $string);
+	     $string = str_replace('&#8217;', '&#39;', $string);
+	     $string = str_replace('&#8211;', '-', $string);
+	     $string = str_replace('&#8212;', '-', $string);
 	     return html_entity_decode($string, ENT_QUOTES);
 	}
 
@@ -440,7 +451,7 @@ function roostFilterString($string) {
                 if ($msgStatus['success'] === true) {
                     $status = 'Message Sent.';
                 } else {
-                    $status = 'Message failed. Please make sure you have a vaild URL.';
+                    $status = 'Message failed. Please make sure you have a valid URL.';
                 }  
 			}
 	    }
