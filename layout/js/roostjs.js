@@ -1,5 +1,5 @@
     var _roost = _roost || [];
-    _roost.push(['appkey', roostjsParams.appkey]);
+    _roost.push(['appkey', pushNotificationsByRoostMe.appkey]);
 
     !function(d,s,id){
         var js, fjs = d.getElementsByTagName(s)[0];

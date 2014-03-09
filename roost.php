@@ -3,7 +3,7 @@
 Plugin Name: Roost Web Push
 Plugin URI: http://www.roost.me/
 Description: Drive traffic to your website with Safari Mavericks push notifications and Roost.
-Version: 2.0.2
+Version: 2.0.3
 Author: Roost.me
 Author URI: http://www.roost.me/
 License: GPL2
@@ -28,7 +28,7 @@ License: GPL2
 	$siteurl = get_option('siteurl');
 	define('ROOST_URL', plugin_dir_url(__FILE__));
 	global $roostVersion;
-	$roostVersion = "2.0.2";
+	$roostVersion = "2.0.3";
 
 	register_activation_hook(__FILE__, 'roostInit');
 	register_uninstall_hook(__FILE__, 'roostUninstall');
@@ -37,10 +37,12 @@ License: GPL2
 	add_action('admin_menu', 'roostAdminMenu');
 	add_action('wp_enqueue_scripts', 'roostLoadScripts');		
 	add_action('publish_post', 'roostMe');
+    add_action('future_to_publish', 'roostMeScheduled');
 	add_action('post_submitbox_misc_actions', 'roostOverride');
     add_action('wp_head', 'roostByLine', 1);
+    add_action( 'save_post', 'roostSavePost' );
 
-	add_shortcode('RoostBar', 'roostBar');
+    add_shortcode('RoostBar', 'roostBar');
 	add_shortcode('Roost', 'roostBtn');
 	add_shortcode('RoostMobile', 'roostmBtn');
 
@@ -133,6 +135,7 @@ License: GPL2
 	
 	function roostUninstall(){
 		delete_option('roost_settings');
+        delete_post_meta_by_key( 'roostOverride' );
 	}
 	
     function roostByLine() {
@@ -152,8 +155,9 @@ License: GPL2
 	    );
 	}
 	function roostAdminSS() {
-		wp_enqueue_style( 'rooststyle', ROOST_URL . 'layout/css/rooststyle.css', '', '2.0' );
-		wp_enqueue_script( 'roostscript', ROOST_URL . 'layout/js/roostscript.js', array('jquery') );
+        global $roostVersion;
+		wp_enqueue_style( 'rooststyle', ROOST_URL . 'layout/css/rooststyle.css', '', $roostVersion );
+		wp_enqueue_script( 'roostscript', ROOST_URL . 'layout/js/roostscript.js', array('jquery'), $roostVersion );
 	}
 	
 	function roostRemoteRequest($remoteData) {
@@ -191,7 +195,8 @@ License: GPL2
 			'appsecret' => $roostPass,
 			'remoteContent' => json_encode($remoteContent)
 		);
-		return roostRemoteRequest($remoteData);		
+        $loggedIntoRoost = roostDecodeData($remoteData);
+        return $loggedIntoRoost;       
 	}
 	
 	function roostSaveUsername($roostUser){
@@ -213,28 +218,45 @@ License: GPL2
 		update_option('roost_settings', $roostSettings);
 	}
 
-    function roostFilterString($string) {
-	     $string = str_replace('&#8220;', '&quot;', $string);
-	     $string = str_replace('&#8221;', '&quot;', $string);
-	     $string = str_replace('&#8216;', '&#39;', $string);
-	     $string = str_replace('&#8217;', '&#39;', $string);
-	     $string = str_replace('&#8211;', '-', $string);
-	     $string = str_replace('&#8212;', '-', $string);
-	     return html_entity_decode($string, ENT_QUOTES);
-	}
+    function roostSavePost( $post_ID ) {
+        if ( defined('DOING_AUTOSAVE') && DOING_AUTOSAVE ) {
+            return false;
+        } elseif (isset($_POST['post_status'])) {
+            $roostNoNote = get_post_meta($post_ID, 'roostOverride', true);
+            if (isset($_POST['roostOverride']) && !$roostNoNote) {
+                $roostOverrideSetting = $_POST['roostOverride'];
+                add_post_meta($post_ID, 'roostOverride', $roostOverrideSetting, true);
+            } elseif (!isset($_POST['roostOverride']) && $roostNoNote) {
+                delete_post_meta($post_ID, 'roostOverride');
+            }
+        }
+    }
 
-	function roostMe($post_ID){
+    function roostFilterString($string) {
+        $string = str_replace('&#8220;', '&quot;', $string);
+        $string = str_replace('&#8221;', '&quot;', $string);
+        $string = str_replace('&#8216;', '&#39;', $string);
+        $string = str_replace('&#8217;', '&#39;', $string);
+        $string = str_replace('&#8211;', '-', $string);
+        $string = str_replace('&#8212;', '-', $string);
+        $string = str_replace('&#8242;', '&#39', $string);
+        $string = str_replace('&#8230;', '...', $string);
+        return html_entity_decode($string, ENT_QUOTES);
+    }
+
+    function roostMe($post_ID){
 		$roostSettings = get_option('roost_settings');
 		$appKey = $roostSettings['appKey'];
 		$appSecret = $roostSettings['appSecret'];
 		$autoPush = $roostSettings['autoPush'];
+        $roostNoNote = get_post_meta($post_ID, 'roostOverride', true);
 		if (isset($_POST['roostOverride'])) {
 			$roostOverride = $_POST['roostOverride'];
 		}
 		if ($autoPush == 1 && strlen($appKey) > 0 && empty($roostOverride)) {
 			if( ( $_POST['post_status'] == 'publish' ) && ( $_POST['original_post_status'] != 'publish' ) ) {
 			    $siteurl = get_option('siteurl');
-		    	$alert = roostFilterString(get_the_title($post_ID));
+		    	$alert = get_the_title($post_ID);
 			    $url = $siteurl . "/?p=" . $post_ID;
                 if ( has_post_thumbnail($post_ID)) {
                     $rawImage = wp_get_attachment_image_src(get_post_thumbnail_id($post_ID));
@@ -246,22 +268,49 @@ License: GPL2
 			}
 		}
 	}
-	
-	function roostOverride(){
+
+	function roostMeScheduled($post){
+        $post_ID = $post->ID;
+        $roostSettings = get_option('roost_settings');
+		$appKey = $roostSettings['appKey'];
+		$appSecret = $roostSettings['appSecret'];
+		$autoPush = $roostSettings['autoPush'];
+        $roostOverride = get_post_meta($post_ID, 'roostOverride', true);
+		if ($autoPush == 1 && strlen($appKey) > 0 && empty($roostOverride)) {
+            $siteurl = get_option('siteurl');
+            $alert = get_the_title($post_ID);
+            $url = $siteurl . "/?p=" . $post_ID;
+            if ( has_post_thumbnail($post_ID)) {
+                $rawImage = wp_get_attachment_image_src(get_post_thumbnail_id($post_ID));
+                $imageURL = $rawImage[0];
+            } else {
+                $imageURL = false;
+            }
+            roostSendNotification($alert, $url, $imageURL, $appKey, $appSecret);
+		}
+	}
+
+	function roostOverride($post){
+        global $post;
+        if ( 'publish' == $post->post_status ) {
+            $roostCheckHide = true;   
+        }
 		$roostSettings = get_option('roost_settings');
 		$appKey = $roostSettings['appKey'];
         $autoPush = $roostSettings['autoPush'];
-		$roost_page_status = get_post_status(get_the_ID());
-		if((strlen($appKey) > 1) && ($autoPush == 1) && ($roost_page_status == 'auto-draft') || ($roost_page_status == 'draft')){
-		    echo '<div class="misc-pub-section misc-pub-section-last" id="roost-override">'
-		         . '<label><input type="checkbox" value="1" id="roostOverrideCheckbox" name="roostOverride" /> <strong>Do NOT</strong> send notification with <strong>Roost</strong></label>'
-		    .'</div>'
-		    ."<script>jQuery('.save-timestamp').on('click', function() {setTimeout(function(){var text = jQuery('#timestamp').text(); text = text.slice(0, text.indexOf(' ')); if(text === 'Schedule') { jQuery('#roost-override').hide(); jQuery('#roostOverrideCheckbox').prop('checked', true);} else { jQuery('#roost-override').show(); jQuery('#roostOverrideCheckbox').prop('checked', false);}}, 250);});</script>";
+        $pid = get_the_ID();
+        $roostOverrideChecked = get_post_meta($pid, 'roostOverride', true);
+		if(strlen($appKey) > 1 && $autoPush == 1){
+            printf('<div class="misc-pub-section misc-pub-section-last" id="roost-override" %s >', (isset($roostCheckHide)) ? "style='display:none;'":"");
+            printf('<label><input type="checkbox" value="1" id="roostOverrideCheckbox" name="roostOverride" %s />', (!empty($roostOverrideChecked)) ? "checked":"");
+            echo '<strong>Do NOT</strong> send notification with <strong>Roost</strong></label>';
+		    echo '</div>';
 		}
 	}
 	
 	function roostSendNotification($alert, $url, $imageURL, $appKey, $appSecret) {
-		$remoteContent = array(
+        $alert = roostFilterString($alert);
+        $remoteContent = array(
 			'alert' => $alert	
 		);
 		if ($url){
@@ -277,7 +326,8 @@ License: GPL2
 			'appsecret' => $appSecret,
 			'remoteContent' => json_encode($remoteContent)
 		);
-		return roostRemoteRequest($remoteData);
+        $response = roostDecodeData($remoteData);
+        return $response;
 	}
 
 	function roostBar($atts, $content = null) {
@@ -313,6 +363,13 @@ License: GPL2
 		return $roostButton;
 	}
 	
+    function roostDecodeData($remoteData) {
+        $xfer = roostRemoteRequest($remoteData);
+        $nxfer = wp_remote_retrieve_body($xfer);
+        $lxfer = json_decode($nxfer, true); 
+        return $lxfer;
+    }
+
     function getRoostServerSettings($appKey, $appSecret) {
         $remoteData = array(
             'method' => 'POST',
@@ -321,7 +378,8 @@ License: GPL2
             'appsecret' => $appSecret,
             'remoteContent' => ''
         );
-		return json_decode(wp_remote_retrieve_body(roostRemoteRequest($remoteData)), true);	
+        $roostServerSettings = roostDecodeData($remoteData);
+		return $roostServerSettings;	
     }
 
     function getRoostStats($appKey, $appSecret) {
@@ -332,9 +390,16 @@ License: GPL2
             'appsecret' => $appSecret,
             'remoteContent' => ''
         );
-        return json_decode(wp_remote_retrieve_body(roostRemoteRequest($remoteData)), true);
+        $roostServerStats = roostDecodeData($remoteData);
+        return $roostServerStats;
     }
-    
+
+    function roostCompleteLogin($formKeys) {
+        roostUpdateKeys($formKeys);
+        $status = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OS X Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats, and send manual push notifications. If you have questions or need support, just email us at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a>.';
+        return $status;
+    }
+
 	function roostAdminMenuList() {
 		$roostSettings = get_option('roost_settings');
 		if (empty($roostSettings)) {
@@ -350,7 +415,7 @@ License: GPL2
 	    if (isset($_POST['roostlogin'])) {
 			$roostUser = $_POST['roostuserlogin'];
 			$roostPass = $_POST['roostpasslogin'];
-			$logginIntoRoost = json_decode(wp_remote_retrieve_body(roostLogin($roostUser, $roostPass)), true);
+			$logginIntoRoost = roostLogin($roostUser, $roostPass);
 			if ($logginIntoRoost['success'] === true) {
 				roostSaveUsername($roostUser);
 				if (count($logginIntoRoost['apps']) > 1){
@@ -360,14 +425,19 @@ License: GPL2
 						"appKey" => $logginIntoRoost['apps'][0]['key'],
 						"appSecret" => $logginIntoRoost['apps'][0]['secret']
 					);
-					roostUpdateKeys($formKeys);				
-					$status = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OSX Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats about your subscribers, and send manual push notifications to your subscribers.';
+                    
+                    $appKey = $formKeys['appKey'];
+                    $appSecret = $formKeys['appSecret'];
+                    
+                    $roostServerSettings = getRoostServerSettings($appKey, $appSecret);	
+        			$roostStats = getRoostStats($appKey, $appSecret);
+                    $status = roostCompleteLogin($formKeys);
 				}
 			} else {			
 				$status = 'Please check your Email or Username and Password.';
 			}	
 		}
-		
+
 	    if (isset($_POST['roostconfigselect'])) {
 			$roostSelectedSite = $_POST['roostsites'];
 			$roostSite = explode("|", $roostSelectedSite);
@@ -377,10 +447,15 @@ License: GPL2
 				"appKey" => $roostSiteKey,
 				"appSecret" => $roostSiteSecret
 			);
-			roostUpdateKeys($formKeys);
-					$status = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OSX Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats about your subscribers, and send manual push notifications to your subscribers.';
+
+            $appKey = $formKeys['appKey'];
+            $appSecret = $formKeys['appSecret'];
+            
+            $roostServerSettings = getRoostServerSettings($appKey, $appSecret);	
+        	$roostStats = getRoostStats($appKey, $appSecret);
+            $status = roostCompleteLogin($formKeys);
 		}
-	    
+        
 	    if (isset($_POST['clearkey'])) {
 		    $formKeys = array(
 		        "appKey" => "",
@@ -392,12 +467,19 @@ License: GPL2
 		    $status = 'Roost has been disconnected.';
 	    }
 	    
-	    if (isset($_POST['savesettings'])) {
-	        $formData = array(
-	            "autoPush" => $_POST['autoPush']
-	        );
-	        roostUpdateSettings($formData);
-	
+	    if (isset($_POST['savesettings'])) {	
+            if (isset($_POST['autoPush'])) {
+                $formData = array(
+                    "autoPush" => $_POST['autoPush']
+                );
+                roostUpdateSettings($formData);
+            } else {
+                $formData = array(
+                    "autoPush" => false
+                );
+                roostUpdateSettings($formData);
+            }
+
 	        if (isset($_POST['mobilePush'])) {
 				if ($roostServerSettings['roostBarSetting'] != "TOP" || $roostServerSettings['roostBarSetting'] != "BOTTOM") {
 					$remoteContent['roostBarSetting'] = "TOP";
@@ -447,7 +529,7 @@ License: GPL2
                 if (strpos($manualLink, 'http') === false) {
                     $manualLink = 'http://' . $manualLink;
                 }
-                $msgStatus = json_decode(wp_remote_retrieve_body(roostSendNotification($manualText, $manualLink, false, $appKey, $appSecret)), true);
+                $msgStatus = roostSendNotification($manualText, $manualLink, false, $appKey, $appSecret);
                 if ($msgStatus['success'] === true) {
                     $status = 'Message Sent.';
                 } else {
@@ -460,14 +542,15 @@ License: GPL2
 	}
 				
 	function roostLoadScripts() {
-		$roostSettings = get_option('roost_settings');
+        global $roostVersion;
+        $roostSettings = get_option('roost_settings');
 		$appKey = $roostSettings['appKey'];
 		if ($appKey && !is_admin()) {
-			wp_enqueue_script( 'roostjs', ROOST_URL . 'layout/js/roostjs.js', array('jquery'), false, true );
-			wp_localize_script( 'roostjs', 'roostjsParams', array( 'appkey' => $appKey) );
+			wp_enqueue_script( 'roostjs', ROOST_URL . 'layout/js/roostjs.js', array('jquery'), $roostVersion, false );
+			wp_localize_script( 'roostjs', 'pushNotificationsByRoostMe', array( 'appkey' => $appKey) );
 		}
 		if(is_admin()){
-			wp_enqueue_script( 'roostGoogleFont', ROOST_URL . 'layout/js/roostGoogleFont.js', '', false, false );		
+			wp_enqueue_script( 'roostGoogleFont', ROOST_URL . 'layout/js/roostGoogleFont.js', '', $roostVersion, false );		
 		}
 	}
 ?>

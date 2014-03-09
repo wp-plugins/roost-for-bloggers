@@ -504,6 +504,7 @@ input.type-text {
 
 #roostUserLogo img {
     border-radius: 3px;
+    cursor: pointer;
 }
 
 .roost-stats-metric {
@@ -543,4 +544,41 @@ input.type-text {
 
 #roost-time-label {
     font-size: 30px;
+}
+
+#roostManualNoteCount {
+    display: block;
+    position: absolute;
+    right: 11px;
+    top: 5px;
+    font-weight: 700;
+    color: #CCCCCC;
+}
+
+#roostManualNoteCount.roostWarning {
+    color: #D54E21;
+}
+.roostTip {
+    position: absolute;
+    background-color: #ffffff;
+    width: 250px;
+    padding: 10px;
+    color: #666666;
+    font-size: 11px;
+    font-family: 'Open Sans', sans-serif;
+    font-weight: 300;
+    text-align: left;
+    z-index: 10;
+    left: -100px;
+    top: 35px;
+    display: none;
+}
+
+#roostUserLogo img:hover + .roostTip {
+    display: block;
+}
+
+#roostSupportTag {
+    text-align: center;
+    text-decoration: underline;
 }

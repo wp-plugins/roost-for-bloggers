@@ -18,7 +18,11 @@
                         <span id="roostUserLogo">
                             <?php if ($roostServerSettings['hasLogo'] == true) { ?>    
                                 <img src="http://get.roost.me/api/device/logo?appKey=<?php echo($roostSettings['appKey']); ?>" />
+                            <?php } else { ?>
+                                <img src="<?php echo ROOST_URL; ?>layout/images/roost-icon-25.png" />
                             <?php } ?>
+                            <span class="roostTip">This is your Roost account logo. It will be shown to your users at the time of registration and when notifications are sent. You can set it by visiting the Roost dashboard.</span>
+
                         </span>
                         <?php echo $roostSettings['username'] ?>
                     </span>
@@ -43,7 +47,7 @@
 					</div>
 					<div class="roost-primary-heading">
 						<span class="roost-primary-cta">Welcome! Log in to your Roost account below.</span>
-						<span class="roost-secondary-cta">If you don’t have a Roost account <a href="https://get.roost.me/signup?returnURL=<?php echo admin_url('admin.php?page=roost-for-bloggers/roost.php'); ?>&websiteURL=<?php echo site_url(); ?>" target="_blank">sign up for free!</a></span>
+						<span class="roost-secondary-cta">If you don’t have a Roost account <a href="https://get.roost.me/signup?returnURL=<?php echo admin_url('admin.php?page=roost-for-bloggers/roost.php'); ?>&websiteURL=<?php echo site_url(); ?>&source=wpplugin" target="_blank">sign up for free!</a></span>
 					</div>
 		    		<div class="roost-section-content">
 	    				<!--USER NAME-->
@@ -170,7 +174,8 @@
 									<div class="roost-input-text">
 										<div class="roost-label">Notification text:</div>
 										<div class="roost-input-wrapper">
-                                            <input name="manualtext" type="text" class="type-text roost-control-secondary" value="" size="50" />
+                                            <span id="roostManualNoteCount">70</span>
+                                            <input name="manualtext" type="text" class="type-text roost-control-secondary" id="roostManualNote" value="" size="50" />
                                             <span class="roost-input-caption">Enter the text for the notification you would like to send your subscribers.</span>
                                         </div>
 									</div>
@@ -227,7 +232,8 @@ First-time subscribers will be prompted to install the iOS or Android Roost app 
 				<?php } ?>
 				<!--END SETTINGS SECTION-->
 			</form>
-		</div>		
+            <div id="roostSupportTag">Have Questions, Comments, or Need a Hand? Hit us up at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a> We're Here to Help.</div>
+		</div>
 	<script>
 		<?php if(isset($roostSites)){ ?>
 			jQuery(".roost-control-login").attr("disabled", "disabled");
