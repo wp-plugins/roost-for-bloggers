@@ -1,6 +1,6 @@
 === Roost Web Push ===
 Contributors: noticesoftware
-Tags: push, safari push, osx, notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple, news, services
+Tags: push, safari push, osx, notifications, safari push notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple, news, services
 Requires at least: 3.0
 Tested up to: 3.8.1
 Stable tag: 2.0.3
@@ -21,7 +21,9 @@ Push Plugin Features:
 * **Scheduled Post Notifications** - Not posting now? Don't worry. Your alerts will go out when your content posts.
 * **Optional mobile push solution** - Fully supported solution to send push not only to desktop, but mobile devices.
 
-**Free** Roost account included. No setup fees, no surprises, and no limititations on your site visitors.
+**Free** Roost account included. No setup fees, no surprises, and no limitations on your site visitors.
+
+[vimeo http://vimeo.com/88533265]
 
 == Installation ==
 
@@ -60,7 +62,7 @@ To enable mobile push support, check the box. The Roost Header bar, will be inse
 == Frequently Asked Questions ==
 
 = What does Roost For Bloggers cost? =
-**It's free!** No setup fees, no surprises, no limititations on your site visitors or subscribers.
+**It's free!** No setup fees, no surprises, no limitations on your site visitors or subscribers.
 
 = Free? Really? What's the catch? =
 No catch! We believe in providing a great service and making it accessible to everyone. So... It's free. (Up to 1,000,000 messages. If you hit that... We'll need to talk.)
@@ -108,9 +110,9 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Added a Roost Push override on post pages to prevent notification
 * Simplified install process - Plugin no longer creates it's own table
 * Added support for featured images from posts (For new Roost app - Soon in Apple App Store and Google Play)
-* Settings now all controled from server
+* Settings now all controlled from server
 * Added Roost Bar shortcode
-* Fixed characther encoding issue on auto push notifications
+* Fixed character encoding issue on auto push notifications
 
 = 1.1 =
 * Added support for Safari Web Push (Desktop Push Notifications) on OS X Mavericks
