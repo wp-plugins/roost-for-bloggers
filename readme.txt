@@ -1,6 +1,6 @@
 === Roost Web Push ===
 Contributors: noticesoftware
-Tags: push, safari push, osx, notifications, safari push notifications push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple, news, services
+Tags: push, safari push, osx, notifications, safari push notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple, news, services
 Requires at least: 3.0
 Tested up to: 3.8.1
 Stable tag: 2.0.3
