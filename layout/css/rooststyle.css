@@ -355,16 +355,21 @@ input.type-text {
 	position: relative;
 }
 
+#roostStatsDisclaimer {
+    text-align: left;
+    font-size: 11px;
+    position: relative;
+    top: -15px;
+    left: 15px;
+    margin-bottom: -25px;
+}
+
 #rooster input:disabled,
 #rooster select:disabled,
 #rooster textarea:disabled,
 #rooster submit:disabled {
 	background: #d4d7d9;
 	cursor: not-allowed;
-}
-
-.rooster-clear-key {
-/*	font-size: 9px;*/
 }
 
 .roost-input-text {
@@ -459,7 +464,8 @@ input.type-text {
 	padding: 17px 20px;
 	margin: 15px auto;
 	display: block;
-	border-left: 4px solid rgb(226, 83, 81);
+/*	border-left: 4px solid rgb(226, 83, 81); */
+	border-left: 4px solid #7ad03a;
 }
 
 #rooster-status-text {
@@ -546,6 +552,10 @@ input.type-text {
     font-size: 30px;
 }
 
+#roostManualNote {
+	padding: 0 180px 0 10px;
+}
+
 #roostManualNoteCount {
     display: block;
     position: absolute;
@@ -555,7 +565,7 @@ input.type-text {
     color: #CCCCCC;
 }
 
-#roostManualNoteCount.roostWarning {
+#roostManualNoteCountInt.roostWarning {
     color: #D54E21;
 }
 .roostTip {
@@ -581,4 +591,101 @@ input.type-text {
 #roostSupportTag {
     text-align: center;
     text-decoration: underline;
+}
+
+.updated#roostSetupNotice {
+    height: 90px;
+    min-width: 800px;
+    border: none;
+    position: relative;
+    display: block;
+    margin: 15px 0 25px 0;
+    overflow: hidden;
+    background: #e66d6b; /* Old browsers */
+    background: -moz-linear-gradient(left, #e66d6b 0%, #e25351 100%); /* FF3.6+ */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#e66d6b), color-stop(100%,#e25351)); /* Chrome,Safari4+ */
+    background: -webkit-linear-gradient(left, #e66d6b 0%,#e25351 100%); /* Chrome10+,Safari5.1+ */
+    background: -o-linear-gradient(left, #e66d6b 0%,#e25351 100%); /* Opera 11.10+ */
+    background: -ms-linear-gradient(left, #e66d6b 0%,#e25351 100%); /* IE10+ */
+    background: linear-gradient(to right, #e66d6b 0%,#e25351 100%); /* W3C */
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    border-radius: 5px;
+}
+
+#roostNoticeLogo {
+    display: block;
+    float: left;
+    width: 123px;
+    height: 100%;
+    border-right: 1px solid #c45d5b;
+}
+
+#roostNoticeLogo img {
+    width: 75px;
+    top: 26px;
+    left: 18px;
+    position: relative;
+}
+
+#roostNoticeText {
+    display: block;
+    float: left;
+    color: #fff;
+    width: 510px;
+    height: 100%;
+    position: relative;
+    border-left: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+#roostNoticeText p {
+	font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    padding: 17px;
+    margin-left: 14px;
+}
+
+#roostNoticeTarget {
+    width: 155px;
+    display: block;
+    float: left;
+    height: 100%;
+}
+
+a#roostNoticeCTA,
+a#roostNoticeCTA:link,
+a#roostNoticeCTA:active {
+    text-align: center;
+    display: block;
+    color: #fff;
+    width: 96px;
+    height: 22px;
+    background-color: #c24846;
+    border: 1px solid #963836;
+    border-radius: 2px;
+    position: relative;
+    top: 31px;
+    left: 25px;
+    box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    text-decoration: none;
+    outline: 0;
+}
+
+a#roostNoticeCTA:visited {
+    text-decoration: none;
+    color: #fff;
+    outline: 0
+}
+
+#roostNoticeCTAHighlight {
+    display: block;
+    height: 1px;
+    margin-bottom: 2px;
+    width: 100px;
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+a#roostNoticeCTA:hover {
+    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }

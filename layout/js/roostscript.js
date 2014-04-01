@@ -8,15 +8,11 @@ jQuery(document).ready(function($) {
 	})
 
     var roostInput = $('#roostManualNote');
-    var roostCount = $('#roostManualNoteCount');
+    var roostCount = $('#roostManualNoteCountInt');
     var roostLimit = 70;
 
     roostInput.keyup(function() {
         var n = this.value.replace(/{.*?}/g, '').length;
-        if ( n > roostLimit ) {
-            this.value = this.value.substr(0, this.value.length + roostLimit - n);
-            n = roostLimit;
-        }
         if ( n > ( roostLimit - 11 ) ){
             if(!roostCount.hasClass('roostWarning')){
                 roostCount.addClass('roostWarning');   
@@ -26,6 +22,6 @@ jQuery(document).ready(function($) {
                 roostCount.removeClass('roostWarning');   
             }
         }
-        roostCount.text( 70 - n );
+        roostCount.text( 0 + n );
     }).triggerHandler('keyup');    
 });

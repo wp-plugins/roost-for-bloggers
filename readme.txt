@@ -1,9 +1,9 @@
-=== Roost Web Push ===
-Contributors: noticesoftware
-Tags: push, safari push, osx, notifications, safari push notifications, push notifications, alerts, website notifications, web alerts, roost, alert rocket, web push, mobile website push notification, safari web push, desktop push notification, OS X Mavericks, desktop push, safari, OS X, Mavericks, mac, apple, news, services
+=== Roost Web Push for Safari ===
+Contributors: noticesoftware, danstever
+Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.0
 Tested up to: 3.8.1
-Stable tag: 2.0.3
+Stable tag: 2.0.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,7 +11,7 @@ Drive traffic to your website with Safari Mavericks push notifications and Roost
 
 == Description ==
 
-[Roost Web Push](http://roost.me/) provides direct engagement with your readers by sending push notifications to their web browser or mobile device.
+[Roost Web Push for Safari](http://roost.me/) provides direct engagement with your readers by sending push notifications to their web browser or mobile device.
 
 Push Plugin Features:
 
@@ -90,6 +90,15 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 
 == Changelog ==
 
+= 2.0.4 =
+* Changed hard limit to soft character limit on manual notifications
+* Restricted notifications to a "post" post type only
+* Added settings link on plugin page
+* Roost stats now cached to improve admin page performance
+* Fixed bug that caused resending notifications when using "Quick Edit" to modify posts
+* Removed shortcodes
+* Code cleanup
+
 = 2.0.3 =
 * Scheduled Notifications can now Trigger Alerts
 * Fixed Stats Error on First Login
@@ -124,6 +133,9 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+
+= 2.0.4 =
+* Limited Auto Push to 'post' types only. Fixes situation with other plugin's custom post types triggering notifications.
 
 = 2.0.3 =
 * Now with support for Scheduled Notifications! Bam! Oh, and some bugfixes and other cool stuff.
