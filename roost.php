@@ -3,7 +3,7 @@
  * Plugin Name: Roost Web Push
  * Plugin URI: http://www.roost.me/
  * Description: Drive traffic to your website with Safari Mavericks push notifications and Roost.
- * Version: 2.0.4
+ * Version: 2.0.5
  * Author: Roost.me
  * Author URI: http://roost.me
  * License: GPLv2 or later

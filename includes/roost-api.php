@@ -32,6 +32,18 @@ class Roost_API {
         return $lxfer;
     }
     
+    public static function api_check() {
+        $remote_data = array(
+            'method' => 'GET',
+            'remoteAction' => 'app',
+            'appkey' => '',
+            'appsecret' => '',
+            'remoteContent' => ''
+        );
+        $response = self::roost_remote_request($remote_data);
+        return $response;	
+    }
+    
     public static function login($roost_user, $roost_pass){
 		$remote_content = array(
 			'username' => $roost_user,

@@ -2,8 +2,8 @@
 Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.0
-Tested up to: 3.8.1
-Stable tag: 2.0.4
+Tested up to: 3.8.2
+Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,8 +16,8 @@ Drive traffic to your website with Safari Mavericks push notifications and Roost
 Push Plugin Features:
 
 * **Safari Web Push** - Take advantage of web push (Desktop Push Notifications) on OS X Mavericks.
+* **Auto Notifications** - *Now with support for posting via email and from the WordPress mobile app!* We take the work out of it. Automatically send notifications to your readers when creating a new post.
 * **Detailed Analytics** - Real-Time stats straight within your WordPress dashboard.
-* **Auto Notifications** - We take the work out of it. Automatically send notifications to your readers when creating a new post.
 * **Scheduled Post Notifications** - Not posting now? Don't worry. Your alerts will go out when your content posts.
 * **Optional mobile push solution** - Fully supported solution to send push not only to desktop, but mobile devices.
 
@@ -85,10 +85,17 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 
 == Screenshots ==
 
-1. Log in to your Roost Account.
-2. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
+1. Create your Roost Account. (It's Free!)
+2. Log in to your Roost Account.
+3. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
 
 == Changelog ==
+
+= 2.0.5 =
+* Now supports Auto Push when posting from the WordPress mobile app and by email via Jetpack by WordPress.com
+* New first time login screen
+* Roost API check on activation to see if URL is reachable
+* Code cleanup
 
 = 2.0.4 =
 * Changed hard limit to soft character limit on manual notifications
@@ -133,6 +140,9 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+
+= 2.0.5 =
+* Now supports Auto Push when posting from the WordPress mobile app and by email via Jetpack by WordPress.com
 
 = 2.0.4 =
 * Limited Auto Push to 'post' types only. Fixes situation with other plugin's custom post types triggering notifications.

@@ -1,12 +1,18 @@
 #rooster a,
 #rooster a:link,
-#rooster a:visited {
+#rooster a:visited,
+#rooster .a.roost-signup {
 	text-decoration: none;
 	color: rgb(46, 162, 204);
 }
 
-#rooster a:hover {
+#rooster a:hover,
+#rooster .roost-signup:hover {
 	text-decoration: underline;
+}
+
+#rooster .roost-signup {
+    cursor: pointer;
 }
 
 #adminmenu li.current .wp-menu-image img,
@@ -148,7 +154,7 @@ input.type-text {
 	min-height: 1200px;
 }
 
-.roost-primary-wrapper {
+#roost-signin-wrapper {
 	background: #fff;
 	width: 366px;
 	margin: 100px auto;
@@ -189,14 +195,14 @@ input.type-text {
 	position: relative;
 }
 
-.roost-primary-wrapper input.type-text {
+#roost-signin-wrapper input.type-text {
 	width: 214px;
 	height: 26px;
 	float: right;
 	margin-top: -2px;
 }
 
-.roost-primary-wrapper select {
+#roost-signin-wrapper select {
 	width: 100%;
     background: #fff url('../images/drop-down-arrows.png') no-repeat 340px center !important;	
 }
@@ -590,7 +596,6 @@ input.type-text {
 
 #roostSupportTag {
     text-align: center;
-    text-decoration: underline;
 }
 
 .updated#roostSetupNotice {
@@ -688,4 +693,88 @@ a#roostNoticeCTA:visited {
 
 a#roostNoticeCTA:hover {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+#roost-signup-wrapper {
+    width: 520px;
+    height: 265px;
+    margin: 100px auto 50px;
+    padding: 80px;
+    color: #fff;
+    background: rgb(230,109,107);
+    background: -moz-linear-gradient(top,  rgb(230,109,107) 0%, rgb(226,89,87) 100%);
+    background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(230,109,107)), color-stop(100%,rgb(226,89,87)));
+    background: -webkit-linear-gradient(top,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
+    background: -o-linear-gradient(top,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
+    background: -ms-linear-gradient(top,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
+    background: linear-gradient(to bottom,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
+}
+
+#roost-signup-wrapper h2 {
+    color: #fff;
+    font-size: 35px;
+    font-weight: 300;
+    margin: 40px auto 23px;
+}
+
+#roost-signup-wrapper p {
+    font-size: 16px;
+    font-weight: 300;
+}
+
+#roost-bottom-right {
+    position: absolute;
+    bottom: 11px;
+    color: #f2b1b1;
+    font-size: 15px;
+    font-weight: 300;
+    right: 42px;
+}
+
+#roost-bottom-right .roost-signup {
+    color: #fff;
+    font-weight: 600;
+    margin-left: 11px;
+}
+
+#roost-signup-inner {
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+#roost-create-account {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    display: inline-block;
+    background-color: #883736;
+    text-align: center;
+    border-radius: 5px;
+    font-weight: 600;
+    padding: 10px 10px 5px;
+    height: 25px;
+    color: #fff !important;
+    text-decoration: none !important;
+    width: 163px;
+    font-size: 14px;
+    text-indent: 13px;
+}
+
+#roost-create-account:hover {
+    background-color: #aa4543;
+}
+
+#roost-create-account img {
+    display: inline-block;
+    position: relative;
+    top: 1px;
+    left: -12px;
+}
+
+#roost-api-error {
+    padding: 12px 10px;
+    position: relative;
+    top: 75px;
 }

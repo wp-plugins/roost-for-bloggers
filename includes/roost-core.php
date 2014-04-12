@@ -2,7 +2,7 @@
 
 class Roost {
     
-    public static $roost_version = "2.0.4";
+    public static $roost_version = "2.0.5";
     
     public static function site_url() {
         return get_option( 'siteurl' );   
@@ -41,7 +41,7 @@ class Roost {
 			$custom_bar_text = $result->custombartext;
 		}		
 		
-		if (!empty($app_key)) {
+		if ( !empty( $app_key ) ) {
 			$roost_settings = array(
 				"appKey" => $app_key,
 				"appSecret" => $app_secret,
@@ -52,9 +52,9 @@ class Roost {
 			
 			add_option('roost_settings', $roost_settings);		
 			
-			if ($app_usage == 1) {
+			if ( $app_usage == 1 ) {
 				$app_usage = 'TOP';
-			} elseif ($app_usage == 2) {
+			} elseif ( $app_usage == 2 ) {
 				$app_usage = 'BOTTOM';
 			} else {
 				$app_usage = 'OFF';
@@ -64,7 +64,7 @@ class Roost {
 				'roostBarSetting' => $app_usage
 			);
 			
-			if (strlen($custom_bar_text) > 0) {
+			if ( strlen( $custom_bar_text ) > 0 ) {
 				$remote_content['roostBarText'] = $custom_bar_text;
 			}
 			
@@ -73,13 +73,13 @@ class Roost {
 				'remoteAction' => 'app',
 				'appkey' => $app_key,
 				'appsecret' => $app_secret,
-				'remoteContent' => json_encode($remote_content)
+				'remoteContent' => json_encode( $remote_content )
 			);
-			Roost_API::roost_remote_request($remote_data);		
+			Roost_API::roost_remote_request( $remote_data );		
 		}
 
 		$structure = "drop table if exists $table";
-		$wpdb->query($structure);
+		$wpdb->query( $structure );
 		
 		self::install();
 	}
@@ -87,7 +87,7 @@ class Roost {
 	public static function install() {
 		$roost_settings = self::roost_settings();
         
-		if (empty($roost_settings)) {
+		if ( empty( $roost_settings ) ) {
 			$roost_settings = array(
 				"appKey" => '',
 				"appSecret" => '',
@@ -108,7 +108,7 @@ class Roost {
     }
 
     public function activate_redirect() {
-        if (get_option('roost_do_redirect', false)) {
+        if ( get_option('roost_do_redirect', false) ) {
             delete_option('roost_do_redirect');
             if( !isset( $_GET['activate-multi'] ) ){
                 wp_redirect( admin_url( 'admin.php?page=roost-for-bloggers/includes/roost-core.php' ) );
@@ -123,8 +123,7 @@ class Roost {
 	}
 
     public function add_actions() {
-        add_action( 'publish_post', array( $this, 'build_note' ) );
-        add_action( 'future_to_publish', array( $this, 'build_scheduled_note' ) );
+        add_action( 'transition_post_status', array( $this, 'build_note' ), 10, 3 );
         add_action( 'post_submitbox_misc_actions', array( $this, 'note_override' ) );
         add_action( 'wp_head', array( $this, 'byline' ), 1 );
         add_action( 'save_post', array( $this, 'save_post_meta_roost' ) );
@@ -189,8 +188,15 @@ class Roost {
             </div>
 		</div>    
     <?php
+        } else if ( !$app_key && ( $hook_suffix === $roost_page ) ) {
+            $api_check = Roost_API::api_check();
+            if ( is_wp_error( $api_check ) ) {
+    ?>
+        <div class="error" id="roost-api-error">There was a problem accessing the <strong>Roost API</strong>. You may not be able to log in. Contact Roost support at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a> for more information.</div>
+    <?php
+            }
         }
-    }
+    }    
 
 	public function admin_menu_add(){
 	    add_menu_page(
@@ -254,58 +260,42 @@ class Roost {
         return html_entity_decode($string, ENT_QUOTES);
     }
 
-    public function build_note( $post_id ){
-        if ( $_POST['post_type'] === 'post' && isset( $_POST['original_post_status'] ) ) {
-            $roost_settings = self::roost_settings();
-            $app_key = $roost_settings['appKey'];
-            $app_secret = $roost_settings['appSecret'];
-            $auto_push = $roost_settings['autoPush'];
-            if (isset($_POST['roostOverride'])) {
-                $override = $_POST['roostOverride'];
-            }
-            if ($auto_push == 1 && strlen($app_key) > 0 && empty($override)) {
-                if( ( $_POST['post_status'] == 'publish' ) && ( $_POST['original_post_status'] != 'publish' ) ) {
-                    $alert = get_the_title($post_id);
-                    if( $alert === null ) {
-                        $alert = "";  
-                    }
-                    $url = self::site_url() . "/?p=" . $post_id;
-                    if ( has_post_thumbnail($post_id)) {
-                        $raw_image = wp_get_attachment_image_src(get_post_thumbnail_id($post_id));
-                        $image_url = $raw_image[0];
-                    } else {
-                        $image_url = false;
-                    }
-                    Roost_API::send_notification($alert, $url, $image_url, $app_key, $app_secret);
-                }
-            }
-        }
-	}
+    public function build_note( $new_status, $old_status, $post ) {
+		if ( $new_status != $old_status && !empty( $post ) ) {
+		    $post_type = get_post_type( $post );
+		    if ( $post_type === 'post' && $new_status === 'publish' ) {
+				$post_id = $post->ID;
+				$roost_settings = self::roost_settings();
+				$app_key = $roost_settings['appKey'];
+				$app_secret = $roost_settings['appSecret'];
+				$auto_push = $roost_settings['autoPush'];
 
-	public function build_scheduled_note( $post ){
-        if ( $post->post_type === 'post' ) {
-            $post_id = $post->ID;
-            $roost_settings = self::roost_settings();
-            $app_key = $roost_settings['appKey'];
-            $app_secret = $roost_settings['appSecret'];
-            $auto_push = $roost_settings['autoPush'];
-            $override = get_post_meta($post_id, 'roostOverride', true);
-            if ($auto_push == 1 && strlen($app_key) > 0 && empty($override)) {
-                $alert = get_the_title($post_id);
-                if( $alert === null ) {
-                    $alert = "";  
-                }
-                $url = self::site_url() . "/?p=" . $post_id;
-                if ( has_post_thumbnail($post_id)) {
-                    $raw_image = wp_get_attachment_image_src(get_post_thumbnail_id($post_id));
-                    $image_url = $raw_image[0];
-                } else {
-                    $image_url = false;
-                }
-                Roost_API::send_notification($alert, $url, $image_url, $app_key, $app_secret);
-            }
+				if ( $auto_push == 1 && !empty( $app_key ) ) {	
+					if ( ( $new_status === 'publish' ) && ( $old_status === 'future' ) ) {
+						$override = get_post_meta($post_id, 'roostOverride', true);
+					} else {
+						if (isset($_POST['roostOverride'])) {
+						    $override = $_POST['roostOverride'];
+						}
+					}
+					if (empty($override)) {
+						$alert = get_the_title( $post_id );
+						if( $alert === null ) {
+						    $alert = "";  
+						}
+						$url = wp_get_shortlink( $post_id );
+						if ( has_post_thumbnail($post_id)) {
+						    $raw_image = wp_get_attachment_image_src(get_post_thumbnail_id($post_id));
+						    $image_url = $raw_image[0];
+						} else {
+						    $image_url = false;
+						}
+						Roost_API::send_notification($alert, $url, $image_url, $app_key, $app_secret);
+					}
+				}
+			}
         }
-	}
+    }
 
 	public function note_override(){
         global $post;
@@ -318,24 +308,24 @@ class Roost {
             $auto_push = $roost_settings['autoPush'];
             $pid = get_the_ID();
             $checked = get_post_meta($pid, 'roostOverride', true);
-            if(strlen($app_key) > 1 && $auto_push == 1){
-                printf('<div class="misc-pub-section misc-pub-section-last" id="roost-override" %s >', (isset($check_hidden)) ? "style='display:none;'":"");
-                printf('<label><input type="checkbox" value="1" id="roostOverrideCheckbox" name="roostOverride" %s />', (!empty($checked)) ? "checked":"");
+            if( !empty( $app_key ) && $auto_push == 1 ){
+                printf('<div class="misc-pub-section misc-pub-section-last" id="roost-override" %s >', ( isset( $check_hidden ) ) ? "style='display:none;'":"" );
+                printf('<label><input type="checkbox" value="1" id="roostOverrideCheckbox" name="roostOverride" %s />', ( !empty( $checked ) ) ? "checked":"" );
                 echo '<strong>Do NOT</strong> send notification with <strong>Roost</strong></label>';
                 echo '</div>';
             }
         }
 	}
 	
-    public static function complete_login($form_keys) {
-        self::update_keys($form_keys);
+    public static function complete_login( $form_keys ) {
+        self::update_keys( $form_keys );
         $status = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OS X Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats, and send manual push notifications. If you have questions or need support, just email us at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a>.';
         return $status;
     }
 
 	public static function admin_menu_page() {
 		$roost_settings = self::roost_settings();
-		if (empty($roost_settings)) {
+		if ( empty( $roost_settings ) ) {
 			self::upgrade();
         }        
 		$app_key = $roost_settings['appKey'];
@@ -345,13 +335,13 @@ class Roost {
 			$roost_stats = Roost_API::get_stats($app_key, $app_secret);
         }
 
-	    if (isset($_POST['roostlogin'])) {
+	    if ( isset( $_POST['roostlogin'] ) ) {
 			$roost_user = $_POST['roostuserlogin'];
 			$roost_pass = $_POST['roostpasslogin'];
 			$logged_in = Roost_API::login($roost_user, $roost_pass);
-			if ($logged_in['success'] === true) {
-				self::save_username($roost_user);
-				if (count($logged_in['apps']) > 1){
+			if ( $logged_in['success'] === true ) {
+				self::save_username( $roost_user );
+				if ( count( $logged_in['apps'] ) > 1 ){
 					$roost_sites = $logged_in['apps'];
 				} else {
 					$form_keys = array(
@@ -362,18 +352,18 @@ class Roost {
                     $app_key = $form_keys['appKey'];
                     $app_secret = $form_keys['appSecret'];
                     
-                    $roost_server_settings = Roost_API::get_server_settings($app_key, $app_secret);	
-        			$roost_stats = Roost_API::get_stats($app_key, $app_secret);
-                    $status = self::complete_login($form_keys);
+                    $roost_server_settings = Roost_API::get_server_settings( $app_key, $app_secret );	
+        			$roost_stats = Roost_API::get_stats( $app_key, $app_secret );
+                    $status = self::complete_login( $form_keys );
 				}
 			} else {
 				$status = 'Please check your Email or Username and Password.';
 			}
 		}
 
-	    if (isset($_POST['roostconfigselect'])) {
+	    if ( isset( $_POST['roostconfigselect'] ) ) {
 			$selected_site = $_POST['roostsites'];
-			$site = explode("|", $selected_site);
+			$site = explode( "|", $selected_site );
 			$site_key = $site[0];
 			$site_secret = $site[1];
 			$form_keys = array(
@@ -389,7 +379,7 @@ class Roost {
             $status = self::complete_login($form_keys);
 		}
         
-	    if (isset($_POST['clearkey'])) {
+	    if ( isset( $_POST['clearkey'] ) ) {
 		    $form_keys = array(
 		        "appKey" => "",
 		        "appSecret" => ""
@@ -400,39 +390,39 @@ class Roost {
 		    $status = 'Roost has been disconnected.';
 	    }
 	    
-	    if (isset($_POST['savesettings'])) {	
-            if (isset($_POST['autoPush'])) {
+	    if ( isset( $_POST['savesettings'] ) ) {	
+            if ( isset( $_POST['autoPush'] ) ) {
                 $form_data = array(
                     "autoPush" => $_POST['autoPush']
                 );
-                self::update_settings($form_data);
+                self::update_settings( $form_data );
             } else {
                 $form_data = array(
                     "autoPush" => false
                 );
-                self::update_settings($form_data);
+                self::update_settings( $form_data );
             }
             
-            Roost_API::save_remote_settings($app_key, $app_secret, $roost_server_settings, $_POST);
-			$roost_server_settings = Roost_API::get_server_settings($app_key, $app_secret);	
-			$roost_stats = Roost_API::get_stats($app_key, $app_secret);
+            Roost_API::save_remote_settings( $app_key, $app_secret, $roost_server_settings, $_POST );
+			$roost_server_settings = Roost_API::get_server_settings( $app_key, $app_secret );	
+			$roost_stats = Roost_API::get_stats( $app_key, $app_secret );
 	        $status = 'Settings Saved.';
 	    }
 		
-	    if (isset($_POST['manualpush'])) {
+	    if ( isset( $_POST['manualpush'] ) ) {
 	        $manual_text = $_POST['manualtext'];
 	        $manual_link = $_POST['manuallink'];
-			if ($manual_text == "" || $manual_link == "") {
+			if ( $manual_text == "" || $manual_link == "" ) {
 				$status = 'Your message or link can not be blank.';
             } else {
                 $roost_settings = self::roost_settings();
                 $app_key = $roost_settings['appKey'];
                 $app_secret = $roost_settings['appSecret'];
-                if (strpos($manual_link, 'http') === false) {
+                if ( strpos( $manual_link, 'http' ) === false ) {
                     $manual_link = 'http://' . $manual_link;
                 }
-                $msg_status = Roost_API::send_notification($manual_text, $manual_link, false, $app_key, $app_secret);
-                if ($msg_status['success'] === true) {
+                $msg_status = Roost_API::send_notification( $manual_text, $manual_link, false, $app_key, $app_secret );
+                if ( $msg_status['success'] === true ) {
                     $status = 'Message Sent.';
                 } else {
                     $status = 'Message failed. Please make sure you have a valid URL.';
