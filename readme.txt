@@ -2,7 +2,7 @@
 Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.0
-Tested up to: 3.8.2
+Tested up to: 3.9
 Stable tag: 2.0.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
