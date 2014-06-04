@@ -10,7 +10,7 @@ class Roost {
 		self::install();
 	}	
 
-    public static $roost_version = '2.1';
+    public static $roost_version = '2.1.1';
         
     public static function site_url() {
         return get_option( 'siteurl' );
@@ -113,17 +113,9 @@ class Roost {
 		$roost_settings = self::roost_settings();
 		$app_key = $roost_settings['appKey'];
 		if ($app_key && !is_admin()) {
-        ?>
-        <script>
-            if( typeof _roost !== 'undefined' ) {
-            <?php
-                wp_enqueue_script( 'roostjs', '//get.roost.me/js/roost.js#async', '', self::$roost_version, false );
-                wp_enqueue_script( 'roostvars', ROOST_URL . 'layout/js/roost_vars.js#async', array( 'roostjs' ), self::$roost_version, false );
-        		wp_localize_script( 'roostvars', 'pushNotificationsByRoostMe', array( 'appkey' => $app_key) );
-            ?>
-            }
-        </script>
-        <?php  
+            wp_enqueue_script( 'roostjs', '//get.roost.me/js/roost.js#async', '', self::$roost_version, false );
+            wp_enqueue_script( 'roostvars', ROOST_URL . 'layout/js/roost_vars.js#async', array( 'roostjs' ), self::$roost_version, false );
+            wp_localize_script( 'roostvars', 'pushNotificationsByRoostMe', array( 'appkey' => $app_key) );
 		}
 	}
 

@@ -66,7 +66,7 @@
                                         Welcome! Creating an account only takes a few seconds and will give you access 
                                         to additional features like our analytics dashboard at roost.me
                                     </p>
-                                    <a href="<?php echo( $roost::registration_url() ); ?>" id="roost-create-account" class="roost-signin-link"><img src="<?php echo ROOST_URL; ?>layout/images/roost-arrow-white.png" />Create an account</a>
+                                    <a href="<?php echo( Roost::registration_url() ); ?>" id="roost-create-account" class="roost-signin-link"><img src="<?php echo ROOST_URL; ?>layout/images/roost-arrow-white.png" />Create an account</a>
                                     <div id="roost-bottom-right">Already have an account? <span class="roost-signup">Sign in</span></div>
                                 </div>
                             </div>
@@ -77,7 +77,7 @@
                             </div>
                             <div class="roost-primary-heading">
                                 <span class="roost-primary-cta">Welcome! Log in to your Roost account below.</span>
-                                <span class="roost-secondary-cta">If you don’t have a Roost account <a href="<?php echo( $roost::registration_url() ); ?>" class="roost-signin-link">sign up for free!</a></span>
+                                <span class="roost-secondary-cta">If you don’t have a Roost account <a href="<?php echo( Roost::registration_url() ); ?>" class="roost-signin-link">sign up for free!</a></span>
                             </div>
                             <div class="roost-section-content">
                                 <!--USER NAME-->
@@ -123,15 +123,15 @@
                                     Or sign in with
                                 </div>
                                 <div class="roost-sso-option">
-                                    <a href="<?php echo( $roost::login_url( 'FACEBOOK' ) ); ?>" class="roost-sso-link">
+                                    <a href="<?php echo( Roost::login_url( 'FACEBOOK' ) ); ?>" class="roost-sso-link">
                                         <span id="roost-sso-facebook" class="roost-plugin-image">Facebook</span>
                                     </a>
                                 </div>
                                 <div class="roost-sso-option">  
-                                    <a href="<?php echo( $roost::login_url( 'TWITTER' ) ); ?>" class="roost-sso-link"><span id="roost-sso-twitter" class="roost-plugin-image">Twitter</span></a>
+                                    <a href="<?php echo( Roost::login_url( 'TWITTER' ) ); ?>" class="roost-sso-link"><span id="roost-sso-twitter" class="roost-plugin-image">Twitter</span></a>
                                 </div>
                                 <div class="roost-sso-option">
-                                    <a href="<?php echo( $roost::login_url( 'GOOGLE' ) ); ?>" class="roost-sso-link"><span id="roost-sso-google" class="roost-plugin-image">Google</span></a>
+                                    <a href="<?php echo( Roost::login_url( 'GOOGLE' ) ); ?>" class="roost-sso-link"><span id="roost-sso-google" class="roost-plugin-image">Google</span></a>
                                 </div>
                             </div>
                         </div>
