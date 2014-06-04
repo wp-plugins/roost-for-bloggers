@@ -1,11 +1,28 @@
-jQuery(document).ready(function($) {
-    $('.roost-section-expansion').on('click', function() {
-		$(this).toggleClass('collapsed');
-		$(this).parent().find('.roost-section-content').slideToggle(200);
-	});
-	$('#rooster-status-close').click(function() {
-		$('#rooster-status').css('display', 'none');
-	})
+(function($) {
+    var $roostAdmin = $('.roost-admin-section');    
+    $roostAdmin.hide();
+    $('#roost-activity').show();
+        
+    $('#roost-tabs li').on('click', function(){
+        $(this).parent().find('.active').removeClass('active');
+        $(this).addClass('active');
+        var index = $(this).index();
+        if(index === 0) {
+            $roostAdmin.hide();
+            $('#roost-activity').show();
+        } else if (index === 1) {
+            $roostAdmin.hide();
+            $('#roost-manual-push').show();
+        } else {
+            $roostAdmin.hide();            
+            $('#roost-settings').show();
+        }
+    });
+        
+    $('.chart-range-toggle, .chart-metric-toggle').on('click', function(){
+        $(this).parent().find('.active').removeClass('active');
+        $(this).addClass('active');
+    });
 
     var roostInput = $('#roostManualNote');
     var roostCount = $('#roostManualNoteCountInt');
@@ -23,5 +40,5 @@ jQuery(document).ready(function($) {
             }
         }
         roostCount.text( 0 + n );
-    }).triggerHandler('keyup');    
-});
+    }).triggerHandler('keyup');
+})(jQuery);

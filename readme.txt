@@ -2,8 +2,8 @@
 Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.0
-Tested up to: 3.9
-Stable tag: 2.0.5
+Tested up to: 3.9.1
+Stable tag: 2.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,15 +11,16 @@ Drive traffic to your website with Safari Mavericks push notifications and Roost
 
 == Description ==
 
-[Roost Web Push for Safari](http://roost.me/) provides direct engagement with your readers by sending push notifications to their web browser or mobile device.
+[Browser Push by Roost](http://roost.me/) - Fundamentally changing the way people consume content on the web.
 
 Push Plugin Features:
 
 * **Safari Web Push** - Take advantage of web push (Desktop Push Notifications) on OS X Mavericks.
+* **bbPress Subscriptions** - Allows site visitors to subscribe to forums, topics, or individual messages when posting replies.
+* **Detailed Analytics** - *Charts* with detailed metrics about your visitors straight to your WordPress dashboard.
 * **Auto Notifications** - *Now with support for posting via email and from the WordPress mobile app!* We take the work out of it. Automatically send notifications to your readers when creating a new post.
-* **Detailed Analytics** - Real-Time stats straight within your WordPress dashboard.
+* **Manual Post Mode** - Send notifications for individual posts when creating. Just check the box.
 * **Scheduled Post Notifications** - Not posting now? Don't worry. Your alerts will go out when your content posts.
-* **Optional mobile push solution** - Fully supported solution to send push not only to desktop, but mobile devices.
 
 **Free** Roost account included. No setup fees, no surprises, and no limitations on your site visitors.
 
@@ -44,8 +45,14 @@ Push Plugin Features:
 **Safari Web Push**
 To use Safari Web Push, simply activate the *Roost for Bloggers* plugin. When your site is viewed in a push-enabled browser, the browser will prompt for permission. No additional setup is needed.
 
+**bbPress**
+With the bbPress extension for Roost, an additional subscribe option will appear next to the default bbPress subscription links. (This does NOT replace traditional subscription methods, only adds a new browser push channel.) Options include Forum subscriptions, Topic subscriptions, and subscribing to your individual posts. Notifications are sent about new content **only** to the visitors that have subscribed to the forum, topic, or post.
+
 **Auto Push**
 Auto Push is what makes this plugin stellar. When you create a new post, your post's title, link, and featured image (if one is attached) will be sent to all of your subscribed readers. That's it. Really. You don't have to do anything else. (It works just like magic.) When enabled, an auto push override check box is also placed on your post's admin page. If for some reason you do not want a notification to go out for that post, just check the box when publishing.
+
+**Manual Post Mode**
+With *Auto Push* disabled, a checkbox will appear just above the Publish button on your post page. Simply check the box *Send Notification with Roost* and a notification will be sent when publishing.
 
 **Send Manual Alert**
 You can send a manual alert to all subscribed users by entering your message text in the "Notification Text" box and a link in the "Notification Link" box.
@@ -54,10 +61,7 @@ You can send a manual alert to all subscribed users by entering your message tex
 When checked, your site will automatically receive the newest (and coolest) features from Roost as we roll them out. (Like Chrome Web Push. *cough*)
 
 **Roost Analytics & Roost JS**
-Detailed metrics are provided in the dashboard. These metrics include subscribers, notifications sent, average time on site, and total page views.
-
-**Mobile Push Support**
-To enable mobile push support, check the box. The Roost Header bar, will be inserted onto your page.
+Detailed metrics are provided in the dashboard. These metrics include subscribes, notifications sent, reads, total page views, and more.
 
 == Frequently Asked Questions ==
 
@@ -90,6 +94,20 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 3. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
 
 == Changelog ==
+
+= 2.1 =
+* Added special support for bbPress subscriptions
+* Charts!!! Lots of Charts...
+* Plugin redesign - Uses tabs to organize sections
+* Changed how the Roost JS script is loaded - Now loading asynchronously
+* Included option to send push notifications when publishing posts without using the "Auto Push" feature
+* Simplified account creation (in the plugin and on Roost website) and included uploading a logo and naming your site - Auto-login on return
+* Added support for signing into the plugin with Facebook, Twitter, and Google+ (SSO)
+* Removed upgrade path from v1.0 - Should not impact anyone at this point
+* Changed logo and username by log out (in the top right corner) to account email - Context makes more sense with multi-config accounts
+* Fixed bug that removed Notification Override setting when doing a Quick Edit
+* Put in null check when sending notifications - Prevents sending null alert with can cause errors
+* Code cleanup
 
 = 2.0.5 =
 * Now supports Auto Push when posting from the WordPress mobile app and by email via Jetpack by WordPress.com
@@ -140,6 +158,9 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+
+= 2.1 =
+* Charts and Graphs! bbPress support! Plugin redesign! Other Major Updates! Does it get any better?
 
 = 2.0.5 =
 * Now supports Auto Push when posting from the WordPress mobile app and by email via Jetpack by WordPress.com
