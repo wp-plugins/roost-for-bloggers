@@ -545,41 +545,13 @@ input.type-text {
 #roostManualNoteCountInt.roostWarning {
     color: #D54E21;
 }
-.roostTip,
-#roostTipNotification {
-    position: absolute;
-    background-color: #ffffff;
-    width: 250px;
-    padding: 10px;
-    color: #666666;
-    font-size: 11px;
-    font-family: 'Open Sans', sans-serif;
-    font-weight: 300;
-    text-align: left;
-    z-index: 10;
-    top: 35px;
-    display: none;
-}
-
-.roostTip {
-    left: -100px;
-}
-
-#roostTipNotification {
-    right: -75px;
-    top: 205px;
-    border: 1px solid #daddde;
-}
-
-#manualpush:hover + #roostTipNotification {
-    display: block;
-}
 
 #roostSupportTag {
     text-align: center;
 }
 
-.updated#roostSetupNotice {
+.updated#roostSetupNotice,
+.updated#roost-first-time-setup {
     height: 90px;
     min-width: 800px;
     border: none;
@@ -596,6 +568,26 @@ input.type-text {
     background: linear-gradient(to right, #e66d6b 0%,#e25351 100%); /* W3C */
     box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
     border-radius: 5px;
+}
+
+.updated#roost-first-time-setup h3,
+.updated#roost-first-time-setup h4 {
+    color: #ffffff;
+}
+
+.updated#roost-first-time-setup {
+    margin: 25px auto;
+}
+
+.updated#roost-first-time-setup h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 22px 0 -10px 0;
+}
+
+.updated#roost-first-time-setup h4 {
+    font-size: 14px;
+    font-weight: 300;
 }
 
 #roostNoticeLogo {
@@ -628,6 +620,12 @@ input.type-text {
     font-size: 14px;
     padding: 17px;
     margin-left: 14px;
+}
+
+#roost-first-time-setup #roostNoticeText {
+    border: 0;
+    width: auto;
+    padding-left: 35px;
 }
 
 #roostNoticeTarget {
@@ -674,6 +672,10 @@ a#roostNoticeCTA:visited {
 
 a#roostNoticeCTA:hover {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
+}
+
+#roost-first-time-setup #roostNoticeTarget {
+    float: right;
 }
 
 #roost-signup-wrapper {
@@ -960,6 +962,30 @@ a#roostNoticeCTA:hover {
     background-color: #fafafa;
     position: relative;
     z-index: 50;
+}
+
+#roost-curtain {
+    height: 100%;
+    display: inline-block;
+    position: absolute;
+    background: #fafafa;
+    width: 100%;
+    top: 0;
+    left: 0;
+}
+
+#roost-curtain-notice {
+    margin: 0 auto;
+    position: relative;
+    top: 100px;
+    background: #e4e4e4;
+    color: #666666;
+    border-radius: 15px;
+    padding: 10px 0 25px;
+    height: 5px;
+    text-align: center;
+    width: 375px;
+    opacity: 0.8;
 }
 
 #roost-recent-activity {

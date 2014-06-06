@@ -10,7 +10,7 @@ class Roost {
 		self::install();
 	}	
 
-    public static $roost_version = '2.1.1';
+    public static $roost_version = '2.1.2';
         
     public static function site_url() {
         return get_option( 'siteurl' );
@@ -92,6 +92,8 @@ class Roost {
         add_filter( 'clean_url', array( $this, 'add_async' ), 2, 1 );
         add_action( 'wp_ajax_graph_reload', array( $this, 'graph_reload' ) );
         add_action( 'wp_ajax_nopriv_graph_reload', array( $this, 'graph_reload' ) );
+        add_action( 'wp_ajax_subs_check', array( $this, 'subs_check' ) );
+        add_action( 'wp_ajax_nopriv_subs_check', array( $this, 'subs_check' ) );
         
         if ( is_admin() ) {
             add_filter( 'plugin_action_links_roost-for-bloggers/roost.php', array( $this, 'add_action_links' ) );
@@ -335,7 +337,8 @@ class Roost {
 
         if ( !empty( $form_keys ) ) {
             self::update_keys( $form_keys );
-            $response['status'] = '<span class="roost-os-bold">Welcome to Roost!</span> The plugin is up and running and visitors to your site using Safari on OS X Mavericks are currently being prompted to subscribe for push notifications. Once you have subscribers you\'ll be able see recent activity, all-time stats, and send manual push notifications. If you have questions or need support, just email us at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a>.';
+            $response['status'] = true;
+            $response['firstTime'] = true;
             $response['server_settings'] = Roost_API::get_server_settings( $form_keys['appKey'], $form_keys['appSecret'] );	
             $response['stats'] = Roost_API::get_stats( $form_keys['appKey'], $form_keys['appSecret'] );
             self::admin_scripts();
@@ -361,6 +364,16 @@ class Roost {
         die();                
     }
     
+    public function subs_check() {
+        $roost_settings = self::roost_settings();
+        $app_key = $roost_settings['appKey'];
+        $app_secret = $roost_settings['appSecret'];
+        $roost_stats = Roost_API::get_stats( $app_key, $app_secret );
+        $roost_subs = json_encode( $roost_stats['registrations'] );
+        echo $roost_subs;
+        die();
+    }
+
 	public static function admin_menu_page() {
         $roost_settings = self::roost_settings();
 
@@ -381,7 +394,7 @@ class Roost {
             $roost_token = urldecode($roost_token);
             $logged_in = Roost_API::login( null, null, $roost_token );
             $response = self::complete_login( $logged_in, null );
-            $status = $response['status'];
+            $first_time = $response['firstTime'];
             $roost_server_settings = $response['server_settings'];	
             $roost_stats = $response['stats'];
         }
@@ -394,7 +407,11 @@ class Roost {
             if( empty( $response['status'] ) ) {
                 $roost_sites = $response;
             } else {
-                $status = $response['status'];
+                if( !empty( $response['firstTime'] ) ) {
+                    $first_time = $response['firstTime'];
+                } else {
+                    $status = $response['status'];
+                }
                 $roost_server_settings = $response['server_settings'];	
                 $roost_stats = $response['stats'];
             }
@@ -404,7 +421,7 @@ class Roost {
             $selected_site = $_POST['roostsites'];
             $site = explode( '|', $selected_site );
             $response = self::complete_login( null, $site );
-            $status = $response['status'];
+            $first_time = $response['firstTime'];
             $roost_server_settings = $response['server_settings'];	
             $roost_stats = $response['stats'];
 		}

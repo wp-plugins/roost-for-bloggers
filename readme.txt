@@ -3,7 +3,7 @@ Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.0
 Tested up to: 3.9.1
-Stable tag: 2.1.1
+Stable tag: 2.1.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -95,6 +95,10 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 
 == Changelog ==
 
+= 2.1.2 =
+* Fixed bug that may have prevented new sites to Roost from being able to send manual notifications from the dashboard
+* Fixed bug with charts not loading correct data on tab click
+
 = 2.1.1 =
 * Fixed bug that prevented Roost admin screen from showing in PHP versions older than 5.3.0
 * Some more code cleanup
@@ -162,6 +166,8 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+= 2.1.2 =
+* Fixed a bug when sending manual notifications from the dashboard and with charts
 
 = 2.1.1 =
 * Fixed bug that prevented Roost admin screen from showing in PHP versions older than 5.3.0

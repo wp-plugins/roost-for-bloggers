@@ -18,11 +18,6 @@
             $('#roost-settings').show();
         }
     });
-        
-    $('.chart-range-toggle, .chart-metric-toggle').on('click', function(){
-        $(this).parent().find('.active').removeClass('active');
-        $(this).addClass('active');
-    });
 
     var roostInput = $('#roostManualNote');
     var roostCount = $('#roostManualNoteCountInt');
