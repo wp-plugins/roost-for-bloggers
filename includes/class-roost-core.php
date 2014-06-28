@@ -10,21 +10,21 @@ class Roost {
 		self::install();
 	}	
 
-    public static $roost_version = '2.1.2';
+    public static $roost_version = '2.1.3';
         
     public static function site_url() {
         return get_option( 'siteurl' );
     }
     
     public static function registration_url() {
-        $tld = 'https://get.roost.me/signup?returnURL=';
+        $tld = 'https://go.goroost.com/signup?returnURL=';
         $admin_path = admin_url('admin.php?page=roost-web-push');
         $url = $tld . urlencode( $admin_path . '&source=wpplugin' );
         return $url;
     }
 
     public static function login_url( $sso ) {
-        $tld = 'https://get.roost.me/login?returnURL=';
+        $tld = 'https://go.goroost.com/login?returnURL=';
         $admin_path = admin_url('admin.php?page=roost-web-push');
         $url = $tld . urlencode( $admin_path );
         $url = $url . '&oauth=' . $sso;
@@ -75,7 +75,7 @@ class Roost {
             }
         }
     }
-
+    
 	public static function uninstall(){
         delete_option('roost_settings');
         delete_post_meta_by_key( 'roostOverride' );
@@ -87,8 +87,8 @@ class Roost {
         add_action( 'transition_post_status', array( $this, 'build_note' ), 10, 3 );
         add_action( 'post_submitbox_misc_actions', array( $this, 'note_override' ) );
         add_action( 'wp_head', array( $this, 'byline' ), 1 );
+        add_action( 'wp_footer', array( $this, 'roostJS' ) );
         add_action( 'save_post', array( $this, 'save_post_meta_roost' ) );
-        add_action( 'wp_enqueue_scripts', array( $this, 'load_scripts' ) );
         add_filter( 'clean_url', array( $this, 'add_async' ), 2, 1 );
         add_action( 'wp_ajax_graph_reload', array( $this, 'graph_reload' ) );
         add_action( 'wp_ajax_nopriv_graph_reload', array( $this, 'graph_reload' ) );
@@ -98,6 +98,8 @@ class Roost {
         if ( is_admin() ) {
             add_filter( 'plugin_action_links_roost-for-bloggers/roost.php', array( $this, 'add_action_links' ) );
             add_action( 'admin_init', array( $this, 'activate_redirect' ) );
+            add_action( 'admin_init', array( $this, 'roost_logout' ) );
+            add_action( 'admin_init', array( $this, 'manual_send' ) );
             add_action( 'admin_notices', array( $this, 'setup_notice' ) );
             add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ) );
             add_action( 'admin_menu', array( $this, 'admin_menu_add' ) );
@@ -110,16 +112,6 @@ class Roost {
         );
         return array_merge( $rlink, $links );
     }
-    
-    public function load_scripts() {
-		$roost_settings = self::roost_settings();
-		$app_key = $roost_settings['appKey'];
-		if ($app_key && !is_admin()) {
-            wp_enqueue_script( 'roostjs', '//get.roost.me/js/roost.js#async', '', self::$roost_version, false );
-            wp_enqueue_script( 'roostvars', ROOST_URL . 'layout/js/roost_vars.js#async', array( 'roostjs' ), self::$roost_version, false );
-            wp_localize_script( 'roostvars', 'pushNotificationsByRoostMe', array( 'appkey' => $app_key) );
-		}
-	}
 
     public function add_async( $url ) {
         if ( false === strpos( $url, '#async' ) ) {
@@ -132,10 +124,18 @@ class Roost {
     }
 
     public function byline() {
-        $byline = "<!-- Push notifications for this website enabled by Roost. Support for Safari, Firefox, and Chrome Browser Push. (v ". self::$roost_version .") - http://roost.me/ -->";
+        $byline = "<!-- Push notifications for this website enabled by Roost. Support for Safari, Firefox, and Chrome Browser Push. (v ". self::$roost_version .") - http://goroost.com/ -->";
         echo "\n${byline}\n";
     }
 
+    public function roostJS() {
+        $roost_settings = self::roost_settings();
+        $app_key = $roost_settings['appKey'];
+    ?>
+        <script>var _roost = _roost || [];_roost.push(['appkey','<?php echo( $app_key ); ?>']);</script><noscript><a href="http://goroost.com/site-contact?noscript&appkey=<?php echo($app_key); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="http://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/js/roost.js" async></script>
+    <?php
+    }
+    
     public static function setup_notice() {
         global $hook_suffix;
         $roost_page = 'toplevel_page_roost-web-push';
@@ -166,7 +166,7 @@ class Roost {
             $api_check = Roost_API::api_check();
             if ( is_wp_error( $api_check ) ) {
     ?>
-        <div class="error" id="roost-api-error">There was a problem accessing the <strong>Roost API</strong>. You may not be able to log in. Contact Roost support at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a> for more information.</div>
+        <div class="error" id="roost-api-error">There was a problem accessing the <strong>Roost API</strong>. You may not be able to log in. Contact Roost support at <a href="mailto:support@goroost.com" target="_blank">support@goroost.com</a> for more information.</div>
     <?php
             }
         }
@@ -374,14 +374,63 @@ class Roost {
         die();
     }
 
-	public static function admin_menu_page() {
-        $roost_settings = self::roost_settings();
+    public function roost_logout() {
+        if ( isset( $_POST['clearkey'] ) ) {
+            $form_keys = array(
+                'appKey' => '',
+                'appSecret' => '',
+            );
+            self::update_keys( $form_keys );
+            wp_dequeue_script( 'roostscript' );
+            $status = 'Roost has been disconnected.';
+            $status = urlencode( $status );
+            wp_redirect( admin_url( 'admin.php?page=roost-web-push' ) . '&status=' . $status );
+            exit;
+        }
+    }
+    
+    public function manual_send() {
+        if ( isset( $_POST['manualtext'] ) ) {
+            $manual_text = $_POST['manualtext'];
+	        $manual_link = $_POST['manuallink'];
+            $manual_text = stripslashes( $manual_text );
+            if ( '' == $manual_text || '' == $manual_link ) {
+                $status = 'Your message or link can not be blank.';
+            } else {
+                $roost_settings = self::roost_settings();
+                $app_key = $roost_settings['appKey'];
+                $app_secret = $roost_settings['appSecret'];
+                if ( false === strpos( $manual_link, 'http' ) ) {
+                    $manual_link = 'http://' . $manual_link;
+                }
+                $msg_status = Roost_API::send_notification( $manual_text, $manual_link, null, $app_key, $app_secret, null );
+                if ( true === $msg_status['success'] ) {
+                    $status = 'Message Sent.';
+                } else {
+                    $status = 'Message failed. Please make sure you have a valid URL.';
+                }
+			}
+            $status = urlencode( $status );
+            wp_redirect( admin_url( 'admin.php?page=roost-web-push' ) . '&status=' . $status );
+            exit;
+        }        
+    }
 
+    public static function admin_menu_page() {
+        $roost_settings = self::roost_settings();
+                
         if ( empty( $roost_settings ) ) {
             self::install();
         } else {
             $app_key = $roost_settings['appKey'];
             $app_secret = $roost_settings['appSecret'];
+        }
+        
+        if ( !empty( $app_key ) ) {
+            $roost_active_key = true;
+            $bbPress_active = Roost_bbPress::bbPress_active();
+        } else {
+            $roost_active_key = false;
         }
         
         if ( !empty( $app_key ) && empty( $roost_server_settings ) ) {
@@ -397,6 +446,7 @@ class Roost {
             $first_time = $response['firstTime'];
             $roost_server_settings = $response['server_settings'];	
             $roost_stats = $response['stats'];
+            $roost_active_key = true;
         }
         
 	    if ( isset( $_POST['roostlogin'] ) ) {
@@ -414,6 +464,7 @@ class Roost {
                 }
                 $roost_server_settings = $response['server_settings'];	
                 $roost_stats = $response['stats'];
+                $roost_active_key = true;
             }
 		}
 
@@ -424,21 +475,17 @@ class Roost {
             $first_time = $response['firstTime'];
             $roost_server_settings = $response['server_settings'];	
             $roost_stats = $response['stats'];
+            $roost_active_key = true;
 		}
-        
-	    if ( isset( $_POST['clearkey'] ) ) {
-            $form_keys = array(
-                'appKey' => '',
-                'appSecret' => '',
-            );
-            self::update_keys( $form_keys );
-            wp_dequeue_script( 'roostscript' );
-            $status = 'Roost has been disconnected.';
-	    }
 
+        if ( isset( $_GET['status'] ) ) {
+            $status = urldecode( $_GET['status'] );
+        }
+        
 	    if ( isset( $_POST['savesettings'] ) ) {	
             $autoPush = false;
             $bbPress = false;
+            
             if ( isset( $_POST['autoPush'] ) ) {
                 $autoPush = true;
             }
@@ -458,26 +505,6 @@ class Roost {
 	        $status = 'Settings Saved.';
 	    }
 		
-	    if ( isset( $_POST['manualpush'] ) ) {
-	        $manual_text = $_POST['manualtext'];
-	        $manual_link = $_POST['manuallink'];
-            if ( '' == $manual_text || '' == $manual_link ) {
-                $status = 'Your message or link can not be blank.';
-            } else {
-                $roost_settings = self::roost_settings();
-                $app_key = $roost_settings['appKey'];
-                $app_secret = $roost_settings['appSecret'];
-                if ( false === strpos( $manual_link, 'http' ) ) {
-                    $manual_link = 'http://' . $manual_link;
-                }
-                $msg_status = Roost_API::send_notification( $manual_text, $manual_link, null, $app_key, $app_secret, null );
-                if ( true === $msg_status['success'] ) {
-                    $status = 'Message Sent.';
-                } else {
-                    $status = 'Message failed. Please make sure you have a valid URL.';
-                }  
-			}
-        }
 	    require_once( dirname( plugin_dir_path( __FILE__ ) ) . '/layout/admin.php');		
 	}
 }

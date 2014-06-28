@@ -1,15 +1,3 @@
-<?php
-    $roost = new Roost();
-    $roost_settings = get_option( 'roost_settings' );
-    if ( strlen( $roost_settings['appKey'] ) > 0 ) {
-        $roost_active_key = true;
-        $roost = new Roost;
-    } else {
-        $roost_active_key = false;
-    }
-    $bbPress_active = Roost_bbPress::bbPress_active();
-?>
-
 <div id="rooster">
     <div id="roost-header">
         <?php if( $roost_active_key ){ ?>
@@ -73,7 +61,7 @@
                                             <h2>Create a free account</h2>
                                             <p>
                                                 Welcome! Creating an account only takes a few seconds and will give you access 
-                                                to additional features like our analytics dashboard at roost.me
+                                                to additional features like our analytics dashboard at goroost.com
                                             </p>
                                             <a href="<?php echo( Roost::registration_url() ); ?>" id="roost-create-account" class="roost-signin-link"><img src="<?php echo ROOST_URL; ?>layout/images/roost-arrow-white.png" />Create an account</a>
                                             <div id="roost-bottom-right">Already have an account? <span class="roost-signup">Sign in</span></div>
@@ -125,7 +113,7 @@
                                         <input type="hidden" id="roost-timezone-offset" name="roost-timezone-offset" value="" />
                                         <input type="Submit" class="type-submit" id="roost-middle-save" name="<?php echo isset($roost_sites) ? 'roostconfigselect' : 'roostlogin' ?>" value="<?php echo isset( $roost_sites ) ? 'Choose Site' : 'Login' ?>" tabindex="3" />
                                         <?php submit_button( 'Cancel', 'delete', 'cancel', false, array( 'tabindex' => '4' ) ); ?>
-                                        <span class="left-link"><a href="https://get.roost.me/login?forgot=true" target="_blank">forget password?</a></span>
+                                        <span class="left-link"><a href="https://go.goroost.com/login?forgot=true" target="_blank">forget password?</a></span>
                                     </div>
                                     <div id="roost-sso">
                                         <div id="roost-sso-text">
@@ -270,14 +258,6 @@
                                                     <span class="roost-setting-caption">Automatically send a push notification to your subscribers every time you publish a new post.</span>
                                                 </div>
                                                 <div class="roost-setting-wrapper">
-
-                                                    <span class="roost-label">Mobile push support:</span>
-                                                    <input type="checkbox" name="mobilePush" class="roost-control-secondary" value="1" <?php if( 'TOP' == $roost_server_settings['roostBarSetting'] || 'BOTTOM' == $roost_server_settings['roostBarSetting'] ){ echo( 'checked' ); } ?> />
-                                                    <span class="roost-setting-caption">Enabling this will allow your readers to subscribe and recieve push notifications on their phone or tablet when they view your mobile site.
-                First-time subscribers will be prompted to install the iOS or Android Roost app in order to recieve notifications.</span>
-
-                                                </div>
-                                                <div class="roost-setting-wrapper">
                                                     <span class="roost-label">Activate all Roost features:</span>
                                                     <input type="checkbox" name="autoUpdate" class="roost-control-secondary" value="1" <?php if( true == $roost_server_settings['autoUpdate'] ){ echo( 'checked' ); } ?> />
                                                     <span class="roost-setting-caption">This will automatically activate current and future features as they are added to the plugin.</span>
@@ -289,7 +269,6 @@
                                                     <span class="roost-setting-caption">Extends subscriptions for bbPress forums, topics, and replies to allow subscribing via push notifications if site is viewed in a push capable browser.</span>
 
                                                 </div>
-
                                                 <input type="Submit" class="type-submit roost-control-secondary" id="roost-middle-save" name="savesettings" value="Save Settings" />                              
                                             </div>
                                         </div>
@@ -299,7 +278,7 @@
                         </form>
                     <?php } ?>
                     <!--END SETTINGS SECTION-->
-                <div id="roostSupportTag">Have Questions, Comments, or Need a Hand? Hit us up at <a href="mailto:support@roost.me" target="_blank">support@roost.me</a> We're Here to Help.</div>
+                <div id="roostSupportTag">Have Questions, Comments, or Need a Hand? Hit us up at <a href="mailto:support@goroost.com" target="_blank">support@goroost.com</a> We're Here to Help.</div>
             </div>
         </div>
 	<script>

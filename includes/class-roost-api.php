@@ -11,7 +11,7 @@ class Roost_API {
 		if ( !empty( $remote_data['appkey'] ) ) {
 			$auth_creds = 'Basic ' . base64_encode( $remote_data['appkey'] .':'.$remote_data['appsecret'] );
 		}
-		$remote_url = 'https://get.roost.me/api/' . $remote_data['remoteAction'];
+		$remote_url = 'https://go.goroost.com/api/' . $remote_data['remoteAction'];
 
 		$headers = array(
 	        'Authorization'  => $auth_creds,
@@ -103,16 +103,6 @@ class Roost_API {
     }
     
     public static function save_remote_settings( $app_key, $app_secret, $roost_server_settings, $POST ) {
-        if ( isset( $POST['mobilePush'] ) ) {
-            if ( 'TOP' != $roost_server_settings['roostBarSetting'] || 'BOTTOM' != $roost_server_settings['roostBarSetting'] ) {
-                $remote_content['roostBarSetting'] = 'TOP';
-            }
-        } else {
-            if ( 'OFF' != $roost_server_settings['roostBarSetting'] ) {
-                $remote_content['roostBarSetting'] = 'OFF';
-            }
-        }
-
         if ( isset( $POST['autoUpdate'] ) ) {
             if ( true != $roost_server_settings['autoUpdate'] ) {
                 $remote_content['autoUpdate'] = true;

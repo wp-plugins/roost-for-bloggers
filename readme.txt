@@ -1,9 +1,9 @@
 === Roost Web Push for Safari ===
 Contributors: noticesoftware, danstever
-Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
-Requires at least: 3.0
+Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
+Requires at least: 3.8
 Tested up to: 3.9.1
-Stable tag: 2.1.2
+Stable tag: 2.1.3
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,7 +11,7 @@ Drive traffic to your website with Safari Mavericks push notifications and Roost
 
 == Description ==
 
-[Browser Push by Roost](http://roost.me/) - Fundamentally changing the way people consume content on the web.
+[Browser Push by Roost](http://goroost.com/) - Fundamentally changing the way people consume content on the web.
 
 Push Plugin Features:
 
@@ -24,7 +24,7 @@ Push Plugin Features:
 
 **Free** Roost account included. No setup fees, no surprises, and no limitations on your site visitors.
 
-[vimeo http://vimeo.com/88533265]
+[vimeo http://vimeo.com/99195697]
 
 == Installation ==
 
@@ -69,7 +69,7 @@ Detailed metrics are provided in the dashboard. These metrics include subscribes
 **It's free!** No setup fees, no surprises, no limitations on your site visitors or subscribers.
 
 = Free? Really? What's the catch? =
-No catch! We believe in providing a great service and making it accessible to everyone. So... It's free. (Up to 1,000,000 messages. If you hit that... We'll need to talk.)
+No catch! We believe in providing a great service and making it accessible to everyone. So... It's free. (Up to 100,000 messages. If you hit that... We'll need to talk.)
 
 = Is it really this easy to use Safari Web Push on my site? =
 Yup! Cool right?
@@ -79,9 +79,6 @@ Nope. We've got you covered.
 
 = Do you support Google Chrome or Firefox for desktop push? =
 Almost. We will be releasing support for Google Chrome very soon. Firefox will follow. To take advantage of them as we include support, make sure to have *Activate all Roost Features* checked.
-
-= If I'm using Mobile Push Support, Why do subscribers have to download the Roost mobile app? =
-In order for a device to receive a true push notification, a native mobile app must be installed. That's where Roost comes in. We are there to provide that *native bridge.* We do not pull readers into our app, but push them back to your website. Notifications also stay in the Roost app, which makes them able to be viewed at any time.
 
 = Do my readers / subscribers have to create an account with Roost? =
 Nope. We have a patent-pending *zero-configuration* installation process for the Roost app. When a person hits your subscription link, the are sent to the Roost page on their device's app store, and prompted for install. Once installed and opened, a person is sent directly back to the page they were viewing on your site.
@@ -94,6 +91,11 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 3. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
 
 == Changelog ==
+= 2.1.3 =
+* RoostJS now served from CDN (BAM! Blazing fast! You didn't see that one did you?)
+* Removed mobile app setting
+* Updated API URLs and references to goroost.com (Go Go Gadget Roosters... Or something like that.)
+* Fixed bug when manual sending notification to eliminate multiple messages.
 
 = 2.1.2 =
 * Fixed bug that may have prevented new sites to Roost from being able to send manual notifications from the dashboard
@@ -166,6 +168,10 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+= 2.1.3 =
+* RoostJS now served from CDN (BAM! Blazing fast! You didn't see that one did you?)
+* Removed mobile app setting
+
 = 2.1.2 =
 * Fixed a bug when sending manual notifications from the dashboard and with charts
 
