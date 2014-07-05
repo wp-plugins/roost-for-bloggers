@@ -3,7 +3,7 @@ Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.8
 Tested up to: 3.9.1
-Stable tag: 2.1.3
+Stable tag: 2.1.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -91,6 +91,11 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 3. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
 
 == Changelog ==
+= 2.1.4 =
+* Bugfix - Fixed bug that prevented stats from displaying when WordPress admin accessed via HTTPS
+* Bugfix - Fixed bug that showed blank stats / setting screen on invalid login attempt
+* Code Cleanup
+
 = 2.1.3 =
 * RoostJS now served from CDN (BAM! Blazing fast! You didn't see that one did you?)
 * Removed mobile app setting
@@ -168,6 +173,9 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+= 2.1.4 =
+* Bugfix - Fixed bug that prevented stats from displaying when WordPress admin accessed via HTTPS
+
 = 2.1.3 =
 * RoostJS now served from CDN (BAM! Blazing fast! You didn't see that one did you?)
 * Removed mobile app setting

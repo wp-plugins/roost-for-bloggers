@@ -10,8 +10,10 @@ class Roost {
 		self::install();
 	}	
 
-    public static $roost_version = '2.1.3';
-        
+    public static $roost_version = '2.1.4';
+    
+    protected static $database_version = 1407;
+    
     public static function site_url() {
         return get_option( 'siteurl' );
     }
@@ -55,10 +57,20 @@ class Roost {
 	}
 
     public static function update( $roost_settings ) {
-        if( "2.0.5" === $roost_settings['version'] ) {
-            $roost_settings['bbPress'] = 1;
-        }
         $roost_settings['version'] = self::$roost_version;
+        update_option('roost_settings', $roost_settings);        
+        if( empty( $roost_settings['database_version'] ) || $roost_settings['database_version'] < self::$database_version ) {
+            self::update_database( $roost_settings );
+        }
+    }
+    
+    protected static function update_database( $roost_settings ) {
+        if( empty( $roost_settings['database_version'] ) ) {
+            $roost_settings['database_version'] = 1407;
+            if( empty( $roost_settings['bbPress'] ) ) {
+                $roost_settings['bbPress'] = 1;
+            }
+        }
         update_option('roost_settings', $roost_settings);
     }
     
@@ -132,7 +144,7 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
     ?>
-        <script>var _roost = _roost || [];_roost.push(['appkey','<?php echo( $app_key ); ?>']);</script><noscript><a href="http://goroost.com/site-contact?noscript&appkey=<?php echo($app_key); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="http://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/js/roost.js" async></script>
+        <script>var _roost = _roost || [];_roost.push(['appkey','<?php echo( $app_key ); ?>']);</script><noscript><a href="https://goroost.com/site-contact?noscript&appkey=<?php echo($app_key); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="https://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/js/roost.js" async></script>
     <?php
     }
     
@@ -189,9 +201,9 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
         if ( !empty( $app_key ) ) {
-            wp_enqueue_style( 'morrisstyle', 'http://cdn.oesmith.co.uk/morris-0.4.3.min.css', '', self::$roost_version );
-            wp_enqueue_script( 'morrisscript', 'http://cdn.oesmith.co.uk/morris-0.4.3.min.js', array('jquery', 'raphael'), self::$roost_version );
-            wp_enqueue_script( 'raphael', '//cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js', array('jquery'), self::$roost_version );        
+            wp_enqueue_style( 'morrisstyle', '//s3.amazonaws.com/roost/plugins/morris-0.4.3.min.css', '', self::$roost_version );
+            wp_enqueue_script( 'morrisscript', '//s3.amazonaws.com/roost/plugins/morris-0.4.3.min.js', array('jquery', 'raphael'), self::$roost_version );
+            wp_enqueue_script( 'raphael', '//s3.amazonaws.com/roost/plugins/raphael-min-2.1.0.js', array('jquery'), self::$roost_version );
             wp_enqueue_script( 'roostscript', ROOST_URL . 'layout/js/roostscript.js', array('jquery'), self::$roost_version, true );
         }
     }
@@ -459,12 +471,12 @@ class Roost {
             } else {
                 if( !empty( $response['firstTime'] ) ) {
                     $first_time = $response['firstTime'];
+                    $roost_server_settings = $response['server_settings'];	
+                    $roost_stats = $response['stats'];
+                    $roost_active_key = true;
                 } else {
                     $status = $response['status'];
                 }
-                $roost_server_settings = $response['server_settings'];	
-                $roost_stats = $response['stats'];
-                $roost_active_key = true;
             }
 		}
 
