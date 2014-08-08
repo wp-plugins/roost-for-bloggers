@@ -1,3 +1,10 @@
+#rooster {
+	margin: 0 0 0 -19px;
+	background: #f1f1f1;
+	color: #5c686f;
+	font-family: 'Open Sans', sans-serif;
+}
+
 #rooster a,
 #rooster a:link,
 #rooster a:visited,
@@ -11,32 +18,31 @@
 	text-decoration: underline;
 }
 
-#rooster .roost-signup {
-    cursor: pointer;
-}
-
 #adminmenu li.current .wp-menu-image img,
 #adminmenu li.wp-not-current-submenu .wp-menu-image img {
 	opacity: 1;
 }
 
-hr {
-	height: 1px;
-	background: #d4d7d9;
-	border: 0;
-	margin: 15px 0 20px;
+#rooster input,
+#rooster select {
+	font-family: 'Open Sans', sans-serif;
 }
 
-.type-submit {
-    font-size: 13px;
-	border-radius: 3px;
-	background: #2ea2cc;
-	color: #fff;
-	box-shadow: none;
-	border: 1px solid;
-	border-color: #0074a2;
-	padding: 5px 0 6px;
+#rooster .roost-signup {
+    cursor: pointer;
+}
+
+.roost-login,
+.roost-section-secondary input[type="submit"] {
 	width: 94px;
+	padding: 5px 0 6px;
+	border: 1px solid;
+	border-radius: 3px;
+	border-color: #0074a2;
+	background: #2ea2cc;
+	box-shadow: none;
+    font-size: 13px;
+	color: #ffffff;
 	cursor: pointer;
 }
 
@@ -45,11 +51,10 @@ hr {
 	font-size: 14px;
 }
 
-input.type-text {
+#rooster input[type="text"] {
 	width: 340px;
 	height: 36px;
 	padding: 0 10px;
-	font-family: 'Open Sans', sans-serif;
 }
 
 #roost-manual-send-section {
@@ -60,80 +65,61 @@ input.type-text {
     margin-top: 15px;
 }
 
-#roost-manual-send-wrapper .type-text {
+#roost-manual-send-wrapper input[type="text"] {
     display:block;
     width: 837px;
     height: 27px;
 }
 
-#roost-send-with-link,
-#roost-send-no-link {
-
-}
-
-#roost-send-no-link .roost-input-text {
-
-}
-
 #rooster select {
 	margin: 5px 0 0;
 	cursor: pointer;
-	font-family: 'Open Sans', sans-serif;
-}
-
-#rooster {
-	margin: 0 0 0 -19px;
-	background: #f1f1f1;
-	color: #5c686f;
-	font-family: 'Open Sans', sans-serif;
 }
 
 #roost-header {
     display:inline-block;
-    position:relative;
-	height: 36px;
 	width: 100%;
+	height: 36px;
+    position:relative;
     margin-top: 7px;
 	padding: 16px 0 0 0;
 }
 
 #roost-header-right {
-	float: right;
 	width: 550px;
+	float: right;
 	margin: 5px;
 }
 
-#roost-username {
-	color: #666666;
+#roost-username,
+#roost-log-out {
 	font-size: 15px;
-	margin-top: -4px;
-	font-family: 'Open Sans', sans-serif;
+	color: #666666;
+}
+
+#roost-username {
 	display: inline-block;
 	width: 425px;
 	float: right;
+	margin-top: -4px;
 	margin-right: 20px;
 	text-align: right;
 }
 
-#roostLogOut {
-	color: #666666;
-	background: #f7f7f7;
-    font-family: 'Open Sans', sans-serif;
-    font-weight:600;
-	font-size: 15px;
-	border: 1px solid #cccccc;
-    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
-	border-radius: 3px;
-	width: 90px;
+#roost-log-out {
 	display: block;
+	width: 90px;
 	float: right;
+    padding: 5px 0 6px;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+    box-shadow: 0 0 1px rgba(0, 0, 0, 0.2);
+    font-weight:600;
+	background: #f7f7f7;
 }
 
 .roost-wrapper {
 	margin: 0 auto;
-/*
-	width: 1066px;
-*/
 	width: 1000px;
 }
 
@@ -143,20 +129,17 @@ input.type-text {
 }
 
 #roost-main-wrapper {
-	margin: -1px auto 0;
-/*
-	width: 1066px;
-*/
 	width: 1000px;
     min-height: 800px;
     position: relative;
     top: 5px;
+	margin: -1px auto 0;
 }
 
 #roost-signin-wrapper {
-	background: #fff;
 	width: 366px;
 	margin: 100px auto;
+	background: #ffffff;
 	box-shadow: 0px 1px 3px rgba(0,0,0,0.2);
 }
 
@@ -167,93 +150,94 @@ input.type-text {
 }
 
 #roost-primary-logo img {
-	height: 40px;
 	width: 72px;
+	height: 40px;
 	margin-top: 12px;
 }
 
 .roost-primary-heading {
-	background: #fafafa;
 	height: 35px;
-	text-align: center;
 	padding: 19px 30px;
 	border-bottom: 1px solid #d4d7d9;	
+	background: #fafafa;
+	text-align: center;
 }
 
 .roost-primary-footer {
-	background: #fff;
 	height: 35px;
-	text-align: center;
 	padding: 14px 30px 20px;
+	background: #fff;
+	text-align: center;
 }
 
 .roost-login-input {
 	display: inline-block;
 	width: 100%;
-	margin: 10px 0;
 	position: relative;
+	margin: 10px 0;
 }
 
-#roost-signin-wrapper input.type-text {
+#roost-signin-wrapper input[type="text"],
+#roost-signin-wrapper input[type="password"] {
 	width: 214px;
 	height: 26px;
 	float: right;
 	margin-top: -2px;
 }
 
+#roost-signin-wrapper input[type="password"] {
+    padding-left: 10px;
+}
+
 #roost-signin-wrapper select {
 	width: 100%;
 }
 
-.roostDisclaimer {
-	font-family: 'Open Sans', sans-serif;
-	font-size: 11px;
-	font-style: italic;
+.roost-disclaimer {
 	display: inline-block;
 	width: 290px;
 	margin: 5px 0 0 5px;
+	font-size: 11px;
+	font-style: italic;
 }
 
 .roost-primary-cta,
 .roost-secondary-cta {
 	display: block;
+	font-size: 13px;
 }
 
 .roost-primary-cta {
-	font-size: 13px;
-	font-family: 'Open Sans', sans-serif;
+	margin-bottom: 10px;
 	font-weight: 600;
 	line-height: 10px;
 	color: #222222;
-	margin-bottom: 10px;
 }
 
 .roost-secondary-cta {
-	font-size: 13px;
-	color: #666666;
-	font-family: 'Open Sans', sans-serif;
 	font-weight: 400;
 	font-style: italic;
+	color: #666666;
 }
 
 .roost-section-wrapper {
-	background: #fafafa;
-    border: 1px solid #e5e5e5;
 	margin: 25px 0;
+    border: 1px solid #e5e5e5;
+	background: #fafafa;
 	box-shadow: 0px 3px 5px rgba(0,0,0,0.2);
 }
 
 .roost-section-heading {
-    color: #222222;
-	width: 100%;
 	display: inline-block;
-	position: relative;
+	width: 100%;
 	height: 17px;
+	position: relative;
 	padding: 15px 0 10px 5px;
+    background-color: #fafafa;
 	font-size: 14px;
 	letter-spacing: 0.1em;
 	text-indent: 13px;
-    background-color: #fafafa;
+    color: #222222;
 }
 
 .roost-section-content {
@@ -266,15 +250,15 @@ input.type-text {
     background-color: #fafafa;
 }
 
-.roost-section-secondary .type-submit {
+.roost-section-secondary input[type="submit"] {
+    width: 130px !important;
     float: right;
-    width: 130px;
     margin:2px 0 0 0;
 }
 
 #roost-all-stats {
-    padding: 0;
     margin: 32px 0 0;
+    padding: 0;
 }
 
 #roost-all-stats {
@@ -282,14 +266,13 @@ input.type-text {
 }
 
 .roost-no-collapse {
-	position: relative;
+	display: inline-block;
 	width: 956px;
-	display: inline-block;		
+	position: relative;
 }
 
 #roost-registration-points {
 	list-style: none;
-	font-family: 'Open Sans', sans-serif;
 	font-size: 13px;
 }
 
@@ -305,16 +288,16 @@ input.type-text {
 }
 
 .roost-step {
-	color: #fff;
-	background: #e25351;
 	display: inline-block;
-	padding: 10px 9px 8px 9px;
 	width: 18px;
 	height: 18px;
 	position: relative;
+	margin-right: 10px;
+	padding: 10px 9px 8px 9px;
+	background: #e25351;
 	border-radius: 20px;
 	text-indent: 5px;
-	margin-right: 10px;
+	color: #fff;
 }
 
 #roost-vert-wedge {
@@ -333,32 +316,91 @@ input.type-text {
 }
 
 .roost-input-text {
-    width:100%;
-    position:relative;
     display:inline-block;
+    width:100%;
     height:71px;
+    position:relative;
 }
 
 .roost-input-text .roost-label,
-#roost-block .roost-label {
-    width: 110px;
-    margin-right: 14px;
+.roost-block .roost-label {
     display: block;
+    width: 110px;
     float:left;
+    margin-right: 14px;
 }
 
-#roost-block .roost-label {
+.roost-block .roost-label {
     width:  175px;
     margin-right: 25px;
     position: relative;
     top: -4px;
 }
 
+.roost-block .roost-label.long-label {
+    font-size: 12px;
+}
+
+#roost-settings-save {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    margin-bottom: 25px;
+}
+
+#roost-event-hints {
+    display: none;
+    width: 664px;
+    height: 102px;
+    position: relative;
+    float: right;
+    top: 10px;
+    padding: 23px 30px 30px 30px;
+    border: 1px solid #e9e9e9;
+    background: #ffffff;
+    box-shadow: 0 1px 2px rgba( 0, 0, 0, 0.2);
+}
+
+.roost-code {
+    display: inline-block;
+    padding: 5px 10px;
+    background: #f0f0f0;
+    font-family: monospace;
+    color: #000000;
+    text-align: center;
+}
+
+#roost-hint-code-line {
+    display: block;
+    margin-top: 7px;
+    margin-bottom: 25px;
+    text-indent: 5px;
+}
+
+#roost-event-hints-disclaimer {
+    display: none;
+    width: 630px;
+    position: relative;
+    float: right;
+    top: 21px;
+    right: 65px;
+    font-size: 12px;
+    font-style: italic;
+}
+
+.roost-block {
+	display: inline-block;
+    width: 100%;
+    height: 288px;
+    position:relative;
+    padding: 15px 0 0;
+}
+
 .roost-input-caption {
-    font-style:italic;
-    font-size:13px;
     display:block;
     margin-top: 5px;
+    font-style:italic;
+    font-size:13px;
     text-indent: 5px;
 }
 
@@ -375,42 +417,40 @@ input.type-text {
     margin-bottom: 12px;
 }
 
-.roost-setting-wrapper:nth-child(2) {
-    margin-bottom: 30px;   
-}
-
-.roost-setting-wrapper:nth-child(3) {
-    margin-bottom: 8px;
-}
-
 .roost-setting-wrapper input {
+    position: relative;
     float: left;
     top: 5px;
     margin-right: 10px;
-    position: relative;
 }
 
 .roost-setting-caption {
-    font-style:italic;
-    width: 725px;
     display:block;
+    width: 725px;
     float:left;
+    font-style:italic;
+}
+
+#roost-settings-lift {
+    position: relative;
+    top: -5px;
 }
 
 .roost-label {
 	display: inline-block;
 	margin: 4px 0 1px 5px;
 	font-size: 13px;
-	font-family: 'Open Sans', sans-serif;
 	font-weight: 600;
 }
 
-#roost-block {
-	display: inline-block;
-    width: 100%;
-    position:relative;
-    height: 258px;
-    padding: 15px 0 0;
+input[type="text"]#roost-min-visits {
+    width: 36px;
+    height: 28px;
+    position: relative;
+    float: none;
+    top: 0px;
+    left: 4px;
+    text-align: center;
 }
 
 .roost-os-bold {
@@ -418,30 +458,27 @@ input.type-text {
 }
 
 #rooster-status {
-	background: #fff;
 	width: 966px;
-	color: #222222;
-	font-size: 13px;
-	padding: 17px 20px;
 	margin: 15px auto;
-	display: block;
-/*	border-left: 4px solid rgb(226, 83, 81); */
+	padding: 17px 20px;
 	border-left: 4px solid #7ad03a;
+	background: #fff;
+	font-size: 13px;
+	color: #222222;
 }
 
 #rooster-status-text {
-	width: 910px;
 	display: inline-block;
+	width: 910px;
 }
 
 #rooster-status-close {
-	font-family: 'Open Sans', sans-serif;
-	color: rgb(46, 162, 204);
+	display: inline-block;
 	height: 16px;
 	position: relative;
-	display: inline-block;
-	cursor: pointer;
 	float: right;
+	color: rgb(46, 162, 204);
+	cursor: pointer;
 }
 
 #roost-middle-save {
@@ -451,40 +488,39 @@ input.type-text {
 
 .rooster-custom-script {
 	width: 220px;
-	padding: 10px;
 	height: 75px;
+	padding: 10px;
 }
 
 .roost-text-pinch {
+	display: inline-block;	
 	width: 200px;
 	margin-top: 50px;
-	display: inline-block;	
 }
-#roostUserLogo {
+#roost-user-logo {
     display: inline-block;
-    top: 7px;
-    position:relative;
-    border-radius: 3px;
     height: 24px;
-    margin-right: 15px
+    position:relative;
+    top: 7px;
+    margin-right: 15px;
+    border-radius: 3px;
 }
 
-#roostUserLogo img {
+#roost-user-logo img {
     border-radius: 3px;
     cursor: pointer;
 }
 
 .roost-stats-metric {
-    background: #fafafa;
-    margin-right: 5px;
-    display: block;
-    height: 95px;
     width: 328px;
+    height: 95px;
+    position: relative;
     float: left;
+    top: -6px;
+    margin-right: 5px;
     padding: 50px 0;
     border: 1px solid #eeeeee;
-    position: relative;
-    top: -6px;
+    background: #fafafa;
 }
 
 .roost-stats-metric:last-of-type {
@@ -492,33 +528,33 @@ input.type-text {
 }
 
 .roost-stats-metric hr {
-    margin: 0 auto;
-    height: 2px;
     width: 40px;
-    background: #e8ebeb;
-    display: block;
+	height: 2px;
     position: relative;
+    margin: 0 auto;
+	border: 0;
+    background: #e8ebeb;
     top: 35px;
 }
 
 .roost-stat {
-    color: #666666;
     display:block;
+    font-size: 63px;
     text-align:center;
     font-weight: 300;
-    font-size: 63px;
+    color: #666666;
 }
 
 .roost-stat-label {
     display:block;
     width: 215px;
-    line-height: 18px;
-    font-size: 15px;
-    margin: 25px auto 0;
-    text-align:center;
-    color: #666666;
     position: relative;
     top: 27px;
+    margin: 25px auto 0;
+    font-size: 15px;
+    line-height: 18px;
+    text-align:center;
+    color: #666666;
 }
 
 #roost-all-stats .roost-no-collapse {
@@ -529,45 +565,43 @@ input.type-text {
     font-size: 30px;
 }
 
-#roostManualNote {
+#roost-manual-note {
 	padding: 0 179px 0 10px;
 }
 
-#roostManualNoteCount {
+#roost-manual-note-count {
     display: block;
     position: absolute;
-    right: 0;
     top: 5px;
+    right: 0;
     font-weight: 700;
     color: #CCCCCC;
 }
 
-#roostManualNoteCountInt.roostWarning {
+#roost-manual-note-count-int.roostWarning {
     color: #D54E21;
 }
 
-#roostSupportTag {
+#roost-support-tag {
     text-align: center;
 }
 
-.updated#roostSetupNotice,
+.updated#roost-setup-notice,
 .updated#roost-first-time-setup {
-    height: 90px;
     min-width: 800px;
-    border: none;
+    height: 90px;
     position: relative;
-    display: block;
     margin: 15px 0 25px 0;
-    overflow: hidden;
-    background: #e66d6b; /* Old browsers */
-    background: -moz-linear-gradient(left, #e66d6b 0%, #e25351 100%); /* FF3.6+ */
-    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#e66d6b), color-stop(100%,#e25351)); /* Chrome,Safari4+ */
-    background: -webkit-linear-gradient(left, #e66d6b 0%,#e25351 100%); /* Chrome10+,Safari5.1+ */
-    background: -o-linear-gradient(left, #e66d6b 0%,#e25351 100%); /* Opera 11.10+ */
-    background: -ms-linear-gradient(left, #e66d6b 0%,#e25351 100%); /* IE10+ */
-    background: linear-gradient(to right, #e66d6b 0%,#e25351 100%); /* W3C */
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    border: none;
     border-radius: 5px;
+    background: #e66d6b; /* Old browsers */
+    background: -webkit-gradient(linear, left top, right top, color-stop(0%,#e66d6b), color-stop(100%,#e25351));
+    background: -webkit-linear-gradient(left, #e66d6b 0%,#e25351 100%);
+    background: -o-linear-gradient(left, #e66d6b 0%,#e25351 100%);
+    background: -ms-linear-gradient(left, #e66d6b 0%,#e25351 100%);
+    background: linear-gradient(to right, #e66d6b 0%,#e25351 100%);
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
 }
 
 .updated#roost-first-time-setup h3,
@@ -580,9 +614,9 @@ input.type-text {
 }
 
 .updated#roost-first-time-setup h3 {
+    margin: 22px 0 -10px 0;
     font-size: 15px;
     font-weight: 600;
-    margin: 22px 0 -10px 0;
 }
 
 .updated#roost-first-time-setup h4 {
@@ -590,91 +624,87 @@ input.type-text {
     font-weight: 300;
 }
 
-#roostNoticeLogo {
-    display: block;
-    float: left;
+#roost-notice-logo {
     width: 123px;
     height: 100%;
+    float: left;
     border-right: 1px solid #c45d5b;
 }
 
-#roostNoticeLogo img {
+#roost-notice-logo img {
     width: 75px;
+    position: relative;
     top: 26px;
     left: 18px;
-    position: relative;
 }
 
-#roostNoticeText {
-    display: block;
-    float: left;
-    color: #fff;
+#roost-notice-text {
     width: 510px;
     height: 100%;
     position: relative;
+    float: left;
     border-left: 1px solid rgba(255, 255, 255, 0.2);
+    color: #ffffff;
 }
 
-#roostNoticeText p {
-	font-family: 'Open Sans', sans-serif;
-    font-size: 14px;
-    padding: 17px;
+#roost-notice-text p {
     margin-left: 14px;
+    padding: 17px;
+    font-size: 14px;
 }
 
-#roost-first-time-setup #roostNoticeText {
-    border: 0;
+#roost-first-time-setup #roost-notice-text {
     width: auto;
     padding-left: 35px;
+    border: 0;
 }
 
-#roostNoticeTarget {
+#roost-notice-target {
     width: 155px;
-    display: block;
-    float: left;
     height: 100%;
+    float: left;
 }
 
-a#roostNoticeCTA,
-a#roostNoticeCTA:link,
-a#roostNoticeCTA:active {
-    text-align: center;
+a#roost-notice-CTA,
+a#roost-notice-CTA:link,
+a#roost-notice-CTA:active {
     display: block;
-    color: #fff;
     width: 96px;
     height: 22px;
-    background-color: #c24846;
-    border: 1px solid #963836;
-    border-radius: 2px;
     position: relative;
     top: 31px;
     left: 25px;
+    border: 1px solid #963836;
+    border-radius: 2px;
+    background-color: #c24846;
     box-shadow: 0 1px 1px rgba(255, 255, 255, 0.2);
-    overflow: hidden;
+    text-align: center;
+    color: #ffffff;
     text-decoration: none;
+    overflow: hidden;
     outline: 0;
 }
 
-a#roostNoticeCTA:visited {
+a#roost-notice-CTA:visited {
     text-decoration: none;
-    color: #fff;
+    color: #ffffff;
     outline: 0
 }
 
-#roostNoticeCTAHighlight {
+#roost-notice-CTA-highlight {
     display: block;
-    height: 1px;
-    margin-bottom: 2px;
     width: 100px;
+    height: 1px;
     position: relative;
+    margin-bottom: 2px;
     background-color: rgba(255, 255, 255, 0.2);
 }
 
-a#roostNoticeCTA:hover {
+a#roost-notice-CTA:hover {
     box-shadow: 0 1px 1px rgba(0, 0, 0, 0.2);
 }
 
-#roost-first-time-setup #roostNoticeTarget {
+#roost-first-time-setup #roost-notice-target {
     float: right;
 }
 
@@ -683,7 +713,6 @@ a#roostNoticeCTA:hover {
     height: 265px;
     margin: 100px auto 50px;
     padding: 80px;
-    color: #fff;
     background: rgb(230,109,107);
     background: -moz-linear-gradient(top,  rgb(230,109,107) 0%, rgb(226,89,87) 100%);
     background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,rgb(230,109,107)), color-stop(100%,rgb(226,89,87)));
@@ -691,13 +720,14 @@ a#roostNoticeCTA:hover {
     background: -o-linear-gradient(top,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
     background: -ms-linear-gradient(top,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
     background: linear-gradient(to bottom,  rgb(230,109,107) 0%,rgb(226,89,87) 100%);
+    color: #ffffff;
 }
 
 #roost-signup-wrapper h2 {
-    color: #fff;
+    margin: 40px auto 23px;
+    color: #ffffff;
     font-size: 35px;
     font-weight: 300;
-    margin: 40px auto 23px;
 }
 
 #roost-signup-wrapper p {
@@ -707,41 +737,41 @@ a#roostNoticeCTA:hover {
 
 #roost-bottom-right {
     position: absolute;
+    right: 42px;
     bottom: 11px;
-    color: #f2b1b1;
     font-size: 15px;
     font-weight: 300;
-    right: 42px;
+    color: #f2b1b1;
 }
 
 #roost-bottom-right .roost-signup {
-    color: #fff;
-    font-weight: 600;
     margin-left: 11px;
+    color: #ffffff;
+    font-weight: 600;
 }
 
 #roost-signup-inner {
     display: inline-block;
-    position: relative;
     width: 100%;
     height: 100%;
+    position: relative;
 }
 
 #roost-create-account {
+    display: inline-block;
+    width: 163px;
+    height: 25px;
     position: absolute;
     bottom: 0;
     left: 0;
-    display: inline-block;
-    background-color: #883736;
-    text-align: center;
-    border-radius: 5px;
-    font-weight: 600;
     padding: 10px 10px 5px;
-    height: 25px;
-    color: #fff !important;
-    text-decoration: none !important;
-    width: 163px;
+    border-radius: 5px;
+    background-color: #883736;
     font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    color: #ffffff !important;
+    text-decoration: none !important;
     text-indent: 13px;
 }
 
@@ -757,14 +787,14 @@ a#roostNoticeCTA:hover {
 }
 
 #roost-api-error {
-    padding: 12px 10px;
     position: relative;
     top: 75px;
+    padding: 12px 10px;
 }
 
 #roost-sso {
-    background: #f7f7f7;
     height: 58px;
+    background: #f7f7f7;
 }
 
 #roost-sso > div {
@@ -778,12 +808,9 @@ a#roostNoticeCTA:hover {
 }
 
 #roost-sso a {
-    height: 58px;
-    width: 58px;
     display: block;
-}
-
-.roost-sso-option {
+    width: 58px;
+    height: 58px;
 }
 
 .roost-sso-option:hover {
@@ -796,17 +823,17 @@ a#roostNoticeCTA:hover {
 
 .roost-sso-option .roost-plugin-image {
     display: block;
-    margin: 0 auto;
-    text-indent: -999em;
     position: relative;
     top: 19px;
+    margin: 0 auto;
+    text-indent: -999em;
 }
 
 #roost-sso-facebook {
-    background-position: -32px -86px;
     width: 9px;
     height: 20px;
     top: 18px;
+    background-position: -32px -86px;
 }
 
 .roost-sso-option:hover #roost-sso-facebook {
@@ -814,9 +841,9 @@ a#roostNoticeCTA:hover {
 }
 
 #roost-sso-twitter {
-    background-position: 0px -88px;
     width: 23px;
     height: 18px;
+    background-position: 0px -88px;
 }
 
 .roost-sso-option:hover #roost-sso-twitter {
@@ -824,9 +851,9 @@ a#roostNoticeCTA:hover {
 }
 
 #roost-sso-google {
-    background-position: -49px -86px;
     width: 24px;
     height: 20px;
+    background-position: -49px -86px;
 }
 
 .roost-sso-option:hover #roost-sso-google {
@@ -834,33 +861,32 @@ a#roostNoticeCTA:hover {
 }
 
 #roost-tabs {
-    display: block;
     height: 50px;
 }
 
 #roost-tabs li {
-    color: #666666;
     display: inline-block;
-    list-style: none;
-    float: left;
-    cursor: pointer;
     height: 27px;
-    padding: 8px 15px 0 15px;
-    font-size: 15px;
-    background-color: #e4e4e4;
-    text-align: center;
-    margin: 15px 10px 10px 0;
-    border: 1px solid #cccccc;
-    border-bottom: 0;
-    font-weight: 600;
     position: relative;
     z-index: 10;
+    float: left;
+    margin: 15px 10px 10px 0;
+    padding: 8px 15px 0 15px;
+    border: 1px solid #cccccc;
+    border-bottom: 0;
+    background-color: #e4e4e4;
+    list-style: none;
+    font-size: 15px;
+    text-align: center;
+    font-weight: 600;
+    color: #666666;
+    cursor: pointer;
 }
 
 #roost-tabs li.active {
-    background-color: #fff;
     position: relative;
     z-index: 50;
+    background-color: #fff;
 }
 
 #roost-pre-wrap {
@@ -869,48 +895,46 @@ a#roostNoticeCTA:hover {
 }
 
 #roost-pre-wrap.roost-white {
-    background-color: #fff;
     border-top: 1px solid #cccccc;
+    background-color: #fff;
 }
 
 #roost-site-name {
-    border-left: 1px solid #d3d6d7;
     display: inline-block;
-    padding: 10px 24px;
-    margin-left: 24px;
-    text-align: center;
     position: absolute;
-    font-family: 'Open Sans', sans-serif;
+    margin-left: 24px;
+    padding: 10px 24px;
+    border-left: 1px solid #d3d6d7;
     font-size: 15px;
+    text-align: center;
 }
 
 #roost-chart-heading {
     height: 45px;
-    background: #f1f1f1;
     padding: 25px 0;
+    background: #f1f1f1;
     text-indent: 29px;
 }
 
-#roostchart_dynamic {
+#roostchart-dynamic {
     height: 250px;
 }
 
 #roost-time-period {
     position: absolute;
-    display: block;
-    right: 30px;
     top: 30px;
+    right: 30px;
 }
 
 .chart-range-toggle {
-    background: #f7f7f7;
-    color: #666666;
-    font-size: 13px;
-    border: 1px solid #cccccc;
-    cursor: pointer;
-    text-align: center;
-    padding: 5px 10px;
     margin-right: -6px;
+    padding: 5px 10px;
+    border: 1px solid #cccccc;
+    background: #f7f7f7;
+    font-size: 13px;
+    color: #666666;
+    text-align: center;
+    cursor: pointer;
 }
 
 .chart-range-toggle.active {
@@ -918,40 +942,39 @@ a#roostNoticeCTA:hover {
 }
 
 .chart-range-toggle:first-of-type {
-    border-radius: 3px 0 0 3px;
     border-right: 0;
+    border-radius: 3px 0 0 3px;
 }
 
 .chart-range-toggle:last-of-type {
-    border-radius: 0 3px 3px 0;
-    border-left: 0;
     margin-right: 0;
+    border-left: 0;
+    border-radius: 0 3px 3px 0;
 }
 
 #roost-metric-options {
-    display: block;
     height: 27px;
     position: absolute;
-    left: 30px;
     bottom: 14px;
+    left: 30px;
 }
 
 .chart-metric-toggle {
-    float: left;
-    font-size: 13px;
-    color: #666666;
-    cursor: pointer;
     height: 22px;
-    padding: 5px 10px 0;
-    background-color: #e4e4e4;
-    text-align: center;
-    border: 1px solid #cccccc;
-    border-bottom: 0;
     position: relative;
     z-index: 10;
+    float: left;
+    margin-right: 10px;
+    padding: 5px 10px 0;
+    border-bottom: 0;
+    border: 1px solid #cccccc;
+    background-color: #e4e4e4;
+    font-size: 13px;
+    color: #666666;
+    text-align: center;
     text-indent: 0;
     letter-spacing: 0;
-    margin-right: 10px;
+    cursor: pointer;
 }
 
 .chart-metric-toggle:last-of-type {
@@ -959,38 +982,65 @@ a#roostNoticeCTA:hover {
 }
 
 .chart-metric-toggle.active {
-    background-color: #fafafa;
     position: relative;
     z-index: 50;
+    border-bottom: none;
+    background-color: #fafafa;
 }
 
 #roost-curtain {
-    height: 100%;
     display: inline-block;
-    position: absolute;
-    background: #fafafa;
     width: 100%;
+    height: 100%;
+    position: absolute;
     top: 0;
     left: 0;
+    background: #fafafa;
 }
 
 #roost-curtain-notice {
-    margin: 0 auto;
+    width: 375px;
+    height: 5px;
     position: relative;
     top: 100px;
+    margin: 0 auto;
+    padding: 10px 0 25px;
+    border-radius: 15px;
     background: #e4e4e4;
     color: #666666;
-    border-radius: 15px;
-    padding: 10px 0 25px;
-    height: 5px;
     text-align: center;
-    width: 375px;
     opacity: 0.8;
 }
 
 #roost-recent-activity {
     height: 275px;
-    border-top: 1px solid #cccccc;
     position: relative;
     z-index: 25;
+    border-top: 1px solid #cccccc;
+}
+
+#custom-note,
+#custom-note input {
+    display: none;
+    margin-top: 5px;
+}
+
+#custom-note-text-trigger {
+    display: block;
+    margin: 10px 0 0 10px;
+    color: #666666;
+}
+
+#custom-note a {
+    cursor: pointer;
+}
+
+#custom-note i {
+    font-size: 11px;
+}
+
+#custom-note input {
+    width: 100%;
+    margin-top: 0;
+    padding: 10px 10px 5px;
 }

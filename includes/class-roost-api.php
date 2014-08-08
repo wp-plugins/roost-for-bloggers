@@ -8,7 +8,7 @@ class Roost_API {
     
 	public static function roost_remote_request( $remote_data ) {
 		$auth_creds = '';
-		if ( !empty( $remote_data['appkey'] ) ) {
+		if ( ! empty( $remote_data['appkey'] ) ) {
 			$auth_creds = 'Basic ' . base64_encode( $remote_data['appkey'] .':'.$remote_data['appsecret'] );
 		}
 		$remote_url = 'https://go.goroost.com/api/' . $remote_data['remoteAction'];
@@ -45,7 +45,7 @@ class Roost_API {
             'remoteContent' => '',
         );
         $response = self::roost_remote_request( $remote_data );
-        return $response;	
+        return $response;
     }
     
     public static function login( $roost_user, $roost_pass, $roost_token ){
@@ -63,7 +63,7 @@ class Roost_API {
 			'remoteContent' => json_encode( $remote_content ),
 		);
         $response = self::decode_data( $remote_data );
-        return $response;       
+        return $response;
 	}
 
     public static function get_server_settings( $appKey, $appSecret ) {
@@ -113,7 +113,7 @@ class Roost_API {
             }
         }
 
-        if( !empty( $remote_content ) ) {
+        if ( ! empty( $remote_content ) ) {
             $remote_data = array(
                 'method' => 'PUT',
                 'remoteAction' => 'app',
@@ -130,7 +130,7 @@ class Roost_API {
         $remote_content = array(
 			'alert' => $alert,
 		);
-        if( null === $remote_content['alert'] ) {
+        if ( null === $remote_content['alert'] ) {
             $remote_content['alert'] = '';
         }
 		if ( $url ){

@@ -2,8 +2,8 @@
 Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.8
-Tested up to: 3.9.1
-Stable tag: 2.1.4
+Tested up to: 4.0
+Stable tag: 2.1.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -16,6 +16,8 @@ Drive traffic to your website with Safari Mavericks push notifications and Roost
 Push Plugin Features:
 
 * **Safari Web Push** - Take advantage of web push (Desktop Push Notifications) on OS X Mavericks.
+* **Notification Prompt Controls** - Decide how and when the subscription prompt is shown to your visitors.
+* **Custom Notification Headlines** - Set a custom headline for your notification to be used instead of a post title.
 * **bbPress Subscriptions** - Allows site visitors to subscribe to forums, topics, or individual messages when posting replies.
 * **Detailed Analytics** - *Charts* with detailed metrics about your visitors straight to your WordPress dashboard.
 * **Auto Notifications** - *Now with support for posting via email and from the WordPress mobile app!* We take the work out of it. Automatically send notifications to your readers when creating a new post.
@@ -24,7 +26,7 @@ Push Plugin Features:
 
 **Free** Roost account included. No setup fees, no surprises, and no limitations on your site visitors.
 
-[vimeo http://vimeo.com/99195697]
+[youtube http://www.youtube.com/watch?v=DxElgkUsrCA]
 
 == Installation ==
 
@@ -44,6 +46,12 @@ Push Plugin Features:
 
 **Safari Web Push**
 To use Safari Web Push, simply activate the *Roost for Bloggers* plugin. When your site is viewed in a push-enabled browser, the browser will prompt for permission. No additional setup is needed.
+
+**Notification Prompt Control**
+Control how and when you display the subscription prompt to your site visitors. From the settings tab, you can set a minimum number of visits, or create a link or button to trigger the prompt. When a button or link is used, if the browser is not able to receive push notifications, we will automatically hide the link or button.
+
+**Custom Notification Headlines**
+Use custom text for your notification headline by setting it underneath the standard post title when creating your content. If you set a custom headline, it will be used for your notification. Not setting a headline will default to your post title.
 
 **bbPress**
 With the bbPress extension for Roost, an additional subscribe option will appear next to the default bbPress subscription links. (This does NOT replace traditional subscription methods, only adds a new browser push channel.) Options include Forum subscriptions, Topic subscriptions, and subscribing to your individual posts. Notifications are sent about new content **only** to the visitors that have subscribed to the forum, topic, or post.
@@ -75,22 +83,33 @@ No catch! We believe in providing a great service and making it accessible to ev
 Yup! Cool right?
 
 = Do I need and Apple Developer Account or Google Play Developer account? =
-Nope. We've got you covered.
+Nah. We've got you covered.
 
 = Do you support Google Chrome or Firefox for desktop push? =
 Almost. We will be releasing support for Google Chrome very soon. Firefox will follow. To take advantage of them as we include support, make sure to have *Activate all Roost Features* checked.
 
 = Do my readers / subscribers have to create an account with Roost? =
-Nope. We have a patent-pending *zero-configuration* installation process for the Roost app. When a person hits your subscription link, the are sent to the Roost page on their device's app store, and prompted for install. Once installed and opened, a person is sent directly back to the page they were viewing on your site.
+Nope. Just you.
 
 
 == Screenshots ==
 
-1. Create your Roost Account. (It's Free!)
-2. Log in to your Roost Account.
-3. Roost plugin from the Wordpress dashboard showing analytics, manual push, and settings.
+1. One-Click to subscribe for visitors to your site. Easy peasy!
+2. Notifications will be delivered in the top-right corner of your subscribers screen.
+3. Create your Roost Account. (It's Free!)
+4. Or log in to your existing Roost account.
+5. Roost plugin from the WordPress dashboard showing analytics.
+6. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.1.5 =
+* Control for Prompt - auto prompt, after number of visits, off, on button / link click
+* Added custom headline option for notification when publishing a post
+* Cleared for takeoff with WordPress v4.0
+* Bugfix - Roost JS now only loaded if logged into plugin.
+* Bugfix - Total notifications sent in dashboard now really total notifications *Palm to Face*
+* Code Cleanup
+
 = 2.1.4 =
 * Bugfix - Fixed bug that prevented stats from displaying when WordPress admin accessed via HTTPS
 * Bugfix - Fixed bug that showed blank stats / setting screen on invalid login attempt
@@ -173,6 +192,9 @@ Nope. We have a patent-pending *zero-configuration* installation process for the
 * Initial Release
 
 == Upgrade Notice ==
+= 2.1.5 =
+* Added prompt control and option for custom text on notifications when publishing a post. Also, pre-check compatible with WordPress v4.0
+
 = 2.1.4 =
 * Bugfix - Fixed bug that prevented stats from displaying when WordPress admin accessed via HTTPS
 
