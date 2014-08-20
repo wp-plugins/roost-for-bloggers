@@ -46,7 +46,7 @@
 	cursor: pointer;
 }
 
-.left-link {
+.roost-left-link {
 	float: left;
 	font-size: 14px;
 }
@@ -451,6 +451,7 @@ input[type="text"]#roost-min-visits {
     top: 0px;
     left: 4px;
     text-align: center;
+    padding: 0;
 }
 
 .roost-os-bold {
@@ -926,7 +927,7 @@ a#roost-notice-CTA:hover {
     right: 30px;
 }
 
-.chart-range-toggle {
+.roost-chart-range-toggle {
     margin-right: -6px;
     padding: 5px 10px;
     border: 1px solid #cccccc;
@@ -937,16 +938,16 @@ a#roost-notice-CTA:hover {
     cursor: pointer;
 }
 
-.chart-range-toggle.active {
+.roost-chart-range-toggle.active {
     background: #e4e4e4;
 }
 
-.chart-range-toggle:first-of-type {
+.roost-chart-range-toggle:first-of-type {
     border-right: 0;
     border-radius: 3px 0 0 3px;
 }
 
-.chart-range-toggle:last-of-type {
+.roost-chart-range-toggle:last-of-type {
     margin-right: 0;
     border-left: 0;
     border-radius: 0 3px 3px 0;
@@ -959,7 +960,7 @@ a#roost-notice-CTA:hover {
     left: 30px;
 }
 
-.chart-metric-toggle {
+.roost-chart-metric-toggle {
     height: 22px;
     position: relative;
     z-index: 10;
@@ -977,11 +978,11 @@ a#roost-notice-CTA:hover {
     cursor: pointer;
 }
 
-.chart-metric-toggle:last-of-type {
+.roost-chart-metric-toggle:last-of-type {
     margin-right: 0;
 }
 
-.chart-metric-toggle.active {
+.roost-chart-metric-toggle.active {
     position: relative;
     z-index: 50;
     border-bottom: none;
@@ -1019,27 +1020,27 @@ a#roost-notice-CTA:hover {
     border-top: 1px solid #cccccc;
 }
 
-#custom-note,
-#custom-note input {
+#roost-custom-note,
+#roost-custom-note input {
     display: none;
     margin-top: 5px;
 }
 
-#custom-note-text-trigger {
+#roost-custom-note-text-trigger {
     display: block;
     margin: 10px 0 0 10px;
     color: #666666;
 }
 
-#custom-note a {
+#roost-custom-note a {
     cursor: pointer;
 }
 
-#custom-note i {
+#roost-custom-note i {
     font-size: 11px;
 }
 
-#custom-note input {
+#roost-custom-note input {
     width: 100%;
     margin-top: 0;
     padding: 10px 10px 5px;

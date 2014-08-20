@@ -1,11 +1,15 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Roost {
 
-    public static $roost_version = '2.1.5';
+    public static $roost_version = '2.1.6';
 
-    protected static $database_version = 1408;
-
+    protected static $database_version = 20140819;
+    
     public static function site_url() {
         return get_option( 'siteurl' );
     }
@@ -29,16 +33,32 @@ class Roost {
         return get_option( 'roost_settings' );
     }
 
+    public static function roost_active() {
+        $roost_settings = self::roost_settings();        
+        $app_key = $roost_settings['appKey'];
+        if ( ! empty( $app_key ) ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    
     public function __construct() {
         //blank
     }
 
     public static function init() {
-        self::add_actions();
-		$roost_settings = self::roost_settings();
-        if ( empty( $roost_settings ) || ( self::$roost_version !== $roost_settings['version'] ) ) {
-            self::install( $roost_settings );
-        }
+        $roost = null;
+        
+        if ( is_null( $roost ) ) {
+			$roost = new self();
+            self::add_actions();
+            $roost_settings = self::roost_settings();
+            if ( empty( $roost_settings ) || ( self::$roost_version !== $roost_settings['version'] ) ) {
+                self::install( $roost_settings );
+            }
+		}
+		return $roost;
 	}
 
 	public static function install( $roost_settings ) {
@@ -51,7 +71,7 @@ class Roost {
                 'bbPress' => 1,
                 'database_version' => self::$database_version,
                 'prompt_min' => 0,
-                'prompt_visits' => 1,
+                'prompt_visits' => 2,
                 'prompt_event' => 0,
             );
 			add_option( 'roost_settings', $roost_settings );
@@ -70,13 +90,23 @@ class Roost {
     }
     
     protected static function update_database( $roost_settings ) {
-        if ( empty( $roost_settings['database_version'] ) || ( 1407 === $roost_settings['database_version'] ) ) {
+        if ( empty( $roost_settings['database_version'] ) || ( 1407 >= $roost_settings['database_version'] ) ) {
             if ( empty( $roost_settings['bbPress'] ) ) {
                 $roost_settings['bbPress'] = 1;
             }
             $roost_settings['prompt_min'] = 0;
-            $roost_settings['prompt_visits'] = 1;
+            $roost_settings['prompt_visits'] = 2;
             $roost_settings['prompt_event'] = 0;
+        }
+        if ( 1408 >= $roost_settings['database_version'] ) {
+            if ( $roost_settings['prompt_visits'] === 1 ) {
+                $roost_settings['prompt_visits'] = 2;
+            }
+            global $wpdb;
+            $wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = '_roost_override' WHERE meta_key = 'roostOverride'" );
+            $wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = '_roost_custom_note_text' WHERE meta_key = 'roost_custom_note_text'" );
+            $wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = '_roost_force' WHERE meta_key = 'roostForce'" );
+            $wpdb->query( "UPDATE $wpdb->postmeta SET meta_key = '_roost_bbp_subscription' WHERE meta_key = 'roost_bbp_subscription'" );
         }
         $roost_settings['database_version'] = self::$database_version;
         update_option('roost_settings', $roost_settings);
@@ -97,7 +127,8 @@ class Roost {
         add_action( 'wp_head', array( __CLASS__, 'byline' ), 1 );
         add_action( 'wp_footer', array( __CLASS__, 'roostJS' ) );
         add_filter( 'clean_url', array( __CLASS__, 'add_async' ), 2, 1 );
-                
+        add_action( 'transition_post_status', array( __CLASS__, 'build_note' ), 10, 3 );
+
         if ( is_admin() ) {
             add_filter( 'plugin_action_links_roost-for-bloggers/roost.php', array( __CLASS__, 'add_action_links' ) );
             add_action( 'admin_init', array( __CLASS__, 'activate_redirect' ) );
@@ -110,11 +141,9 @@ class Roost {
             add_action( 'wp_ajax_graph_reload', array( __CLASS__, 'graph_reload' ) );
             add_action( 'wp_ajax_remove_headline', array( __CLASS__, 'remove_headline' ) );
             add_action( 'wp_ajax_subs_check', array( __CLASS__, 'subs_check' ) );
-            add_action( 'wp_ajax_nopriv_subs_check', array( __CLASS__, 'subs_check' ) );
             add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'note_override' ) );
             add_action( 'add_meta_boxes_post', array( __CLASS__, 'custom_note_text' ) );
             add_action( 'save_post', array( __CLASS__, 'save_post_meta_roost' ) );
-            add_action( 'transition_post_status', array( __CLASS__, 'build_note' ), 10, 3 );
         }
     }
 
@@ -141,46 +170,48 @@ class Roost {
     }
 
     public static function roostJS() {
+        if ( false === self::roost_active() ) {
+            return;
+        }
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
-        if ( ! empty( $app_key ) ) {
     ?>
-            <script>var _roost = _roost || [];_roost.push(['appkey','<?php echo( $app_key ); ?>']);</script><noscript><a href="https://goroost.com/site-contact?noscript&appkey=<?php echo( $app_key ); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="https://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/js/roost.js" async></script>
-        <?php
-            if ( ( true === $roost_settings['prompt_min'] ) || ( true === $roost_settings['prompt_event'] ) ) {
-        ?>
-                <script>
-                    _roost.push( [ 'autoprompt', false ] );
-                    <?php
-                        if ( true == $roost_settings['prompt_min'] ) {
-                    ?>
-                        _roost.push( [ 'minvisits', <?php echo( $roost_settings['prompt_visits'] ); ?> ] );
-                    <?php
-                        }
-                        if ( true === $roost_settings['prompt_event'] ) {
-                    ?>
-                            ( function( $ ) {
-                                $( '.roost-prompt-wp' ).on( 'click', function( e ) {
-                                    e.preventDefault();
-                                    _roost.prompt();
-                                });
-                                _roost.push(['onload', function(data){
-                                    if ( false === data.promptable ) {
-                                        $( '.roost-prompt-wp' ).hide();
-                                    }
-                                }]);
-                                _roost.push(['onresult', function(data){
-                                    if ( true === data.registered ) {
-                                        $( '.roost-prompt-wp' ).hide();
-                                    }
-                                }]);
-                            })( jQuery );
-                    <?php
-                        }
-                    ?>
-                </script>
+        <script>var _roost = _roost || [];_roost.push(['appkey','<?php echo( $app_key ); ?>']);</script><noscript><a href="https://goroost.com/site-contact?noscript&appkey=<?php echo( $app_key ); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="https://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/js/roost.js" async></script>
     <?php
-            }
+        if ( ( true === $roost_settings['prompt_min'] ) || ( true === $roost_settings['prompt_event'] ) ) {
+    ?>
+            <script>
+                _roost.push( [ 'autoprompt', false ] );
+                <?php
+                    if ( true == $roost_settings['prompt_min'] ) {
+                ?>
+                    _roost.push( [ 'minvisits', <?php echo( $roost_settings['prompt_visits'] ); ?> ] );
+                <?php
+                    }
+                    if ( true === $roost_settings['prompt_event'] ) {
+                ?>
+                        ( function( $ ) {
+                            $( '.roost-prompt-wp' ).on( 'click', function( e ) {
+                                e.preventDefault();
+                                _roost.prompt();
+                            });
+                            _roost.push(['onload', function(data){
+                                if ( false === data.promptable ) {
+                                    $( '.roost-prompt-wp' ).hide();
+                                }
+                            }]);
+                            _roost.push(['onresult', function(data){
+                                console.log(data);
+                                if ( true === data.registered || false === data.registered ) {
+                                    $( '.roost-prompt-wp' ).hide();
+                                }
+                            }]);
+                        })( jQuery );
+                <?php
+                    }
+                ?>
+            </script>
+    <?php
         }
     }
 
@@ -191,7 +222,7 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
 
-        if ( ! $app_key && ( $hook_suffix !== $roost_page ) ) {
+        if ( false === self::roost_active() && $hook_suffix !== $roost_page ) {
     ?>
 		<div class="updated" id="roost-setup-notice">
             <div id="roost-notice-logo">
@@ -234,9 +265,7 @@ class Roost {
 	public static function admin_scripts() {
         wp_enqueue_style( 'rooststyle', ROOST_URL . 'layout/css/rooststyle.css', '', self::$roost_version );
         wp_enqueue_script( 'roostGoogleFont', ROOST_URL . 'layout/js/roostGoogleFont.js', '', self::$roost_version, false );
-        $roost_settings = self::roost_settings();
-        $app_key = $roost_settings['appKey'];
-        if ( ! empty( $app_key ) ) {
+        if ( true === self::roost_active() ) {
             wp_enqueue_style( 'morrisstyle', '//s3.amazonaws.com/roost/plugins/morris-0.4.3.min.css', '', self::$roost_version );
             wp_enqueue_script( 'morrisscript', '//s3.amazonaws.com/roost/plugins/morris-0.4.3.min.js', array( 'jquery', 'raphael' ), self::$roost_version );
             wp_enqueue_script( 'raphael', '//s3.amazonaws.com/roost/plugins/raphael-min-2.1.0.js', array( 'jquery' ), self::$roost_version );
@@ -265,22 +294,22 @@ class Roost {
         if ( ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) || empty( $_POST['hiddenRooster'] ) ) {
             return false;
         } else {
-            $no_note = get_post_meta( $post_id, 'roostOverride', true );
-            $send_note = get_post_meta( $post_id, 'roostForce', true );
-            if ( isset( $_POST['roostOverride'] ) && ! $no_note ) {
-                $override_setting = $_POST['roostOverride'];
-                add_post_meta( $post_id, 'roostOverride', $override_setting, true );
-            } elseif ( ! isset( $_POST['roostOverride'] ) && $no_note ) {
-                delete_post_meta( $post_id, 'roostOverride' );
+            $no_note = get_post_meta( $post_id, '_roost_override', true );
+            $send_note = get_post_meta( $post_id, '_roost_force', true );
+            if ( isset( $_POST['roost-override'] ) && ! $no_note ) {
+                $override_setting = $_POST['roost-override'];
+                add_post_meta( $post_id, '_roost_override', $override_setting, true );
+            } elseif ( ! isset( $_POST['roost-override'] ) && $no_note ) {
+                delete_post_meta( $post_id, '_roost_override' );
             }
-            if ( isset( $_POST['roostForce'] ) && ! $send_note ) {
-                $override_setting = $_POST['roostForce'];
-                add_post_meta( $post_id, 'roostForce', $override_setting, true );
-            } elseif ( ! isset( $_POST['roostForce'] ) && $send_note ) {
-                delete_post_meta( $post_id, 'roostForce' );
+            if ( isset( $_POST['roost-force'] ) && ! $send_note ) {
+                $override_setting = $_POST['roost-force'];
+                add_post_meta( $post_id, '_roost_force', $override_setting, true );
+            } elseif ( ! isset( $_POST['roost-force'] ) && $send_note ) {
+                delete_post_meta( $post_id, '_roost_force' );
             }
-            if ( isset( $_POST['custom-note-text'] ) ) {
-                update_post_meta( $post_id, 'roost_custom_note_text', $_POST['custom-note-text'] );
+            if ( isset( $_POST['roost-custom-note-text'] ) ) {
+                update_post_meta( $post_id, '_roost_custom_note_text', $_POST['roost-custom-note-text'] );
             }
         }
     }
@@ -299,32 +328,37 @@ class Roost {
     }
 
     public static function build_note( $new_status, $old_status, $post ) {
-		if ( $new_status != $old_status && ! empty( $post ) ) {
-		    $post_type = get_post_type( $post );
+        if ( false === self::roost_active() ) {
+            return;
+        }
+        if ( $new_status != $old_status && ! empty( $post ) ) {
+            $post_type = get_post_type( $post );
 		    if ( 'post' === $post_type && 'publish' === $new_status ) {
-				$post_id = $post->ID;
+                $post_id = $post->ID;
 				$roost_settings = self::roost_settings();
 				$app_key = $roost_settings['appKey'];
 				$app_secret = $roost_settings['appSecret'];
 				$auto_push = $roost_settings['autoPush'];
                 
-				if ( ! empty( $app_key ) ) {
-					if ( ( 'publish' === $new_status && 'future' === $old_status ) || empty( $_POST['hiddenRooster'] ) ) {
-						$override = get_post_meta( $post_id, 'roostOverride', true );
-                        $send_note = get_post_meta( $post_id, 'roostForce', true );
-					} else {
-                        if ( isset( $_POST['roostOverride'] ) ) {
-                            $override = $_POST['roostOverride'];
-                        }
-                        if ( isset( $_POST['roostForce'] ) ) {
-                            $send_note = $_POST['roostForce'];
-                        }
-					}
+                if ( ( 'publish' === $new_status && 'future' === $old_status ) || empty( $_POST['hiddenRooster'] ) ) {
+                    $override = get_post_meta( $post_id, '_roost_override', true );
+                    $send_note = get_post_meta( $post_id, '_roost_force', true );
+                    $custom_headline = get_post_meta( $post_id, '_roost_custom_note_text', true );
+                } else {
+                    if ( isset( $_POST['roost-override'] ) ) {
+                        $override = $_POST['roost-override'];
+                    }
+                    if ( isset( $_POST['roost-force'] ) ) {
+                        $send_note = $_POST['roost-force'];
+                    }
+                    if ( isset( $_POST['roost-custom-note-text'] ) && ! empty( $_POST['roost-custom-note-text'] ) ) {
+                        $custom_headline = $_POST['roost-custom-note-text'];
+                    }
                 }
-                if ( ( 1 == $auto_push || ! empty( $send_note ) ) && ! empty( $app_key ) ) {
+                if ( ( 1 == $auto_push || ! empty( $send_note ) ) ) {
 					if ( empty( $override ) ) {
-                        if ( ! empty( $_POST['custom-note-text'] ) && strlen( $_POST['custom-note-text'] ) > 3 ) {
-                            $alert = $_POST['custom-note-text'];
+                        if ( ! empty( $custom_headline ) ) {
+                            $alert = $custom_headline;
                         } else {
                             $alert = get_the_title( $post_id );
                         }
@@ -341,40 +375,43 @@ class Roost {
 			}
         }
     }
-
+    
 	public static function note_override() {
+        if ( false === self::roost_active() ) {
+            return;
+        }
+        $roost_settings = self::roost_settings();
         global $post;
         if ( 'post' === $post->post_type ) {
             if ( 'publish' === $post->post_status ) {
                 $check_hidden = true;
             }
-            $roost_settings = self::roost_settings();
-            $app_key = $roost_settings['appKey'];
             $auto_push = $roost_settings['autoPush'];
-            if ( ! empty( $app_key ) ) {
-                printf('<div class="misc-pub-section misc-pub-section-last" id="roost-post-checkboxes" %s >', ( isset( $check_hidden ) ) ? 'style="display:none;"' : '' );
-                $pid = get_the_ID();
-                if ( 1 == $auto_push ) {
-                    $checked = get_post_meta($pid, 'roostOverride', true);
-                    printf('<label><input type="checkbox" value="1" id="roost-override-checkbox" name="roostOverride" %s />', ( ! empty( $checked ) ) ? 'checked="checked"' : '' );
-                    echo '<strong>Do NOT</strong> send notification with <strong>Roost</strong></label>';
-                } else {
-                    $checked = get_post_meta($pid, 'roostForce', true);
-                    printf('<label><input type="checkbox" value="1" id="roost-forced-checkbox" name="roostForce" %s />', ( ! empty( $checked ) ) ? 'checked="checked"' : '' );
-                    echo '<strong>Send</strong> notification with <strong>Roost</strong></label>';
-                }
-                echo '<input type="hidden" name="hiddenRooster" value="true" />';
-                echo '</div>';
+            printf('<div class="misc-pub-section misc-pub-section-last" id="roost-post-checkboxes" %s >', ( isset( $check_hidden ) ) ? 'style="display:none;"' : '' );
+            $pid = get_the_ID();
+            if ( 1 == $auto_push ) {
+                $checked = get_post_meta($pid, '_roost_override', true);
+                printf('<label><input type="checkbox" value="1" id="roost-override-checkbox" name="roost-override" %s />', ( ! empty( $checked ) ) ? 'checked="checked"' : '' );
+                echo '<strong>Do NOT</strong> send notification with <strong>Roost</strong></label>';
+            } else {
+                $checked = get_post_meta($pid, '_roost_force', true);
+                printf('<label><input type="checkbox" value="1" id="roost-forced-checkbox" name="roost-force" %s />', ( ! empty( $checked ) ) ? 'checked="checked"' : '' );
+                echo '<strong>Send</strong> notification with <strong>Roost</strong></label>';
             }
+            echo '<input type="hidden" name="hiddenRooster" value="true" />';
+            echo '</div>';
         }
 	}
     
     public static function custom_note_text( $post ) {
+        if ( false === self::roost_active() ) {
+            return;
+        }
         if ( 'publish' !== $post->post_status ) {
-            $custom_note_text = get_post_meta( $post->ID, 'roost_custom_note_text', true );
+            $custom_note_text = get_post_meta( $post->ID, '_roost_custom_note_text', true );
     ?>
-        <div id="custom-note">
-            <span id="custom-note-text-trigger" ><strong>Roost Web Push - </strong>
+        <div id="roost-custom-note">
+            <span id="roost-custom-note-text-trigger" ><strong>Roost Web Push - </strong>
                 <?php
                     if ( ! empty( $custom_note_text ) ) {
                 ?>
@@ -387,7 +424,7 @@ class Roost {
                     }
                 ?>
             </span>
-            <input type="text" id="custom-note-text" placeholder="Enter Custom Headline for your Notification" name="custom-note-text" value="<?php echo( ! empty( $custom_note_text ) ? $custom_note_text : '' ); ?>" />
+            <input type="text" id="roost-custom-note-text" placeholder="Enter Custom Headline for your Notification" name="roost-custom-note-text" value="<?php echo( ! empty( $custom_note_text ) ? $custom_note_text : '' ); ?>" />
         </div>
     <?php
         }
@@ -448,7 +485,7 @@ class Roost {
 
     public static function remove_headline() {
         $post_id = $_POST['postID'];
-        update_post_meta( $post_id, 'roost_custom_note_text', '' );
+        update_post_meta( $post_id, '_roost_custom_note_text', '' );
         die();
     }
 
@@ -489,7 +526,7 @@ class Roost {
             $autoPush = false;
             $bbPress = false;
             $prompt_min = false;
-            $prompt_visits = 1;
+            $prompt_visits = 2;
             $prompt_event = false;
 
             if ( isset( $_POST['autoPush'] ) ) {
@@ -498,17 +535,17 @@ class Roost {
             if ( isset( $_POST['bbPress'] ) ) {
                 $bbPress = true;
             }
-            if ( isset( $_POST['promptmin'] ) ) {
+            if ( isset( $_POST['roost-prompt-min'] ) ) {
                 $prompt_min = true;
             }
-            if ( isset( $_POST['promptvisits'] ) ) {
-                if ( '0' === $_POST['promptvisits'] ) {
-                    $prompt_visits = 1;
+            if ( isset( $_POST['roost-prompt-visits'] ) ) {
+                if ( '0' === $_POST['roost-prompt-visits'] || '1' === $_POST['roost-prompt-visits'] ) {
+                    $prompt_visits = 2;
                 } else {
-                    $prompt_visits = $_POST['promptvisits'];
+                    $prompt_visits = $_POST['roost-prompt-visits'];
                 }
             }
-            if ( isset( $_POST['promptevent'] ) ) {
+            if ( isset( $_POST['roost-prompt-event'] ) ) {
                 $prompt_event = true;
             }
 
@@ -556,24 +593,23 @@ class Roost {
     }
 
     public static function admin_menu_page() {
-        $roost_settings = self::roost_settings();
-                
+        $roost_settings = self::roost_settings();      
         $app_key = $roost_settings['appKey'];
         $app_secret = $roost_settings['appSecret'];
 
-        if ( ! empty( $app_key ) ) {
-            $roost_active_key = true;
+        if ( true === self::roost_active() ) {
             $bbPress_active = Roost_bbPress::bbPress_active();
+            $roost_active_key = true;
         } else {
             $roost_active_key = false;
         }
         
-        if ( ! empty( $app_key ) && empty( $roost_server_settings ) ) {
+        if ( true === self::roost_active() && empty( $roost_server_settings ) ) {
             $roost_server_settings = Roost_API::get_server_settings( $app_key, $app_secret );
             $roost_stats = Roost_API::get_stats( $app_key, $app_secret );
-        }
-
-        if ( empty( $app_key ) && isset( $_GET['roost_token'] ) ) {
+        }        
+        
+        if ( false === self::roost_active() && isset( $_GET['roost_token'] ) ) {
             $roost_token = $_GET['roost_token'];
             $roost_token = urldecode($roost_token);
             $logged_in = Roost_API::login( null, null, $roost_token );

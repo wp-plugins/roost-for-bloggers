@@ -1,5 +1,9 @@
 <?php
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 class Roost_bbPress {
 
     public static function bbPress_active() {
@@ -18,7 +22,16 @@ class Roost_bbPress {
         //blank
     }
 
-    public static function init() {
+    public static function init() {        
+        $roost_bbp = null;
+        if ( is_null( $roost_bbp ) ) {
+			$roost_bbp = new self();
+            self::add_actions();
+		}
+		return $roost_bbp;
+    }
+    
+    public static function add_actions() {
         add_action( 'wp_enqueue_scripts', array( __CLASS__, 'load_roost_bbp_scripts' ), 1 );
 
         add_action( 'wp_ajax_roost_bbp_subscribe', array( __CLASS__, 'roost_bbp_ajax_subscription' ) );
@@ -50,7 +63,7 @@ class Roost_bbPress {
     
     public static function roost_bbp_reply_subscription( $post ) {
         global $post;
-        $roost_bbp_subscriptions = get_post_meta( $post->ID, 'roost_bbp_subscription', true );
+        $roost_bbp_subscriptions = get_post_meta( $post->ID, '_roost_bbp_subscription', true );
     ?>
         <div class="roost-bbp-reply-subscription-wrap" style="display:none;">
             <input type="checkbox" value='1' name="roost-bbp-subscription" class="roost-bbp-reply-subscription" />
@@ -69,7 +82,7 @@ class Roost_bbPress {
                         ?>
                                 var registrations = <?php echo( $reply_bbp_subscriptions ); ?>;
                                 if ( 'undefined' !== typeof registrations[window.roostToken] ) {
-                                    if ( true ==== registrations[window.roostToken] ) {
+                                    if ( true === registrations[window.roostToken] ) {
                                         jQuery( '.roost-bbp-reply-subscription' ).prop( 'checked', true );
                                     }
                                 }
@@ -89,7 +102,7 @@ class Roost_bbPress {
 
         $url = bbp_get_topic_permalink( $post_id );
 
-        $roost_bbp_subscriptions = get_post_meta( $post_id, 'roost_bbp_subscription', true );
+        $roost_bbp_subscriptions = get_post_meta( $post_id, '_roost_bbp_subscription', true );
         
         echo( sprintf( "<span id='roost-subscribe-%d' style='display:none;'><a href='%s' data-post='%d' class='roost-topic-subscribe-link'></a></span>", $post_id, $url, $post_id ) );
         ?>
@@ -179,7 +192,7 @@ class Roost_bbPress {
 
         $url = bbp_get_forum_permalink( $post_id );
 
-        $roost_bbp_subscriptions = get_post_meta( $post_id, 'roost_bbp_subscription', true );
+        $roost_bbp_subscriptions = get_post_meta( $post_id, '_roost_bbp_subscription', true );
         
         echo( sprintf( "<span id='roost-subscribe-%d' style='display:none;'><a href='%s' data-post='%d' class='roost-forum-subscribe-link' class='subscription-toggle'></a></span>", $post_id, $url, $post_id ) );
         ?>
@@ -269,7 +282,7 @@ class Roost_bbPress {
                 $roost_bbp_subscription = false;
             }   
 
-            $subscriptions = get_post_meta( $post_id, 'roost_bbp_subscription', true );
+            $subscriptions = get_post_meta( $post_id, '_roost_bbp_subscription', true );
             if ( ! empty( $subscriptions )  ) {
                 if ( isset( $subscriptions[$roost_device_token] ) ) {
                     if ( true === $roost_bbp_subscription ) {
@@ -287,11 +300,11 @@ class Roost_bbPress {
                     $roost_device_token => $roost_bbp_subscription,
                 );
             }
-            update_post_meta( $post_id, 'roost_bbp_subscription', $subscriptions );
+            update_post_meta( $post_id, '_roost_bbp_subscription', $subscriptions );
         }
 
         if ( ( ! empty( $roost_device_token ) ) && ( 'roost_bbp_subscribe' === $action ) ) {
-            $subscriptions = get_post_meta( $post_id, 'roost_bbp_subscription', true );
+            $subscriptions = get_post_meta( $post_id, '_roost_bbp_subscription', true );
             if ( ! empty( $subscriptions )  ) {
                 $subscriptions[$roost_device_token] = true;
             } else {
@@ -299,18 +312,18 @@ class Roost_bbPress {
                     $roost_device_token => true,
                 );
             }
-            update_post_meta( $post_id, 'roost_bbp_subscription', $subscriptions );
+            update_post_meta( $post_id, '_roost_bbp_subscription', $subscriptions );
         }
 
         if ( ( ! empty( $roost_device_token ) ) && ( 'roost_bbp_unsubscribe' === $action ) ) {
-            $subscriptions = get_post_meta( $post_id, 'roost_bbp_subscription', true );
+            $subscriptions = get_post_meta( $post_id, '_roost_bbp_subscription', true );
             unset( $subscriptions[$roost_device_token] );
-            update_post_meta( $post_id, 'roost_bbp_subscription', $subscriptions );
+            update_post_meta( $post_id, '_roost_bbp_subscription', $subscriptions );
         }
     }
     
     public static function roost_bbp_remove_all_subscriptions( $action ) {
-        delete_post_meta( $action, 'roost_bbp_subscription' );
+        delete_post_meta( $action, '_roost_bbp_subscription' );
     }
     
     public static function roost_bbp_notify_subscribers( $reply_id, $topic_id, $forum_id, $anonymous_data, $reply_author = 0 ) {
@@ -321,8 +334,8 @@ class Roost_bbPress {
             return false;
         }
         
-        $topic_title   = bbp_get_topic_title( $topic_id );
-        $topic_url     = get_permalink( $topic_id );
+        $topic_title = bbp_get_topic_title( $topic_id );
+        $topic_url = get_permalink( $topic_id );
         if ( isset( $_POST['bbp_reply_to'] ) ) {
             $reply_to_id = $_POST['bbp_reply_to'];
         }
@@ -334,11 +347,11 @@ class Roost_bbPress {
         $message = 'New Post in ' . $topic_title;
         
         if ( ! empty( $reply_to_id ) ) {
-            $reply_subscriptions = get_post_meta( $reply_to_id, 'roost_bbp_subscription', true );
+            $reply_subscriptions = get_post_meta( $reply_to_id, '_roost_bbp_subscription', true );
         }
         
-        $topic_subscriptions = get_post_meta( $topic_id, 'roost_bbp_subscription', true );
-        $forum_subscriptions = get_post_meta( $forum_id, 'roost_bbp_subscription', true );
+        $topic_subscriptions = get_post_meta( $topic_id, '_roost_bbp_subscription', true );
+        $forum_subscriptions = get_post_meta( $forum_id, '_roost_bbp_subscription', true );
 
         if ( ! empty( $reply_subscriptions ) ) {
             $device_tokens = array();

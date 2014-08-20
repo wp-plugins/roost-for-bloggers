@@ -1,3 +1,9 @@
+<?php
+    if ( ! defined( 'ABSPATH' ) ) {
+        exit;
+    }
+?>
+
 <div id="rooster">
     <div id="roost-header">
         <?php if ( $roost_active_key ) { ?>
@@ -113,7 +119,7 @@
                                         <input type="hidden" id="roost-timezone-offset" name="roost-timezone-offset" value="" />
                                         <input type="submit" id="roost-middle-save" class="roost-login" name="<?php echo isset($roost_sites) ? 'roostconfigselect' : 'roostlogin' ?>" value="<?php echo isset( $roost_sites ) ? 'Choose Site' : 'Login' ?>" tabindex="3" />
                                         <?php submit_button( 'Cancel', 'delete', 'cancel', false, array( 'tabindex' => '4' ) ); ?>
-                                        <span class="left-link"><a href="https://go.goroost.com/login?forgot=true" target="_blank">forget password?</a></span>
+                                        <span class="roost-left-link"><a href="https://go.goroost.com/login?forgot=true" target="_blank">forget password?</a></span>
                                     </div>
                                     <div id="roost-sso">
                                         <div id="roost-sso-text">
@@ -170,24 +176,22 @@
                                 <div class="roost-section-heading" id="roost-chart-heading">
                                     Recent Activity
                                     <div id="roost-time-period">
-                                        <span id="test-id" class="chart-range-toggle chart-reload active"><span class="load-chart" data-type="APP" data-range="DAY">Day</span></span>
-                                        <span class="chart-range-toggle chart-reload"><span class="load-chart" data-type="APP" data-range="WEEK">Week</span></span>
-<!--
-                                        <span class="chart-range-toggle chart-reload"><span class="load-chart" data-type="APP" data-range="MONTH">Month</span></span>
--->
+                                        <span class="roost-chart-range-toggle roost-chart-reload active"><span class="load-chart" data-type="APP" data-range="DAY">Day</span></span>
+                                        <span class="roost-chart-range-toggle roost-chart-reload"><span class="load-chart" data-type="APP" data-range="WEEK">Week</span></span>
+                                        <span class="roost-chart-range-toggle roost-chart-reload"><span class="load-chart" data-type="APP" data-range="MONTH">Month</span></span>
                                     </div>
                                     <div id="roost-metric-options">
                                         <ul>
-                                            <li class="chart-metric-toggle chart-reload active"><span class="chart-value" data-value="s">Subscribes</span></li>
-                                            <li class="chart-metric-toggle chart-reload"><span class="chart-value" data-value="n">Notifications</span></li>
-                                            <li class="chart-metric-toggle chart-reload"><span class="chart-value" data-value="r">Reads</span></li>
-                                            <li class="chart-metric-toggle chart-reload"><span class="chart-value" data-value="p">Page Views</li></li>
-                                            <li class="chart-metric-toggle chart-reload"><span class="chart-value" data-value="u">Unsubscribes</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload active"><span class="chart-value" data-value="s">Subscribes</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="n">Notifications</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="r">Reads</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="p">Page Views</li></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="u">Unsubscribes</span></li>
 <!--
-                                            <li class="chart-metric-toggle chart-reload"><span class="chart-value" data-value="m">Messages</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="m">Messages</span></li>
 -->
 <!--
-                                            <li class="chart-metric-toggle chart-reload"><span class="chart-value" data-value="pr">Prompts</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="pr">Prompts</span></li>
 -->
                                         </ul>
                                     </div>
@@ -269,12 +273,12 @@
                                                 </div>
                                                 <div class="roost-setting-wrapper">
                                                     <span class="roost-label long-label">Notification prompt options:</span>
-                                                    <input type="checkbox" name="promptmin" id="prompt-min" value="1" <?php if ( ! empty( $roost_settings['prompt_min'] ) ) { echo( 'checked="checked"' ); } ?> />
-                                                    <span class="roost-setting-caption" id="roost-settings-lift">Prompt visitors for notifications after they visit the site <input name="promptvisits" type="text" id="roost-min-visits" value="<?php echo( $roost_settings['prompt_visits'] ); ?>" <?php echo( ! empty( $roost_settings['prompt_min'] ) ? '' : 'disabled="disabled"' ); ?>/>times.</span>
+                                                    <input type="checkbox" name="roost-prompt-min" id="roost-prompt-min" value="1" <?php if ( ! empty( $roost_settings['prompt_min'] ) ) { echo( 'checked="checked"' ); } ?> />
+                                                    <span class="roost-setting-caption" id="roost-settings-lift">Prompt visitors for notifications when they visit the site <input name="roost-prompt-visits" type="text" id="roost-min-visits" value="<?php echo( $roost_settings['prompt_visits'] ); ?>" <?php echo( ! empty( $roost_settings['prompt_min'] ) ? '' : 'disabled="disabled"' ); ?>/>times.</span>
                                                 </div>
                                                 <div class="roost-setting-wrapper">
                                                     <span class="roost-label"></span>
-                                                    <input type="checkbox" name="promptevent" id="prompt-event" value="1" <?php if ( ! empty( $roost_settings['prompt_event'] ) ) { echo( 'checked="checked"' ); } ?> />
+                                                    <input type="checkbox" name="roost-prompt-event" id="roost-prompt-event" value="1" <?php if ( ! empty( $roost_settings['prompt_event'] ) ) { echo( 'checked="checked"' ); } ?> />
                                                     <span class="roost-setting-caption">Prompt visitors for notifications once they complete an action (clicking a button or link).</span>
                                                     <div id="roost-event-hints">
                                                         <div>
@@ -311,7 +315,7 @@
             var timeZoneOffset = new Date().getTimezoneOffset();
             $( '#roost-timezone-offset' ).val( timeZoneOffset );
             <?php if ( $roost_active_key ) { ?>
-                $( '.chart-range-toggle, .chart-metric-toggle' ).on( 'click', function() {
+                $( '.roost-chart-range-toggle, .roost-chart-metric-toggle' ).on( 'click', function() {
                     $( this ).parent().find( '.active' ).removeClass( 'active' );
                     $( this ).addClass( 'active' );
                 });
@@ -319,19 +323,19 @@
                     $( '#roost-curtain' ).hide();
                     var chart;
                     var data = {
-                        type: $( '.chart-range-toggle.active span' ).data( 'type' ),
-                        range: $( '.chart-range-toggle.active span' ).data( 'range' ),
-                        value: $( '.chart-metric-toggle.active span' ).data( 'value' ),
+                        type: $( '.roost-chart-range-toggle.active span' ).data( 'type' ),
+                        range: $( '.roost-chart-range-toggle.active span' ).data( 'range' ),
+                        value: $( '.roost-chart-metric-toggle.active span' ).data( 'value' ),
                         offset: new Date().getTimezoneOffset(),
                         action: 'graph_reload',
                     };
-                    $( '.chart-reload' ).on( 'click', function( e ) {
+                    $( '.roost-chart-reload' ).on( 'click', function( e ) {
                         e.preventDefault();
                         $( '#roostchart-dynamic' ).html( "" );
                         data = {
-                            type: $( '.chart-range-toggle.active span' ).data( 'type' ),
-                            range: $( '.chart-range-toggle.active span' ).data( 'range' ),
-                            value: $( '.chart-metric-toggle.active span' ).data( 'value' ),
+                            type: $( '.roost-chart-range-toggle.active span' ).data( 'type' ),
+                            range: $( '.roost-chart-range-toggle.active span' ).data( 'range' ),
+                            value: $( '.roost-chart-metric-toggle.active span' ).data( 'value' ),
                             offset: new Date().getTimezoneOffset(),
                             action: 'graph_reload',
                         };

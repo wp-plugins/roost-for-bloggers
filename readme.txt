@@ -3,7 +3,7 @@ Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.8
 Tested up to: 4.0
-Stable tag: 2.1.5
+Stable tag: 2.1.6
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,14 @@ Nope. Just you.
 6. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.1.6 =
+* Added 30-day to Roost stats on graph (Yay for history!)
+* Bugfix - Fixed bug that prevented notifications for Scheduled Posts
+* Bugfix - Show custom headline only when logged into Roost
+* 'roost' prefixed some classes / ids
+* Hid custom post meta fields on post pages
+* Code Cleanup
+
 = 2.1.5 =
 * Control for Prompt - auto prompt, after number of visits, off, on button / link click
 * Added custom headline option for notification when publishing a post
@@ -192,6 +200,9 @@ Nope. Just you.
 * Initial Release
 
 == Upgrade Notice ==
+= 2.1.6 =
+* Fixed bug with scheduled posts
+
 = 2.1.5 =
 * Added prompt control and option for custom text on notifications when publishing a post. Also, pre-check compatible with WordPress v4.0
 

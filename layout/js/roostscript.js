@@ -33,12 +33,12 @@
         }
         roostCount.text( 0 + n );
     }).triggerHandler( 'keyup' );
-    if ( $( '#prompt-event' ).is( ':checked' ) ) {
+    if ( $( '#roost-prompt-event' ).is( ':checked' ) ) {
         $( '#roost-event-hints' ).css( 'display', 'inline-block' ).show();
         $( '.roost-block' ).height( '483px' );
         $( '#roost-event-hints-disclaimer' ).show();
     }
-    $( '#prompt-event' ).change( function () {
+    $( '#roost-prompt-event' ).change( function () {
         $( '#roost-event-hints' ).slideToggle( 100 );
         var height = $( '.roost-block' ).height();
         if ( 483 === height ) {
@@ -53,16 +53,16 @@
             $( '#roost-event-hints-disclaimer' ).show();
         }
     });
-    $( '#prompt-min' ).change( function () {
+    $( '#roost-prompt-min' ).change( function () {
         $( '#roost-min-visits' ).attr( 'disabled', ! this.checked );
     });
-    $( '#custom-note' ).remove().insertAfter( '#post-body #title' ).show();
-    $( '#custom-note-text-trigger' ).on( 'click', 'a', function() {
+    $( '#roost-custom-note' ).remove().insertAfter( '#post-body #title' ).show();
+    $( '#roost-custom-note-text-trigger' ).on( 'click', 'a', function() {
         var $this = $(this);
         var action = $this.data( 'action' );
         if ( 'change' === action ) {
-            $( '#custom-note-text-trigger' ).fadeOut( 100, function() {
-                $( '#custom-note-text' ).fadeIn( 100 );
+            $( '#roost-custom-note-text-trigger' ).fadeOut( 100, function() {
+                $( '#roost-custom-note-text' ).fadeIn( 100 );
             });
         } else {
             var data = {
@@ -70,7 +70,7 @@
                 action: 'remove_headline',
             };
             $.post( ajaxurl, data, function() {
-                $( '#custom-note-text' ).val( '' );
+                $( '#roost-custom-note-text' ).val( '' );
                 $( '.roost-headline-cage' ).fadeOut( 100, function() {
                     $( '.roost-headline-cage' ).html( '<a class="roost-headline" data-action="change">Use Custom Text for your Push Notification</a>' ).fadeIn( 150 );
                 });
