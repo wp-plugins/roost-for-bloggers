@@ -1022,14 +1022,13 @@ a#roost-notice-CTA:hover {
 
 #roost-custom-note,
 #roost-custom-note input {
-    display: none;
     margin-top: 5px;
 }
 
-#roost-custom-note-text-trigger {
+#roost-custom-note-text-description {
     display: block;
-    margin: 10px 0 0 10px;
-    color: #666666;
+    margin: 10px 10px;
+    font-weight: 400;
 }
 
 #roost-custom-note a {
@@ -1042,6 +1041,4 @@ a#roost-notice-CTA:hover {
 
 #roost-custom-note input {
     width: 100%;
-    margin-top: 0;
-    padding: 10px 10px 5px;
 }

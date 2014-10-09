@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roost {
 
-    public static $roost_version = '2.1.6';
+    public static $roost_version = '2.1.7';
 
     protected static $database_version = 20140819;
     
@@ -139,7 +139,6 @@ class Roost {
             add_action( 'admin_enqueue_scripts', array( __CLASS__, 'admin_scripts' ) );
             add_action( 'admin_menu', array( __CLASS__, 'admin_menu_add' ) );
             add_action( 'wp_ajax_graph_reload', array( __CLASS__, 'graph_reload' ) );
-            add_action( 'wp_ajax_remove_headline', array( __CLASS__, 'remove_headline' ) );
             add_action( 'wp_ajax_subs_check', array( __CLASS__, 'subs_check' ) );
             add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'note_override' ) );
             add_action( 'add_meta_boxes_post', array( __CLASS__, 'custom_note_text' ) );
@@ -176,7 +175,7 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
     ?>
-        <script>var _roost = _roost || [];_roost.push(['appkey','<?php echo( $app_key ); ?>']);</script><noscript><a href="https://goroost.com/site-contact?noscript&appkey=<?php echo( $app_key ); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="https://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/js/roost.js" async></script>
+        <script>var _roost = _roost || [];</script><noscript><a href="https://goroost.com/site-contact?noscript&appkey=<?php echo( $app_key ); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="https://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/roostjs/<?php echo( $app_key ); ?>" async></script>
     <?php
         if ( ( true === $roost_settings['prompt_min'] ) || ( true === $roost_settings['prompt_event'] ) ) {
     ?>
@@ -407,29 +406,26 @@ class Roost {
         if ( false === self::roost_active() ) {
             return;
         }
-        if ( 'publish' !== $post->post_status ) {
-            $custom_note_text = get_post_meta( $post->ID, '_roost_custom_note_text', true );
-    ?>
-        <div id="roost-custom-note">
-            <span id="roost-custom-note-text-trigger" ><strong>Roost Web Push - </strong>
-                <?php
-                    if ( ! empty( $custom_note_text ) ) {
-                ?>
-                    <span class="roost-headline-cage">Push Headline: <i><?php echo( $custom_note_text ); ?></i> - <a class="roost-headline" data-action="change">Change</a> / <a class="roost-headline" data-action="remove" data-id="<?php echo( $post->ID ); ?>">Remove</a></span>
-                <?php
-                    } else {
-                ?>
-                    <a class="roost-headline" data-action="change">Use Custom Text for your Push Notification</a>
-                <?php
-                    }
-                ?>
-            </span>
-            <input type="text" id="roost-custom-note-text" placeholder="Enter Custom Headline for your Notification" name="roost-custom-note-text" value="<?php echo( ! empty( $custom_note_text ) ? $custom_note_text : '' ); ?>" />
-        </div>
-    <?php
-        }
+        add_meta_box(
+            'roost_meta',
+            'Roost Web Push - Custom Notification Headline',
+            array( __CLASS__, 'roost_custom_headline_content' ),
+            'post',
+            'normal',
+            'high'
+        );
     }
 
+    public static function roost_custom_headline_content( $post ) {
+        $custom_note_text = get_post_meta( $post->ID, '_roost_custom_note_text', true );
+        ?>
+        <div id="roost-custom-note">
+            <input type="text" id="roost-custom-note-text" placeholder="Enter Custom Headline for your Notification" name="roost-custom-note-text" value="<?php echo( ! empty( $custom_note_text ) ? $custom_note_text : '' ); ?>" />
+            <span id="roost-custom-note-text-description" >When using a custom headline, this text will be used in place of the default blog post title for your push notification. ( Leave this blank to default to post title. )</span>
+        </div>
+    <?php
+    }
+    
     public static function complete_login( $logged_in, $site ) {
         if ( ! empty( $logged_in ) ) {
             if ( true === $logged_in['success'] ) {
@@ -480,12 +476,6 @@ class Roost {
         $roost_graph_data = Roost_API::get_graph_data( $app_key, $app_secret, $type, $range, $value, $time_offset );
         $roost_graph_data = json_encode( $roost_graph_data );
         echo $roost_graph_data;
-        die();
-    }
-
-    public static function remove_headline() {
-        $post_id = $_POST['postID'];
-        update_post_meta( $post_id, '_roost_custom_note_text', '' );
         die();
     }
 
