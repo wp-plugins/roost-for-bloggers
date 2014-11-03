@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roost {
 
-    public static $roost_version = '2.1.7';
+    public static $roost_version = '2.1.8';
 
     protected static $database_version = 20140819;
     
@@ -175,7 +175,7 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
     ?>
-        <script>var _roost = _roost || [];</script><noscript><a href="https://goroost.com/site-contact?noscript&appkey=<?php echo( $app_key ); ?>" title="Contact Us" target="_blank">Questions or feedback? Need help?</a> powered by <a href="https://goroost.com" title="Roost Web Push">Roost - Push notifications for websites</a></noscript><script src="//cdn.goroost.com/roostjs/<?php echo( $app_key ); ?>" async></script>
+        <script>var _roost = _roost || [];</script><noscript>Please enable JavaScript to use web push. Still not working? <a href="https://goroost.com/site-contact?noscript&amp;appkey=<?php echo( $app_key ); ?>" target="_blank">Troubleshoot web push notification registration with Roost.</a></noscript><script src="//cdn.goroost.com/roostjs/<?php echo( $app_key ); ?>" async></script>
     <?php
         if ( ( true === $roost_settings['prompt_min'] ) || ( true === $roost_settings['prompt_event'] ) ) {
     ?>

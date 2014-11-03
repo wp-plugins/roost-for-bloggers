@@ -176,8 +176,8 @@
                                 <div class="roost-section-heading" id="roost-chart-heading">
                                     Recent Activity
                                     <div id="roost-time-period">
-                                        <span class="roost-chart-range-toggle roost-chart-reload active"><span class="load-chart" data-type="APP" data-range="DAY">Day</span></span>
-                                        <span class="roost-chart-range-toggle roost-chart-reload"><span class="load-chart" data-type="APP" data-range="WEEK">Week</span></span>
+                                        <span class="roost-chart-range-toggle roost-chart-reload"><span class="load-chart" data-type="APP" data-range="DAY">Day</span></span>
+                                        <span class="roost-chart-range-toggle roost-chart-reload active"><span class="load-chart" data-type="APP" data-range="WEEK">Week</span></span>
                                         <span class="roost-chart-range-toggle roost-chart-reload"><span class="load-chart" data-type="APP" data-range="MONTH">Month</span></span>
                                     </div>
                                     <div id="roost-metric-options">
@@ -185,14 +185,7 @@
                                             <li class="roost-chart-metric-toggle roost-chart-reload active"><span class="chart-value" data-value="s">Subscribes</span></li>
                                             <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="n">Notifications</span></li>
                                             <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="r">Reads</span></li>
-                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="p">Page Views</li></li>
                                             <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="u">Unsubscribes</span></li>
-<!--
-                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="m">Messages</span></li>
--->
-<!--
-                                            <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="pr">Prompts</span></li>
--->
                                         </ul>
                                     </div>
                                 </div>

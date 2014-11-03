@@ -3,7 +3,7 @@ Contributors: noticesoftware, danstever
 Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
 Requires at least: 3.8
 Tested up to: 4.0
-Stable tag: 2.1.7
+Stable tag: 2.1.8
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -102,6 +102,10 @@ Nope. Just you.
 6. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.1.8 =
+* Fixed (encoded) URL that was causing W3C validation error
+* Removed outdated metrics from the Roost dashboard inside WP Admin
+
 = 2.1.7 =
 * Major updates to roost.js (Includes performance boost and new APIs)
 * Custom headline field in post screen moved to a meta box instead of injected textfield
@@ -204,6 +208,9 @@ Nope. Just you.
 * Initial Release
 
 == Upgrade Notice ==
+= 2.1.8 =
+* Fixed URL causing W3C validation error -- removed invalid metrics in dashboard
+
 = 2.1.7 =
 * Major updates to roost.js (Performance updates and new APIs)
 * Moved custom headline field to meta box on post screen

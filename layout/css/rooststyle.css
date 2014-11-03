@@ -949,7 +949,7 @@ a#roost-notice-CTA:hover {
 
 .roost-chart-range-toggle:last-of-type {
     margin-right: 0;
-    border-left: 0;
+    border-left: 1px solid #cccccc;
     border-radius: 0 3px 3px 0;
 }
 
