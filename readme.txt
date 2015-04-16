@@ -7,7 +7,7 @@ Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Web push notifications for your website. Available in Chrome (Android and desktop) and Safari (desktop).
+Push notifications for your website. Available in Chrome (Android and desktop) and Safari (desktop).
 
 == Description ==
 

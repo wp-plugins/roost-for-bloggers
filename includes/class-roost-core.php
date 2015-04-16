@@ -15,8 +15,7 @@ class Roost {
     }
 
     public static function registration_url() {
-//        $tld = 'https://dashboard.goroost.com/signup?returnURL=';
-        $tld = 'https://staging.goroost.com/signup?returnURL=';
+        $tld = 'https://dashboard.goroost.com/signup?returnURL=';
         $admin_path = admin_url( 'admin.php?page=roost-web-push' );
         $url = $tld . urlencode( $admin_path . '&source=wpplugin' );
         return $url;
