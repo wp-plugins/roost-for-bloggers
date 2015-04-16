@@ -32,7 +32,7 @@
         <div class="updated roost-wrapper" id="roost-first-time-setup">
             <div id="roost-notice-text">
                 <h3>Welcome to Roost, the plugin is up and running!</h3>
-                <h4>Your site visitors can now opt-in to receive notifications from you. ( Safari / Mavericks only right now )</h4>
+                <h4>Customize your site on the settings tab below.</h4>
             </div>
             <div id="roost-notice-target">
                 <a href="#" id="roost-notice-CTA" ><span id="roost-notice-CTA-highlight"></span>Dismiss</a>
@@ -119,23 +119,7 @@
                                         <input type="hidden" id="roost-timezone-offset" name="roost-timezone-offset" value="" />
                                         <input type="submit" id="roost-middle-save" class="roost-login" name="<?php echo isset($roost_sites) ? 'roostconfigselect' : 'roostlogin' ?>" value="<?php echo isset( $roost_sites ) ? 'Choose Site' : 'Login' ?>" tabindex="3" />
                                         <?php submit_button( 'Cancel', 'delete', 'cancel', false, array( 'tabindex' => '4' ) ); ?>
-                                        <span class="roost-left-link"><a href="https://go.goroost.com/login?forgot=true" target="_blank">forget password?</a></span>
-                                    </div>
-                                    <div id="roost-sso">
-                                        <div id="roost-sso-text">
-                                            Or sign in with
-                                        </div>
-                                        <div class="roost-sso-option">
-                                            <a href="<?php echo( Roost::login_url( 'FACEBOOK' ) ); ?>" class="roost-sso-link">
-                                                <span id="roost-sso-facebook" class="roost-plugin-image">Facebook</span>
-                                            </a>
-                                        </div>
-                                        <div class="roost-sso-option">
-                                            <a href="<?php echo( Roost::login_url( 'TWITTER' ) ); ?>" class="roost-sso-link"><span id="roost-sso-twitter" class="roost-plugin-image">Twitter</span></a>
-                                        </div>
-                                        <div class="roost-sso-option">
-                                            <a href="<?php echo( Roost::login_url( 'GOOGLE' ) ); ?>" class="roost-sso-link"><span id="roost-sso-google" class="roost-plugin-image">Google</span></a>
-                                        </div>
+                                        <span class="roost-left-link"><a href="https://dashboard.goroost.com/" target="_blank">forget password?</a></span>
                                     </div>
                                 </div>
                             </div>
@@ -150,7 +134,7 @@
                                 <div class="roost-no-collapse">
                                     <div class="roostStats">
                                         <div class="roost-stats-metric">
-                                            <span class="roost-stat"><?php echo(number_format($roost_stats['registrations'])); ?></span>
+                                            <span class="roost-stat"><?php echo(number_format(($roost_stats['registrations'] - $roost_stats['unsubscribes']))); ?></span>
                                             <hr />
                                             <span class="roost-stat-label">Total subscribers on <?php echo( $roost_server_settings['name'] ); ?></span>
                                         </div>
@@ -243,11 +227,25 @@
                     <?php if ( $roost_active_key ) { ?>
                         <form action="" method="post">
                             <div id="roost-settings" class="roost-admin-section">
+                                <?php if ( empty( $chrome_error_dismiss ) ) {  ?>
+                                    <div id="roost-chrome-instructions">
+                                        <span class="roost-section-heading">***NOTICE About Chrome Notifications***</span>
+                                        <div id="roost-chrome-caption" class="roost-subsetting" style="display: block;">
+                                            <div>
+                                                &bull; HTTPS is not detected.  Chrome requires sites to have a valid SSL certificate for push notifications.
+                                            </div>
+                                            <div>
+                                                &bull; For detailed instructions view our <a href="https://goroost.com/best-practices/chrome-integration-guide" target="_blank">Chrome Integration Guide</a>. Still need help? <a href="mailto:support@goroost.com" target="_blank">Contact Roost support</a>.
+                                            </div>
+                                            <div id="chrome-install-dismiss"><a>Close</a></div>
+                                        </div>
+                                    </div>
+                                <?php } ?>
                                 <div class="roost-section-wrapper">
                                     <span class="roost-section-heading">Settings</span>
                                     <div class="roost-section-content roost-section-secondary">
                                         <div class="roost-no-collapse">
-                                            <div class="roost-block <?php if ( ! empty( $roost_settings['prompt_event'] ) ) { echo( 'roost-settings-top-floor' ); } ?>">
+                                            <div class="roost-block">
                                                 <div class="roost-setting-wrapper">
                                                     <span class="roost-label">Auto Push:</span>
                                                     <input type="checkbox" name="autoPush" class="roost-control-secondary" id="roost-push-control" value="1" <?php if ( ! empty( $roost_settings['autoPush'] ) ) { echo( "checked='checked'" ); } ?> />
@@ -289,11 +287,6 @@
                                                 <a id="roost-advanced-settings-control">Show Advanced Settings</a>
                                                 <div id="roost-advanced-settings">
                                                     <div class="roost-setting-wrapper">
-                                                        <span class="roost-label">Activate all Roost features:</span>
-                                                        <input type="checkbox" name="autoUpdate" class="roost-control-secondary" value="1" <?php if ( true == $roost_server_settings['autoUpdate'] ){ echo( "checked='checked'" ); } ?> />
-                                                        <span class="roost-setting-caption">This will automatically activate current and future features as they are added to the plugin.</span>
-                                                    </div>
-                                                    <div class="roost-setting-wrapper">
                                                         <span class="roost-label">Use Segmented Send:</span>
                                                         <input type="checkbox" name="roost-segment-send" value="1" id="roost-segment-send" <?php if ( ! empty( $roost_settings['segment_send'] ) ) { echo( 'checked="checked"' ); } ?> />
                                                         <span class="roost-setting-caption">Use WordPress categories to target notifications based on Roost segments.<br /> <strong>***DISCLAIMER***</strong> You must be assigning users segments to send notifications.</span>
@@ -318,7 +311,7 @@
                         </form>
                     <?php } ?>
                     <!--END SETTINGS SECTION-->
-                <div id="roost-support-tag">Have Questions, Comments, or Need a Hand? Hit us up at <a href="mailto:support@goroost.com" target="_blank">support@goroost.com</a> We're Here to Help.</div>
+                <div id="roost-support-tag">Have questions, comments, or need a hand? Hit us up at <a href="mailto:support@goroost.com" target="_blank">support@goroost.com</a> We're here to help.</div>
             </div>
         </div>
     <script>
@@ -421,6 +414,13 @@
                              $( '#manualpush' ).unbind( 'click' ).trigger( 'click' );
                         }
                     }
+                });
+                $( '#chrome-install-dismiss' ).on( 'click', function( e ) {
+                    e.preventDefault();
+                    $.post( ajaxurl, { action: 'chrome_dismiss' }, function( response ) {
+                        $( '#roost-chrome-instructions' ).hide();
+                        console.log('Chrome Install Dismissed');
+                    });
                 });
             })( jQuery );
         <?php } ?>

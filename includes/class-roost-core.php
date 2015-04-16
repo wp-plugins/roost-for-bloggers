@@ -6,26 +6,19 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roost {
 
-    public static $roost_version = '2.2.0';
+    public static $roost_version = '2.3.0';
 
-    protected static $database_version = 20141217;
+    protected static $database_version = 20150331;
 
     public static function site_url() {
         return get_option( 'siteurl' );
     }
 
     public static function registration_url() {
-        $tld = 'https://go.goroost.com/signup?returnURL=';
+//        $tld = 'https://dashboard.goroost.com/signup?returnURL=';
+        $tld = 'https://staging.goroost.com/signup?returnURL=';
         $admin_path = admin_url( 'admin.php?page=roost-web-push' );
         $url = $tld . urlencode( $admin_path . '&source=wpplugin' );
-        return $url;
-    }
-
-    public static function login_url( $sso ) {
-        $tld = 'https://go.goroost.com/login?returnURL=';
-        $admin_path = admin_url( 'admin.php?page=roost-web-push' );
-        $url = $tld . urlencode( $admin_path );
-        $url = $url . '&oauth=' . $sso;
         return $url;
     }
 
@@ -67,16 +60,19 @@ class Roost {
                 'appKey' => '',
                 'appSecret' => '',
                 'version' => self::$roost_version,
-                'autoPush' => 0,
-                'bbPress' => 1,
+                'autoPush' => true,
+                'bbPress' => true,
                 'database_version' => self::$database_version,
-                'prompt_min' => 0,
+                'prompt_min' => true,
                 'prompt_visits' => 2,
-                'prompt_event' => 0,
+                'prompt_event' => true,
                 'categories' => array(),
-                'segment_send' => 0,
-                'use_custom_script' => 0,
+                'segment_send' => true,
+                'use_custom_script' => true,
                 'custom_script' => '',
+                'chrome_error_dismiss' => false,
+                'chrome_setup' => false,
+                'gcm_token' => '',
             );
             add_option( 'roost_settings', $roost_settings );
         }
@@ -96,11 +92,11 @@ class Roost {
     protected static function update_database( $roost_settings ) {
         if ( empty( $roost_settings['database_version'] ) || ( 1407 >= $roost_settings['database_version'] ) ) {
             if ( empty( $roost_settings['bbPress'] ) ) {
-                $roost_settings['bbPress'] = 1;
+                $roost_settings['bbPress'] = true;
             }
-            $roost_settings['prompt_min'] = 0;
+            $roost_settings['prompt_min'] = false;
             $roost_settings['prompt_visits'] = 2;
-            $roost_settings['prompt_event'] = 0;
+            $roost_settings['prompt_event'] = false;
         }
         if ( 1408 >= $roost_settings['database_version'] ) {
             if ( $roost_settings['prompt_visits'] === 1 ) {
@@ -115,9 +111,23 @@ class Roost {
         if ( 20140819 >= $roost_settings['database_version'] ) {
             unset( $roost_settings['username'] );
             $roost_settings['categories'] = array();
-            $roost_settings['segment_send'] = 0;
-            $roost_settings['use_custom_script'] = 0;
+            $roost_settings['segment_send'] = false;
+            $roost_settings['use_custom_script'] = false;
             $roost_settings['custom_script'] = '';
+        }
+        if ( 20150331 >= $roost_settings['database_version'] ) {
+            $roost_settings['autoPush'] = (bool)$roost_settings['autoPush'];
+            $roost_settings['bbPress'] = (bool)$roost_settings['bbPress'];
+            $roost_settings['prompt_min'] = (bool)$roost_settings['prompt_min'];
+            $roost_settings['prompt_event'] = (bool)$roost_settings['prompt_event'];
+            $roost_settings['segment_send'] = (bool)$roost_settings['segment_send'];
+            $roost_settings['use_custom_script'] = (bool)$roost_settings['use_custom_script'];
+            $roost_settings['chrome_error_dismiss'] = false;
+            $roost_settings['chrome_setup'] = false;
+            $roost_settings['gcm_token'] = '';
+            if( true === self::roost_active() ) {
+                self::setup_chrome();
+            }
         }
         $roost_settings['database_version'] = self::$database_version;
         update_option('roost_settings', $roost_settings);
@@ -150,6 +160,7 @@ class Roost {
             add_action( 'admin_menu', array( __CLASS__, 'admin_menu_add' ) );
             add_action( 'wp_ajax_graph_reload', array( __CLASS__, 'graph_reload' ) );
             add_action( 'wp_ajax_subs_check', array( __CLASS__, 'subs_check' ) );
+            add_action( 'wp_ajax_chrome_dismiss', array( __CLASS__, 'chrome_dismiss' ) );
             add_action( 'post_submitbox_misc_actions', array( __CLASS__, 'note_override' ) );
             add_action( 'add_meta_boxes_post', array( __CLASS__, 'custom_note_text' ) );
             add_action( 'save_post', array( __CLASS__, 'save_post_meta_roost' ) );
@@ -164,7 +175,7 @@ class Roost {
     }
 
     public static function byline() {
-        $byline = "<!-- Push notifications for this website enabled by Roost. Support for Safari, Firefox, and Chrome Browser Push. (v ". self::$roost_version .") - http://goroost.com/ -->";
+        $byline = "<!-- Push notifications for this website enabled by Roost. Support for Chrome, Safari, and Firefox. (v ". self::$roost_version .") - https://goroost.com/ -->";
         echo "\n${byline}\n";
     }
 
@@ -174,9 +185,7 @@ class Roost {
         }
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
-    ?>
-        <script>var _roost = _roost || [];</script>
-    <?php
+
         if ( ( true === $roost_settings['use_custom_script'] ) ) {
             echo( stripslashes( $roost_settings['custom_script'] ) );
         } else {
@@ -189,6 +198,7 @@ class Roost {
         if ( ( true === $roost_settings['prompt_min'] ) || ( true === $roost_settings['prompt_event'] ) ) {
     ?>
             <script>
+                var _roost = _roost || [];
                 _roost.push( [ 'autoprompt', false ] );
                 <?php
                     if ( true == $roost_settings['prompt_min'] ) {
@@ -248,7 +258,7 @@ class Roost {
             </div>
         </div>
     <?php
-        } else if ( ! $app_key && ( $hook_suffix === $roost_page ) ) {
+        } elseif ( ! $app_key && ( $hook_suffix === $roost_page ) ) {
             $api_check = Roost_API::api_check();
             if ( is_wp_error( $api_check ) ) {
     ?>
@@ -260,11 +270,11 @@ class Roost {
 
     public static function admin_menu_add(){
         add_menu_page(
-        	'Roost Web Push',
+            'Roost Web Push',
             'Roost Web Push',
             'manage_options',
             'roost-web-push',
-        	array( __CLASS__, 'admin_menu_page' ),
+            array( __CLASS__, 'admin_menu_page' ),
             ROOST_URL . 'layout/images/roost_thumb.png'
         );
     }
@@ -410,7 +420,7 @@ class Roost {
                         } else {
                             $alert = get_the_title( $post_id );
                         }
-                        $url = wp_get_shortlink( $post_id );
+                        $url = get_permalink( $post_id );
                         if ( has_post_thumbnail( $post_id ) ) {
                             $raw_image = wp_get_attachment_image_src( get_post_thumbnail_id( $post_id ) );
                             $image_url = $raw_image[0];
@@ -538,6 +548,13 @@ class Roost {
         die();
     }
 
+    public static function chrome_dismiss() {
+        $roost_settings = self::roost_settings();
+        $roost_settings['chrome_error_dismiss'] = true;
+        update_option('roost_settings', $roost_settings);
+        die();
+    }
+
     public static function roost_logout() {
         if ( isset( $_POST['clearkey'] ) ) {
             $form_keys = array(
@@ -546,6 +563,7 @@ class Roost {
             );
             self::update_keys( $form_keys );
             wp_dequeue_script( 'roostscript' );
+            self::uninstall_chrome();
             $status = 'Roost has been disconnected.';
             $status = urlencode( $status );
             wp_redirect( admin_url( 'admin.php?page=roost-web-push' ) . '&status=' . $status );
@@ -553,10 +571,93 @@ class Roost {
         }
     }
 
+    private static function setup_chrome() {
+        $roost_settings = self::roost_settings();
+        $app_key = $roost_settings['appKey'];
+        $app_secret = $roost_settings['appSecret'];
+
+        $roost_server_settings = Roost_API::get_server_settings( $app_key, $app_secret );
+        $gcm_token = $roost_server_settings['gcmProjectID'];
+
+        $server_name = $_SERVER['SERVER_NAME'];
+        $server_protocol = 'http://';
+        if ( isset( $_SERVER['HTTPS'] ) ) {
+            $server_protocol = 'https://';
+            $roost_settings['chrome_error_dismiss'] = true;
+        } elseif ( '443' === $_SERVER['SERVER_PORT'] ) {
+            $server_protocol = 'https://';
+            $roost_settings['chrome_error_dismiss'] = true;
+        }
+
+        $chrome_dir = plugin_dir_path( __FILE__ ) . 'chrome/';
+        $sw_scope = plugins_url( 'chrome/', __FILE__ );
+        $sw_scope = wp_make_link_relative( $sw_scope );
+        $sw_scope = str_replace( $server_name, '', $sw_scope );
+        $roost_html_tmp = plugins_url( 'chrome/roost_tmp.html', __FILE__ );
+        $roost_html_tmp = wp_make_link_relative( $roost_html_tmp );
+        $roost_html = str_replace( $server_name, '', $roost_html_tmp );
+        $roost_html = str_replace( 'roost_tmp.html', 'roost_' . $server_name . '.html', $roost_html );
+
+        $roost_manifest = plugins_url( 'chrome/roost_manifest_tmp.js', __FILE__ );
+        $roost_manifest = wp_make_link_relative( $roost_manifest );
+        $roost_manifest = str_replace( $server_name, '', $roost_manifest );
+        $roost_manifest = str_replace( 'roost_manifest_tmp.js', 'roost_manifest_' . $server_name . '.js', $roost_manifest );
+        $roost_manifest_file = $chrome_dir . 'roost_manifest_' . $server_name . '.js';
+        $roost_manifest_contents = "{\"gcm_user_visible_only\":true,\"gcm_sender_id\":\"$gcm_token\"}";
+        file_put_contents($roost_manifest_file, $roost_manifest_contents);
+
+        $roost_sw_tmp = plugins_url( 'chrome/roost_worker_tmp.js', __FILE__ );
+        $roost_sw_tmp = wp_make_link_relative( $roost_sw_tmp );
+        $roost_sw = str_replace( $server_name, '', $roost_sw_tmp );
+        $roost_sw = str_replace( 'roost_worker_tmp.js', 'roost_worker_' . $server_name . '.js', $roost_sw );
+        $roost_sw_tmp_file = $chrome_dir . 'roost_worker_tmp.js';
+        $roost_sw_file = $chrome_dir . 'roost_worker_' . $server_name . '.js';
+        $roost_sw_contents = file_get_contents($roost_sw_tmp_file);
+        $roost_sw_contents = str_replace('ROOST_APP_KEY', $app_key, $roost_sw_contents);
+        $roost_sw_contents = str_replace('ROOST_HTML_PATH', $roost_html, $roost_sw_contents);
+        file_put_contents($roost_sw_file, $roost_sw_contents);
+
+        $roost_html_tmp_file = $chrome_dir . 'roost_tmp.html';
+        $roost_html_file = $chrome_dir . 'roost_' . $server_name . '.html';
+        $roost_html_contents = file_get_contents($roost_html_tmp_file);
+        $roost_html_contents = str_replace('ROOST_MANIFEST_URL', $roost_manifest, $roost_html_contents);
+        $roost_html_contents = str_replace('SERVICE_WORKER_URL', $roost_sw, $roost_html_contents);
+        $roost_html_contents = str_replace('SERVICE_WORKER_SCOPE', $sw_scope, $roost_html_contents);
+        file_put_contents($roost_html_file, $roost_html_contents);
+
+        $chrome_vars = array(
+            'html_url' => $roost_html,
+            'site_url' => $server_protocol . $server_name,
+        );
+
+        Roost_API::save_remote_settings( $app_key, $app_secret, null, null, $chrome_vars );
+
+        $roost_settings['chrome_setup'] = true;
+        $roost_settings['gcm_token'] = $gcm_token;
+        update_option('roost_settings', $roost_settings);
+    }
+
+    private static function uninstall_chrome() {
+        $roost_settings = self::roost_settings();
+        $roost_settings['chrome_error_dismiss'] = false;
+        $roost_settings['chrome_setup'] = false;
+        $roost_settings['gcm_token'] = '';
+        update_option('roost_settings', $roost_settings);
+        $server_name = $_SERVER['SERVER_NAME'];
+        $chrome_dir = plugin_dir_path( __FILE__ ) . 'chrome/';
+        $roost_manifest = $chrome_dir . 'roost_manifest_' . $server_name . '.js';
+        $roost_worker = $chrome_dir . 'roost_worker_' . $server_name . '.js';
+        $roost_html = $chrome_dir . 'roost_' . $server_name . '.html';
+        if ( file_exists( $roost_manifest ) ) {
+            unlink( $roost_manifest );
+            unlink( $roost_worker );
+            unlink( $roost_html );
+        }
+    }
+
     public static function roost_save_settings() {
         if ( isset( $_POST['savesettings'] ) ) {
             $roost_settings = self::roost_settings();
-
             $app_key = $roost_settings['appKey'];
             $app_secret = $roost_settings['appSecret'];
 
@@ -615,7 +716,6 @@ class Roost {
             );
 
             self::update_settings( $form_data );
-            Roost_API::save_remote_settings( $app_key, $app_secret, $roost_server_settings, $_POST );
             $status = 'Settings Saved.';
             $status = urlencode( $status );
             wp_redirect( admin_url( 'admin.php?page=roost-web-push' ) . '&status=' . $status );
@@ -654,6 +754,7 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
         $app_secret = $roost_settings['appSecret'];
+        $chrome_error_dismiss = $roost_settings['chrome_error_dismiss'];
         $cat_args = array(
             'hide_empty' => 0,
             'order' => 'ASC'
@@ -681,6 +782,7 @@ class Roost {
             $roost_server_settings = $response['server_settings'];
             $roost_stats = $response['stats'];
             $roost_active_key = true;
+            self::setup_chrome();
         }
 
         if ( isset( $_POST['roostlogin'] ) ) {
@@ -696,6 +798,7 @@ class Roost {
                     $roost_server_settings = $response['server_settings'];
                     $roost_stats = $response['stats'];
                     $roost_active_key = true;
+                    self::setup_chrome();
                 } else {
                     $status = $response['status'];
                 }
@@ -710,6 +813,7 @@ class Roost {
             $roost_server_settings = $response['server_settings'];
             $roost_stats = $response['stats'];
             $roost_active_key = true;
+            self::setup_chrome();
         }
         if ( isset( $_GET['status'] ) ) {
             $status = urldecode( $_GET['status'] );

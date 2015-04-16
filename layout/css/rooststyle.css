@@ -165,7 +165,7 @@
 
 .roost-primary-footer {
     height: 35px;
-    padding: 14px 30px 20px;
+    padding: 20px 30px;
     background: #fff;
     text-align: center;
 }
@@ -378,7 +378,7 @@
 #roost-hint-code-line {
     display: block;
     margin-top: 7px;
-    margin-bottom: 25px;
+    margin-bottom: 10px;
     text-indent: 5px;
 }
 
@@ -806,74 +806,6 @@ a#roost-notice-CTA:hover {
     padding: 12px 10px;
 }
 
-#roost-sso {
-    height: 58px;
-    background: #f7f7f7;
-}
-
-#roost-sso > div {
-    float: left;
-}
-
-#roost-sso-text {
-    width: 164px;
-    height: 28px;
-    padding: 20px 0 10px 28px;
-}
-
-#roost-sso a {
-    display: block;
-    width: 58px;
-    height: 58px;
-}
-
-.roost-sso-option:hover {
-    background-color: #f0f0f0;
-}
-
-.roost-plugin-image {
-    background: url(../images/roost-plugin-sprite.png) no-repeat;
-}
-
-.roost-sso-option .roost-plugin-image {
-    display: block;
-    position: relative;
-    top: 19px;
-    margin: 0 auto;
-    text-indent: -999em;
-}
-
-#roost-sso-facebook {
-    width: 9px;
-    height: 20px;
-    top: 18px;
-    background-position: -32px -86px;
-}
-
-.roost-sso-option:hover #roost-sso-facebook {
-    background-position: -32px -63px;
-}
-
-#roost-sso-twitter {
-    width: 23px;
-    height: 18px;
-    background-position: 0px -88px;
-}
-
-.roost-sso-option:hover #roost-sso-twitter {
-    background-position: 0px -65px;
-}
-
-#roost-sso-google {
-    width: 24px;
-    height: 20px;
-    background-position: -49px -86px;
-}
-
-.roost-sso-option:hover #roost-sso-google {
-    background-position: -49px -63px;
-}
-
 #roost-tabs {
     height: 50px;
 }
@@ -1071,4 +1003,58 @@ a#roost-notice-CTA:hover {
 
 #roost-advanced-settings {
     display: none;
+}
+
+.roost-error {
+    padding: 10px;
+    color: #ffffff;
+    background: #ff9b96;
+}
+
+#rooster .roost-error a,
+#rooster .roost-error a:link,
+#rooster .roost-error a:visited {
+    color: #ffffff;
+    font-style: italic;
+}
+
+#rooster .roost-error a:hover {
+    text-decoration: underline;
+}
+
+#roost-chrome-instructions {
+    display: block;
+}
+
+#roost-chrome-instructions .roost-section-heading {
+    height: auto;
+    margin: 17px 0 -4px;
+    padding-top: 0;
+    background-color: transparent;
+    text-indent: 0;
+}
+
+#roost-chrome-caption {
+    width: 965px;
+    position: relative;
+    margin: 15px 0 25px;
+    padding-right: 0;
+    top: 0;
+    float: none;
+    border-left: 5px solid #dd3d36;
+}
+
+#roost-chrome-caption div:nth-child(1) {
+    margin-bottom: 6px;
+}
+
+#roost-chrome-caption div:nth-child(2) {
+    margin-bottom: 10px;
+}
+
+#chrome-install-dismiss {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    cursor: pointer;
 }

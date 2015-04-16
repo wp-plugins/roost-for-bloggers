@@ -1,21 +1,22 @@
-=== Roost Web Push for Safari ===
+=== Roost Web Push ===
 Contributors: noticesoftware, danstever
-Tags: safari, push, push notifications, web push notifications, Mavericks, mobile, web push, roost, roost.me, roost_me, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services
+Tags: Chrome, Chrome Notifications, Android, Safari, push, push notifications, web push notifications, Mavericks, Yosemite, mobile, web push, Roost, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services, desktop notifications, mobile notifications, Roost notifications, apple, google, Firefox, new post, osx, mac, Chrome OS
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 2.2.0
+Stable tag: 2.3.0
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
-Drive traffic to your website with Safari Mavericks push notifications and Roost.
+Web push notifications for your website. Available in Chrome (Android and desktop) and Safari (desktop).
 
 == Description ==
 
-[Browser Push by Roost](http://goroost.com/) - Fundamentally changing the way people consume content on the web.
+[Web Push by Roost](https://goroost.com/) allows websites to send notifications to their site visitors for updates about new posts. This plugin suppots Chrome notifications and Safari for desktop.
 
-Push Plugin Features:
+Plugin Features:
 
-* **Safari Web Push** - Take advantage of web push (Desktop Push Notifications) on OS X Mavericks and Yosemite.
+* **Chrome Notifications** - Use notifications in Chrome (desktop and Android)
+* **Safari Web Push** - Take advantage of web push (desktop push notifications)
 * **Auto Notifications** - We take the work out of it. Automatically send notifications to your readers when creating a new post.
 * **Category Filters** - Decide which content triggers a notification based on the category.
 * **Notifications on Update** - Easily send notifications when updating posts.
@@ -28,7 +29,7 @@ Push Plugin Features:
 
 **Free** Roost account included. No setup fees, no surprises, and no limitations on your site visitors.
 
-[youtube http://www.youtube.com/watch?v=DxElgkUsrCA]
+[youtube http://www.youtube.com/watch?v=Oae3alI9_jg]
 
 == Installation ==
 
@@ -36,18 +37,21 @@ Push Plugin Features:
 1. Visit 'Plugins > Add New'
 2. Search for 'Roost'
 3. Activate Roost from your Plugins page
-4. (a) Create your Free Roost for Bloggers account - (Click on "sign up for free") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
+4. (a) Create your Free Roost account - (Click on "sign up for free") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
 
 = From WordPress.org =
-1. Download Roost For Bloggers Wordpress Plugin.
+1. Download the Roost Web Push Wordpress Plugin.
 2. Upload the 'Roost' directory to your '/wp-content/plugins/' directory.
-3. Activate Roost For Bloggers from your Plugins page.
-4. (a) Create your Free Roost for Bloggers account - (Click on "sign up for free") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
+3. Activate Roost Web Push from your Plugins page.
+4. (a) Create your Free Roost account - (Click on "sign up for free") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
 
 = Using Features =
 
-**Safari Web Push**
-To use Safari Web Push, simply activate the *Roost for Bloggers* plugin. When your site is viewed in a push-enabled browser, the browser will prompt for permission. No additional setup is needed.
+**Chrome Notifications**
+To use notifications in Chrome just activate the plugin and sign into your Roost account. We take care of the rest, generating the files you need. If you're curious, for detailed information view our [Chrome Integration Guide](https://goroost.com/best-practices/chrome-integration-guide).
+
+**Safari Push Notifications**
+To use Safari Web Push, simply activate the Roost plugin. No additional setup is needed.
 
 **Category Filters**
 With *Auto Push* enabled, you can select which categories are excluded from triggering notifications.
@@ -71,13 +75,10 @@ Auto Push is what makes this plugin stellar. When you create a new post, your po
 With *Auto Push* disabled, a checkbox will appear just above the Publish button on your post page. Simply check the box *Send Notification with Roost* and a notification will be sent when publishing.
 
 **Send Manual Alert**
-You can send a manual alert to all subscribed users by entering your message text in the "Notification Text" box and a link in the "Notification Link" box.
-
-**Activate all Roost Features**
-When checked, your site will automatically receive the newest (and coolest) features from Roost as we roll them out. (Like Chrome Web Push. *cough*)
+You can send a manual notification to all subscribed users by entering your message text in the "Notification Text" box and a link in the "Notification Link" box.
 
 **Roost Analytics & Roost JS**
-Detailed metrics are provided in the dashboard. These metrics include subscribes, notifications sent, reads, total page views, and more.
+Detailed metrics are provided in the dashboard. These metrics include subscribes, notifications sent, reads, and more.
 
 **Advanced Settings - Use Segmented Send**
 Use WordPress categories to target notifications based on Roost segments. ***DISCLAIMER*** You must be assigning users segments to send notifications. If not, notificaitons will not be sent to your subscribers.
@@ -87,20 +88,20 @@ In some cases, we’ll ask you to use a custom script. Paste it in the text area
 
 == Frequently Asked Questions ==
 
-= What does Roost For Bloggers cost? =
+= What does Roost cost? =
 **It's free!** No setup fees, no surprises, no limitations on your site visitors or subscribers.
 
 = Free? Really? What's the catch? =
-No catch! We believe in providing a great service and making it accessible to everyone. So... It's free. (Up to 100,000 messages. If you hit that... We'll need to talk.)
+No catch! We believe in providing a great service and making it accessible to everyone. So... It's free. (Up to 100,000 messages. If you hit that... We'll need to talk.) We also do have some stellar features available with our paid monthly plans. Check out all of our [montly plans](https://goroost.com/pricing).
 
-= Is it really this easy to use Safari Web Push on my site? =
+= Is it really this easy to use push notifications in Chrome, Android, and Safari on my site? =
 Yup! Cool right?
 
-= Do I need and Apple Developer Account or Google Play Developer account? =
+= Do I need and Apple Developer Account or Google Developer account? =
 Nah. We've got you covered.
 
-= Do you support Google Chrome or Firefox for desktop push? =
-Almost. We will be releasing support for Google Chrome very soon. Firefox will follow. To take advantage of them as we include support, make sure to have *Activate all Roost Features* checked.
+= Do you support Firefox web push? =
+Almost. We will be releasing Firefox as soon as possible.
 
 = Do my readers / subscribers have to create an account with Roost? =
 Nope. Just you.
@@ -108,14 +109,29 @@ Nope. Just you.
 
 == Screenshots ==
 
-1. One-Click to subscribe for visitors to your site. Easy peasy!
-2. Notifications will be delivered in the top-right corner of your subscribers screen.
-3. Create your Roost Account. (It's Free!)
-4. Or log in to your existing Roost account.
-5. Roost plugin from the WordPress dashboard showing analytics.
-6. Powerful control on how your visitors can subscribe and how your notifications are sent.
+1. Subscribe to Chrome notifications in Android! Receive Chrome notifications on Android! (OMG! LOL! IKR! FTW! LOLZ.)
+2. Chrome dialog in Mac OS X.
+3. Opt-in on Chrome in Windows. (Wait... What? We know right? Windows! #Boom!)
+4. Notification being delivered on Chrome in Mac.
+5. Chrome notification tray on OS X.
+6. Subscription control from Chrome notification tray.
+7. Easy for visitors to subscribe to your site in Safari. Easy peasy!
+8. Notifications will be delivered in the top-right corner of your subscribers screen. (Safari)
+9. Create your Roost Account. (It's Free!)
+10. Or log in to your existing Roost account.
+11. Roost plugin from the WordPress dashboard showing analytics.
+12. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.3.0 =
+* Chrome Push Notifications Now Available!!! (#Boom! So much win... This feels good.)
+* Small UI tweaks
+* Corrected calculation for current subscribers in dashboard
+* Remove deprecated settings
+* Removes SSO option (May come back...)
+* Switched to use permalink in url instead of post ID (We know... Should have been awhile ago.)
+* *Palm to face* fixes
+
 = 2.2.0 =
 * Ability to exclude posts published in specified categories from automatically sending notifications
 * Send notifications when updating a post
@@ -230,6 +246,9 @@ Nope. Just you.
 * Initial Release
 
 == Upgrade Notice ==
+= 2.3.0 =
+* Chrome Push Notifications Now Available!!! (#Boom! So much win... This feels good.)
+
 = 2.2.0 =
 * Exclude categories from Auto Push - Send notification on post updates - Targeted sending with Roost segments - Custom script option
 

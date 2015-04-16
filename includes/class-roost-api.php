@@ -106,15 +106,10 @@ class Roost_API {
         return $response;
     }
 
-    public static function save_remote_settings( $app_key, $app_secret, $roost_server_settings, $POST ) {
-        if ( isset( $POST['autoUpdate'] ) ) {
-            if ( true != $roost_server_settings['autoUpdate'] ) {
-                $remote_content['autoUpdate'] = true;
-            }
-        } else {
-            if ( false != $roost_server_settings['autoUpdate'] ) {
-                $remote_content['autoUpdate'] = false;
-            }
+    public static function save_remote_settings( $app_key, $app_secret, $roost_server_settings, $POST, $chrome_vars ) {
+        if ( ! empty( $chrome_vars ) ) {
+            $remote_content['serviceWorkerHostPath'] = $chrome_vars['html_url'];
+            $remote_content['websiteURL'] = $chrome_vars['site_url'];
         }
 
         if ( ! empty( $remote_content ) ) {

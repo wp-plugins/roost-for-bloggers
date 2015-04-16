@@ -1,11 +1,11 @@
 <?php
 /**
  * Plugin Name: Roost Web Push
- * Plugin URI: http://goroost.com/
- * Description: Drive traffic to your website with Safari Mavericks push notifications and Roost.
- * Version: 2.2.0
+ * Plugin URI: https://goroost.com/
+ * Description: Drive traffic to your website with Roost Notifications -- which includes Chrome and Safari.
+ * Version: 2.3.0
  * Author: Roost
- * Author URI: http://goroost.com
+ * Author URI: https://goroost.com
  * License: GPLv2 or later
  */
 
