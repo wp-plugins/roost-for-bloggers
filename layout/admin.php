@@ -232,7 +232,7 @@
                                         <span class="roost-section-heading">***NOTICE About Chrome Notifications***</span>
                                         <div id="roost-chrome-caption" class="roost-subsetting" style="display: block;">
                                             <div>
-                                                &bull; HTTPS is not detected.  Chrome requires sites to have a valid SSL certificate for push notifications.
+                                                &bull; Google has designed Chrome to require a valid SSL certificate for push notifications. If you do not use HTTPS, Chrome will not work.
                                             </div>
                                             <div>
                                                 &bull; For detailed instructions view our <a href="https://goroost.com/best-practices/chrome-integration-guide" target="_blank">Chrome Integration Guide</a>. Still need help? <a href="mailto:support@goroost.com" target="_blank">Contact Roost support</a>.

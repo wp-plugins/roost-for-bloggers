@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roost {
 
-    public static $roost_version = '2.3.0';
+    public static $roost_version = '2.3.1';
 
     protected static $database_version = 20150331;
 
@@ -185,7 +185,7 @@ class Roost {
         $roost_settings = self::roost_settings();
         $app_key = $roost_settings['appKey'];
 
-        if ( ( true === $roost_settings['use_custom_script'] ) ) {
+        if ( true === $roost_settings['use_custom_script'] && !empty( $roost_settings['custom_script'] ) ) {
             echo( stripslashes( $roost_settings['custom_script'] ) );
         } else {
     ?>
@@ -582,10 +582,8 @@ class Roost {
         $server_protocol = 'http://';
         if ( isset( $_SERVER['HTTPS'] ) ) {
             $server_protocol = 'https://';
-            $roost_settings['chrome_error_dismiss'] = true;
         } elseif ( '443' === $_SERVER['SERVER_PORT'] ) {
             $server_protocol = 'https://';
-            $roost_settings['chrome_error_dismiss'] = true;
         }
 
         $chrome_dir = plugin_dir_path( __FILE__ ) . 'chrome/';
