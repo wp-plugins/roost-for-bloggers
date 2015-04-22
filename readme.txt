@@ -3,7 +3,7 @@ Contributors: noticesoftware, danstever
 Tags: Chrome, Chrome Notifications, Android, Safari, push, push notifications, web push notifications, Mavericks, Yosemite, mobile, web push, Roost, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services, desktop notifications, mobile notifications, Roost notifications, apple, google, Firefox, new post, osx, mac, Chrome OS
 Requires at least: 3.8
 Tested up to: 4.2
-Stable tag: 2.3.1
+Stable tag: 2.3.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -123,6 +123,9 @@ Nope. Just you.
 12. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.3.2 =
+* MAJOR - Bugfix - Chrome files not being regenerated after plugin upgrade
+
 = 2.3.1 =
 * Changed messaging for HTTPS check to a notice not warning (Was throwing false negatives)
 * Added saftey net for accidental Advanced Settings checkboxes
@@ -250,8 +253,11 @@ Nope. Just you.
 * Initial Release
 
 == Upgrade Notice ==
+= 2.3.2 =
+* MAJOR - Bugfix - Chrome files not generated on plugin upgrade.
+
 = 2.3.1 =
-* Minor UX tweaks - HTTPS check now non-blocking notice not warning.
+* Minor - UX tweaks - HTTPS check now non-blocking notice not warning.
 
 = 2.3.0 =
 * Chrome Push Notifications Now Available!!! (#Boom! So much win... This feels good.)

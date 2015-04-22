@@ -3,7 +3,7 @@
  * Plugin Name: Roost Web Push
  * Plugin URI: https://goroost.com/
  * Description: Drive traffic to your website with Roost Notifications -- which includes Chrome and Safari.
- * Version: 2.3.1
+ * Version: 2.3.2
  * Author: Roost
  * Author URI: https://goroost.com
  * License: GPLv2 or later

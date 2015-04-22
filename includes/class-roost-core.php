@@ -6,7 +6,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roost {
 
-    public static $roost_version = '2.3.1';
+    public static $roost_version = '2.3.2';
 
     protected static $database_version = 20150331;
 
@@ -70,7 +70,7 @@ class Roost {
                 'use_custom_script' => true,
                 'custom_script' => '',
                 'chrome_error_dismiss' => false,
-                'chrome_setup' => false,
+                'chrome_setup' => true,
                 'gcm_token' => '',
             );
             add_option( 'roost_settings', $roost_settings );
@@ -83,6 +83,9 @@ class Roost {
     public static function update( $roost_settings ) {
         $roost_settings['version'] = self::$roost_version;
         update_option( 'roost_settings', $roost_settings );
+        if( isset( $roost_settings['chrome_setup'] ) && true === self::roost_active() ) {
+            self::setup_chrome();
+        }
         if ( empty( $roost_settings['database_version'] ) || $roost_settings['database_version'] < self::$database_version ) {
             self::update_database( $roost_settings );
         }
@@ -122,7 +125,7 @@ class Roost {
             $roost_settings['segment_send'] = (bool)$roost_settings['segment_send'];
             $roost_settings['use_custom_script'] = (bool)$roost_settings['use_custom_script'];
             $roost_settings['chrome_error_dismiss'] = false;
-            $roost_settings['chrome_setup'] = false;
+            $roost_settings['chrome_setup'] = true;
             $roost_settings['gcm_token'] = '';
             if( true === self::roost_active() ) {
                 self::setup_chrome();
@@ -629,7 +632,6 @@ class Roost {
 
         Roost_API::save_remote_settings( $app_key, $app_secret, null, null, $chrome_vars );
 
-        $roost_settings['chrome_setup'] = true;
         $roost_settings['gcm_token'] = $gcm_token;
         update_option('roost_settings', $roost_settings);
     }
@@ -637,7 +639,6 @@ class Roost {
     private static function uninstall_chrome() {
         $roost_settings = self::roost_settings();
         $roost_settings['chrome_error_dismiss'] = false;
-        $roost_settings['chrome_setup'] = false;
         $roost_settings['gcm_token'] = '';
         update_option('roost_settings', $roost_settings);
         $server_name = $_SERVER['SERVER_NAME'];
