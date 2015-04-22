@@ -83,7 +83,7 @@ class Roost {
     public static function update( $roost_settings ) {
         $roost_settings['version'] = self::$roost_version;
         update_option( 'roost_settings', $roost_settings );
-        if( isset( $roost_settings['chrome_setup'] ) && true === self::roost_active() ) {
+        if ( isset( $roost_settings['chrome_setup'] ) && true === self::roost_active() ) {
             self::setup_chrome();
         }
         if ( empty( $roost_settings['database_version'] ) || $roost_settings['database_version'] < self::$database_version ) {
@@ -127,7 +127,7 @@ class Roost {
             $roost_settings['chrome_error_dismiss'] = false;
             $roost_settings['chrome_setup'] = true;
             $roost_settings['gcm_token'] = '';
-            if( true === self::roost_active() ) {
+            if ( true === self::roost_active() ) {
                 self::setup_chrome();
             }
         }
