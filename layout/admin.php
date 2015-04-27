@@ -64,7 +64,7 @@
                                     <div id="roost-signup-wrapper">
                                         <div id="roost-signup-inner">
                                             <img src="<?php echo ROOST_URL; ?>layout/images/roost_logo.png" alt="Roost Logo" />
-                                            <h2>Create a free account</h2>
+                                            <h2>Create your account</h2>
                                             <p>
                                                 Welcome! Creating an account only takes a few seconds and will give you access
                                                 to additional features like our analytics dashboard at goroost.com
@@ -80,7 +80,7 @@
                                     </div>
                                     <div class="roost-primary-heading">
                                         <span class="roost-primary-cta">Welcome! Log in to your Roost account below.</span>
-                                        <span class="roost-secondary-cta">If you don’t have a Roost account <a href="<?php echo( Roost::registration_url() ); ?>" class="roost-signin-link">sign up for free!</a></span>
+                                        <span class="roost-secondary-cta">If you don’t have a Roost account <a href="<?php echo( Roost::registration_url() ); ?>" class="roost-signin-link">sign up now!</a></span>
                                     </div>
                                     <div class="roost-section-content">
                                         <!--USER NAME-->

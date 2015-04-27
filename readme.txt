@@ -27,7 +27,7 @@ Plugin Features:
 * **Manual Post Mode** - Send notifications for individual posts when creating. Just check the box.
 * **Scheduled Post Notifications** - Not posting now? Don't worry. Your alerts will go out when your content posts.
 
-**Free** Roost account included. No setup fees, no surprises, and no limitations on your site visitors.
+*Roost account needed - 30-Day trials of all plans - Custom plans available.*
 
 [youtube http://www.youtube.com/watch?v=Oae3alI9_jg]
 
@@ -37,13 +37,13 @@ Plugin Features:
 1. Visit 'Plugins > Add New'
 2. Search for 'Roost'
 3. Activate Roost from your Plugins page
-4. (a) Create your Free Roost account - (Click on "sign up for free") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
+4. (a) Create your Roost account - (Click on "sign up now") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
 
 = From WordPress.org =
 1. Download the Roost Web Push Wordpress Plugin.
 2. Upload the 'Roost' directory to your '/wp-content/plugins/' directory.
 3. Activate Roost Web Push from your Plugins page.
-4. (a) Create your Free Roost account - (Click on "sign up for free") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
+4. (a) Create your Roost account - (Click on "sign up now") OR (b) Log In an Existing Account - Click "Log In" and enter your username and password
 
 = Using Features =
 
@@ -89,10 +89,7 @@ In some cases, we’ll ask you to use a custom script. Paste it in the text area
 == Frequently Asked Questions ==
 
 = What does Roost cost? =
-**It's free!** No setup fees, no surprises, no limitations on your site visitors or subscribers.
-
-= Free? Really? What's the catch? =
-No catch! We believe in providing a great service and making it accessible to everyone. So... It's free. (Up to 100,000 messages. If you hit that... We'll need to talk.) We also do have some stellar features available with our paid monthly plans. Check out all of our [montly plans](https://goroost.com/pricing).
+Our Starter Plan is $9 per month and supports all features in the plugin. We do have custom plans available with more features or if you need additional included monthly notifications. All plans have 30-day trials and no additional setup fees, no surprises, and no limitations on your site visitors or subscribers.
 
 = Is it really this easy to use push notifications in Chrome, Android, and Safari on my site? =
 Yup! Cool right?
@@ -117,7 +114,7 @@ Nope. Just you.
 6. Subscription control from Chrome notification tray.
 7. Easy for visitors to subscribe to your site in Safari. Easy peasy!
 8. Notifications will be delivered in the top-right corner of your subscribers screen. (Safari)
-9. Create your Roost Account. (It's Free!)
+9. Create your Roost Account.
 10. Or log in to your existing Roost account.
 11. Roost plugin from the WordPress dashboard showing analytics.
 12. Powerful control on how your visitors can subscribe and how your notifications are sent.
