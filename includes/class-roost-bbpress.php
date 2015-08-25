@@ -6,6 +6,8 @@ if ( ! defined( 'ABSPATH' ) ) {
 
 class Roost_bbPress {
 
+    private static $roost_bbp;
+
     public static function bbPress_active() {
         $roost_settings = Roost::roost_settings();
         $bbPress = array(
@@ -23,12 +25,11 @@ class Roost_bbPress {
     }
 
     public static function init() {
-        $roost_bbp = null;
-        if ( is_null( $roost_bbp ) ) {
-            $roost_bbp = new self();
+        if ( is_null( static::$roost_bbp ) ) {
+            static::$roost_bbp = new static();
             self::add_actions();
         }
-        return $roost_bbp;
+        return static::$roost_bbp;
     }
 
     public static function add_actions() {

@@ -17,13 +17,13 @@
                             <?php echo get_avatar($roost_server_settings['ownerEmail'], 25 ); ?>
                         </span>
                         <?php
-                            echo $roost_server_settings['ownerEmail'];
+                            echo esc_html( $roost_server_settings['ownerEmail'] );
                         ?>
                     </span>
                 </div>
-                <img src="<?php echo ROOST_URL; ?>layout/images/roost-red-logo.png" />
+                <img src="<?php echo esc_url( ROOST_URL . 'layout/images/roost-red-logo.png' ); ?>" />
                 <?php if ( $roost_active_key ) { ?>
-                    <div id="roost-site-name"><?php echo( $roost_server_settings['name'] ); ?></div>
+                    <div id="roost-site-name"><?php echo esc_html( $roost_server_settings['name'] ); ?></div>
                 <?php } ?>
             </div>
         <?php } ?>
@@ -40,7 +40,7 @@
         </div>
     <?php } ?>
     <?php if ( isset( $status ) && empty( $first_time ) ){ ?>
-        <div id="rooster-status"><span id="rooster-status-text"><?php echo($status); ?></span><span id="rooster-status-close">Dismiss</span></div>
+        <div id="rooster-status"><span id="rooster-status-text"><?php echo esc_html( $status ); ?></span><span id="rooster-status-close">Dismiss</span></div>
     <?php } ?>
         <!--BEGIN ADMIN TABS-->
         <?php if ( $roost_active_key ) { ?>
@@ -54,7 +54,7 @@
             </div>
         <?php } ?>
         <!--END ADMIN TABS-->
-        <div id="roost-pre-wrap" class="<?php echo( ! empty( $roost_active_key ) ? 'roost-white':''); ?>">
+        <div id="roost-pre-wrap" class="<?php echo ! empty( $roost_active_key ) ? 'roost-white':''; ?>">
             <div id="roost-main-wrapper">
                     <!--BEGIN USER LOGIN SECTION-->
                     <?php if ( ! $roost_active_key ) { ?>
@@ -63,35 +63,35 @@
                                 <?php if ( empty( $roost_sites ) ){ ?>
                                     <div id="roost-signup-wrapper">
                                         <div id="roost-signup-inner">
-                                            <img src="<?php echo ROOST_URL; ?>layout/images/roost_logo.png" alt="Roost Logo" />
+                                            <img src="<?php echo esc_url( ROOST_URL . 'layout/images/roost_logo.png' ); ?>" alt="Roost Logo" />
                                             <h2>Create your account</h2>
                                             <p>
                                                 Welcome! Creating an account only takes a few seconds and will give you access
                                                 to additional features like our analytics dashboard at goroost.com
                                             </p>
-                                            <a href="<?php echo( Roost::registration_url() ); ?>" id="roost-create-account" class="roost-signin-link"><img src="<?php echo ROOST_URL; ?>layout/images/roost-arrow-white.png" />Create an account</a>
+                                            <a href="<?php echo esc_url( Roost::registration_url() ); ?>" id="roost-create-account" class="roost-signin-link"><img src="<?php echo esc_url( ROOST_URL . 'layout/images/roost-arrow-white.png' ); ?>" />Create an account</a>
                                             <div id="roost-bottom-right">Already have an account? <span class="roost-signup">Sign in</span></div>
                                         </div>
                                     </div>
                                 <?php } ?>
                                 <div id="roost-signin-wrapper" class="roost-login-account">
                                     <div id="roost-primary-logo">
-                                        <img src="<?php echo ROOST_URL; ?>layout/images/roost_logo.png" alt="" />
+                                        <img src="<?php echo esc_url( ROOST_URL . 'layout/images/roost_logo.png' ); ?>" alt="" />
                                     </div>
                                     <div class="roost-primary-heading">
                                         <span class="roost-primary-cta">Welcome! Log in to your Roost account below.</span>
-                                        <span class="roost-secondary-cta">If you don’t have a Roost account <a href="<?php echo( Roost::registration_url() ); ?>" class="roost-signin-link">sign up now!</a></span>
+                                        <span class="roost-secondary-cta">If you don’t have a Roost account <a href="<?php echo esc_url( Roost::registration_url() ); ?>" class="roost-signin-link">sign up now!</a></span>
                                     </div>
                                     <div class="roost-section-content">
                                         <!--USER NAME-->
                                         <div class="roost-login-input">
                                             <span class="roost-label">Email:</span>
-                                            <input name="roostuserlogin" type="text" class="roost-control-login" value="<?php echo isset($_POST['roostuserlogin']) ? $_POST['roostuserlogin'] : '' ?>" size="50" tabindex="1" />
+                                            <input name="roostuserlogin" type="text" class="roost-control-login" value="<?php echo isset( $_POST['roostuserlogin'] ) ? esc_attr( $_POST['roostuserlogin'] ) : '' ?>" size="50" tabindex="1" />
                                         </div>
                                         <div class="roost-login-input">
                                             <!--PASSWORD-->
                                             <span class="roost-label">Password:</span>
-                                            <input name="roostpasslogin" type="password" class="roost-control-login" value="<?php echo isset($_POST['roostpasslogin']) ? $_POST['roostpasslogin'] : '' ?>" size="50" tabindex="2" />
+                                            <input name="roostpasslogin" type="password" class="roost-control-login" value="<?php echo isset( $_POST['roostpasslogin'] ) ? esc_attr( $_POST['roostpasslogin'] ) : '' ?>" size="50" tabindex="2" />
                                         </div>
                                         <?php if ( isset( $roost_sites ) ) { ?>
                                             <!--CONFIGS-->
@@ -104,7 +104,7 @@
                                                     <?php
                                                         for($i = 0; $i < count( $roost_sites ); $i++ ) {
                                                     ?>
-                                                        <option value="<?php echo $roost_sites[$i]['key'] . '|' . $roost_sites[$i]['secret']; ?>"><?php echo $roost_sites[$i]['name']; ?></option>
+                                                        <option value="<?php echo esc_attr( $roost_sites[$i]['key'] ) . '|' . esc_attr( $roost_sites[$i]['secret'] ); ?>"><?php echo esc_html( $roost_sites[$i]['name'] ); ?></option>
                                                     <?php
                                                         }
                                                     ?>
@@ -134,17 +134,17 @@
                                 <div class="roost-no-collapse">
                                     <div class="roostStats">
                                         <div class="roost-stats-metric">
-                                            <span class="roost-stat"><?php echo(number_format(($roost_stats['registrations'] - $roost_stats['unsubscribes']))); ?></span>
+                                            <span class="roost-stat"><?php echo number_format( ( esc_html( $roost_stats['registrations'] ) - esc_html( $roost_stats['unsubscribes'] ) ) ) ; ?></span>
                                             <hr />
-                                            <span class="roost-stat-label">Total subscribers on <?php echo( $roost_server_settings['name'] ); ?></span>
+                                            <span class="roost-stat-label">Total subscribers on <?php echo esc_html( $roost_server_settings['name'] ); ?></span>
                                         </div>
                                         <div class="roost-stats-metric">
-                                            <span class="roost-stat"><?php echo(number_format($roost_stats['notifications'])); ?></span>
+                                            <span class="roost-stat"><?php echo number_format( esc_html( $roost_stats['notifications'] ) ); ?></span>
                                             <hr />
                                             <span class="roost-stat-label">Total notifications sent to your subscribers</span>
                                         </div>
                                         <div class="roost-stats-metric">
-                                            <span class="roost-stat"><?php echo(number_format($roost_stats['read'])); ?></span>
+                                            <span class="roost-stat"><?php echo number_format( esc_html( $roost_stats['read'] ) ); ?></span>
                                             <hr />
                                             <span class="roost-stat-label">Total notifications read by your subscribers</span>
                                         </div>
@@ -166,7 +166,7 @@
                                     </div>
                                     <div id="roost-metric-options">
                                         <ul>
-                                            <li class="roost-chart-metric-toggle roost-chart-reload active"><span class="chart-value" data-value="s">Subscribes</span></li>
+                                            <li class="roost-chart-metric-toggle roost-chart-reload active"><span class="chart-value" data-value="s">New Subscribers</span></li>
                                             <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="n">Notifications</span></li>
                                             <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="r">Reads</span></li>
                                             <li class="roost-chart-metric-toggle roost-chart-reload"><span class="chart-value" data-value="u">Unsubscribes</span></li>
@@ -248,55 +248,69 @@
                                             <div class="roost-block">
                                                 <div class="roost-setting-wrapper">
                                                     <span class="roost-label">Auto Push:</span>
-                                                    <input type="checkbox" name="autoPush" class="roost-control-secondary" id="roost-push-control" value="1" <?php if ( ! empty( $roost_settings['autoPush'] ) ) { echo( "checked='checked'" ); } ?> />
+                                                    <input type="checkbox" name="autoPush" class="roost-control-secondary" id="roost-push-control" value="1" <?php checked( $roost_settings['autoPush'], 1 ); ?> />
                                                     <span class="roost-setting-caption">Automatically send a push notification to your subscribers every time you publish a new post.</span>
                                                     <div class="roost-subsetting" id="roost-available-categories">
                                                         <div>Exclude Categories for Auto Push? <span class="light-weight">(If checked, posts published in these categories will <b>not</b> be sent.)</span></div>
                                                         <ul>
                                                             <?php foreach( $cats as $cat ) { ?>
-                                                                <li><input type="checkbox" name="roost-categories[]" value="<?php echo($cat->cat_ID); ?>" <?php if( in_array( $cat->cat_ID, $roost_settings['categories'] ) ) { echo( 'checked="checked"'); } ?> /> <?php echo($cat->cat_name); ?></li>
+                                                                <li><input type="checkbox" name="roost-categories[]" value="<?php echo esc_attr( $cat->cat_ID ); ?>" <?php checked( true, in_array( $cat->cat_ID, $roost_settings['categories'] ) ); ?> /> <?php echo esc_attr( $cat->cat_name ); ?></li>
                                                             <?php } ?>
                                                         </ul>
                                                     </div>
                                                 </div>
                                                 <div class="roost-setting-wrapper">
-                                                    <span class="roost-label">bbPress Push Notifications:</span>
-                                                    <input type="checkbox" name="bbPress" class="roost-control-secondary" value="1" <?php if ( true == $roost_settings['bbPress'] ){ echo( 'checked="checked"' ); } ?> <?php echo( ! empty( $bbPress_active['present'] ) ? '' : 'disabled="disabled"' ); ?> />
-                                                    <span class="roost-setting-caption">Extends subscriptions for bbPress forums, topics, and replies to allow subscribing via push notifications.</span>
+                                                    <span class="roost-label">The Bell:</span>
+                                                    <select name="bell-state" class="roost-control-secondary" id="roost-bell-state">
+                                                        <option value="default" <?php selected( $roost_server_settings['bellState'], 'default' ); ?>> --- </option>
+                                                        <option value="on" <?php selected( $roost_server_settings['bellState'], 'on' ); ?>>On</option>
+                                                        <option value="off" <?php selected( $roost_server_settings['bellState'], 'off' ); ?>>Off</option>
+                                                    </select>
+                                                    <span class="roost-setting-caption roost-short-caption">On-Site notifications from Roost. ( Learn about <a href="https://goroost.com/blog/bell-keep-users-loop" target="_blank" >The Bell</a> )</span>
+                                                </div>
+                                                <div class="roost-setting-wrapper">
+                                                    <span class="roost-label long-label">Use Custom Images:</span>
+                                                    <input type="checkbox" name="roost-custom-image" id="roost-custom-image" value="1" <?php checked( $roost_settings['use_featured_image'], 1 ); ?> />
+                                                    <span class="roost-setting-caption">Use featured image from post as custom image for notifications. ( Chrome only. )</span>
                                                 </div>
                                                 <div class="roost-setting-wrapper">
                                                     <span class="roost-label long-label">Notification prompt options:</span>
-                                                    <input type="checkbox" name="roost-prompt-min" id="roost-prompt-min" value="1" <?php if ( ! empty( $roost_settings['prompt_min'] ) ) { echo( 'checked="checked"' ); } ?> />
-                                                    <span class="roost-setting-caption" id="roost-settings-lift">Prompt visitors for notifications when they visit the site <input name="roost-prompt-visits" type="text" id="roost-min-visits" value="<?php echo( $roost_settings['prompt_visits'] ); ?>" <?php echo( ! empty( $roost_settings['prompt_min'] ) ? '' : 'disabled="disabled"' ); ?>/>times.</span>
+                                                    <input type="checkbox" name="roost-prompt-min" id="roost-prompt-min" value="1" <?php checked( $roost_settings['prompt_min'], 1 ); ?> />
+                                                    <span class="roost-setting-caption" id="roost-settings-lift">Prompt visitors for notifications when they visit the site <input name="roost-prompt-visits" type="text" id="roost-min-visits" value="<?php echo esc_attr( $roost_settings['prompt_visits'] ); ?>" <?php disabled( empty( $roost_settings['prompt_min'] ) ) ?>/>times.</span>
                                                 </div>
                                                 <div class="roost-setting-wrapper">
                                                     <span class="roost-label"></span>
-                                                    <input type="checkbox" name="roost-prompt-event" id="roost-prompt-event" value="1" <?php if ( ! empty( $roost_settings['prompt_event'] ) ) { echo( 'checked="checked"' ); } ?> />
-                                                    <span class="roost-setting-caption">Prompt visitors for notifications once they complete an action (clicking a button or link).</span>
+                                                    <input type="checkbox" name="roost-prompt-event" id="roost-prompt-event" value="1" <?php checked( $roost_settings['prompt_event'], 1 ); ?> />
+                                                    <span class="roost-setting-caption">Prompt visitors for notifications once they complete an action ( clicking a button or link ).</span>
                                                     <div id="roost-event-hints" class="roost-subsetting">
                                                         <div>
                                                             &bull; Assign the class <span class="roost-code">"roost-prompt-wp"</span> to any element to prompt the visitor on click.
                                                             <span id="roost-hint-code-line">Example: <span class="roost-code">&lt;a href="#" class="roost-prompt-wp"&gt;Receive Desktop Notifications&lt;/a&gt;</span></span>
                                                         </div>
 
-                                                        &bull; You could also create a <a href="<?php echo( admin_url( 'nav-menus.php' ) ); ?>">menu item</a> and add the same class, to trigger the prompt.
+                                                        &bull; You could also create a <a href="<?php echo esc_url( admin_url( 'nav-menus.php' ) ); ?>">menu item</a> and add the same class, to trigger the prompt.
                                                     </div>
                                                     <span id="roost-event-hints-disclaimer">*Links or buttons with this class will be hidden to visitors already subscribed, or using a browser that does not support push notifications.</span>
+                                                </div>
+                                                <div class="roost-setting-wrapper">
+                                                    <span class="roost-label">bbPress Push Notifications:</span>
+                                                    <input type="checkbox" name="bbPress" class="roost-control-secondary" value="1" <?php if ( true == $roost_settings['bbPress'] ){ echo( 'checked="checked"' ); } ?> <?php echo( ! empty( $bbPress_active['present'] ) ? '' : 'disabled="disabled"' ); ?> />
+                                                    <span class="roost-setting-caption">Extends subscriptions for bbPress forums, topics, and replies to allow subscribing via push notifications.</span>
                                                 </div>
                                                 <hr />
                                                 <a id="roost-advanced-settings-control">Show Advanced Settings</a>
                                                 <div id="roost-advanced-settings">
                                                     <div class="roost-setting-wrapper">
                                                         <span class="roost-label">Use Segmented Send:</span>
-                                                        <input type="checkbox" name="roost-segment-send" value="1" id="roost-segment-send" <?php if ( ! empty( $roost_settings['segment_send'] ) ) { echo( 'checked="checked"' ); } ?> />
+                                                        <input type="checkbox" name="roost-segment-send" value="1" id="roost-segment-send" <?php checked( $roost_settings['segment_send'], 1 ); ?> />
                                                         <span class="roost-setting-caption">Use WordPress categories to target notifications based on Roost segments.<br /> <strong>***DISCLAIMER***</strong> You must be assigning users segments to send notifications.</span>
                                                     </div>
                                                     <div class="roost-setting-wrapper">
                                                         <span class="roost-label">Use Custom Script:</span>
-                                                        <input type="checkbox" name="roost-use-custom-script" id="roost-use-custom-script" value="1" <?php if ( ! empty( $roost_settings['use_custom_script'] ) ) { echo( 'checked="checked"' ); } ?> />
+                                                        <input type="checkbox" name="roost-use-custom-script" id="roost-use-custom-script" value="1" <?php checked( $roost_settings['use_custom_script'], 1 ) ?> />
                                                         <span class="roost-setting-caption">In some cases, we’ll ask you to use a custom script. Paste it here. <br /> <strong>***DISCLAIMER***</strong> This will override the standard Roost.js.</span>
                                                         <div class="roost-subsetting" id="roost-custom-script">
-                                                            <textarea name="roost-custom-script" placeholder="Place your custom script here."><?php echo( stripslashes( $roost_settings['custom_script'] ) ); ?></textarea>
+                                                            <textarea name="roost-custom-script" placeholder="Place your custom script here."><?php echo wp_kses_data( stripslashes( $roost_settings['custom_script'] ) ); ?></textarea>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -355,8 +369,7 @@
                     });
                     function graphDataRequest( data ) {
                         $.post( ajaxurl, data, function( response ) {
-                            var data = $.parseJSON( response );
-                            loadGraph( data );
+                            loadGraph( response );
                         });
                     }
                     function loadGraph( data ) {
@@ -394,11 +407,10 @@
                 }
                 $( '#manualpush' ).on( 'click', function( e ) {
                     e.preventDefault();
-                    var subscribers = <?php echo $roost_stats['registrations']; ?>;
+                    var subscribers = <?php echo wp_json_encode( $roost_stats['registrations'] ); ?>;
                     if ( 0 === subscribers ) {
                         var resub;
                         $.post( ajaxurl, { action: 'subs_check' }, function( response ) {
-                            var response = $.parseJSON( response );
                             resub = response;
                             if ( 0 === resub ) {
                                 alert('You must have one visitor subscribed to your site to send notifications');

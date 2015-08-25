@@ -29,7 +29,7 @@ class Roost_API {
             'headers'   => $headers,
             'body'      => $remote_data['remoteContent'],
         );
-        $response = wp_remote_request( $remote_url, $remote_payload );
+        $response = wp_remote_request( esc_url_raw( $remote_url ), $remote_payload );
         return $response;
     }
 
@@ -106,10 +106,16 @@ class Roost_API {
         return $response;
     }
 
-    public static function save_remote_settings( $app_key, $app_secret, $roost_server_settings, $POST, $chrome_vars ) {
-        if ( ! empty( $chrome_vars ) ) {
-            $remote_content['serviceWorkerHostPath'] = $chrome_vars['html_url'];
-            $remote_content['websiteURL'] = $chrome_vars['site_url'];
+    public static function save_remote_settings( $app_key, $app_secret, $data ) {
+        if ( ! empty( $data['website_url'] ) ) {
+            $remote_content['serviceWorkerHostPath'] = $data['html_url'];
+            $remote_content['serviceWorkerRelativePath'] = $data['worker_url'];
+            $remote_content['manifestRelativePath'] = $data['manifest_url'];
+            $remote_content['websiteURL'] = $data['website_url'];
+        }
+
+        if ( ! empty( $data['bell_state'] ) ) {
+            $remote_content['bellState'] = $data['bell_state'];
         }
 
         if ( ! empty( $remote_content ) ) {

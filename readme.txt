@@ -2,8 +2,8 @@
 Contributors: noticesoftware, danstever
 Tags: Chrome, Chrome Notifications, Android, Safari, push, push notifications, web push notifications, Mavericks, Yosemite, mobile, web push, Roost, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services, desktop notifications, mobile notifications, Roost notifications, apple, google, Firefox, new post, osx, mac, Chrome OS
 Requires at least: 3.8
-Tested up to: 4.2
-Stable tag: 2.3.2
+Tested up to: 4.3
+Stable tag: 2.3.4
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -11,19 +11,20 @@ Push notifications for your website. Available in Chrome (Android and desktop) a
 
 == Description ==
 
-[Web Push by Roost](https://goroost.com/) allows websites to send notifications to their site visitors for updates about new posts. This plugin suppots Chrome notifications and Safari for desktop.
+[Web Push by Roost](https://goroost.com/) allows websites to send notifications to their site visitors for updates about new posts. This plugin supports Chrome notifications and Safari for desktop.
 
 Plugin Features:
 
 * **Chrome Notifications** - Use notifications in Chrome (desktop and Android)
 * **Safari Web Push** - Take advantage of web push (desktop push notifications)
+* **The Bell** - On-Site notifications AND supported in all browsers ([Want to know more about The Bell?](https://goroost.com/blog/bell-keep-users-loop))
 * **Auto Notifications** - We take the work out of it. Automatically send notifications to your readers when creating a new post.
 * **Category Filters** - Decide which content triggers a notification based on the category.
 * **Notifications on Update** - Easily send notifications when updating posts.
 * **Notification Prompt Controls** - Decide how and when the subscription prompt is shown to your visitors.
 * **Custom Notification Headlines** - Set a custom headline for your notification to be used instead of a post title.
 * **bbPress Subscriptions** - Allows site visitors to subscribe to forums, topics, or individual messages when posting replies.
-* **Detailed Analytics** - *Charts* with detailed metrics about your visitors straight to your WordPress dashboard.
+* **Detailed Analytics** - Charts with detailed metrics about your visitors straight to your WordPress dashboard.
 * **Manual Post Mode** - Send notifications for individual posts when creating. Just check the box.
 * **Scheduled Post Notifications** - Not posting now? Don't worry. Your alerts will go out when your content posts.
 
@@ -48,7 +49,7 @@ Plugin Features:
 = Using Features =
 
 **Chrome Notifications**
-To use notifications in Chrome just activate the plugin and sign into your Roost account. We take care of the rest, generating the files you need. If you're curious, for detailed information view our [Chrome Integration Guide](https://goroost.com/best-practices/chrome-integration-guide).
+To use notifications in Chrome just activate the plugin and sign into your Roost account, we take care of the rest. The necessary files are dynamically generated upon request, eliminating the need to upload additional files or potentially change directory permissions. If you're curious, for detailed information view our [Chrome Integration Guide](https://goroost.com/best-practices/chrome-integration-guide).
 
 **Safari Push Notifications**
 To use Safari Web Push, simply activate the Roost plugin. No additional setup is needed.
@@ -69,7 +70,7 @@ Use custom text for your notification headline by setting it underneath the stan
 With the bbPress extension for Roost, an additional subscribe option will appear next to the default bbPress subscription links. (This does NOT replace traditional subscription methods, only adds a new browser push channel.) Options include Forum subscriptions, Topic subscriptions, and subscribing to your individual posts. Notifications are sent about new content **only** to the visitors that have subscribed to the forum, topic, or post.
 
 **Auto Push**
-Auto Push is what makes this plugin stellar. When you create a new post, your post's title, link, and featured image (if one is attached) will be sent to all of your subscribed readers. That's it. Really. You don't have to do anything else. (It works just like magic.) When enabled, an auto push override check box is also placed on your post's admin page. If for some reason you do not want a notification to go out for that post, just check the box when publishing.
+Auto Push is what makes this plugin stellar. When you create a new post, your post's title, link, and featured image *(Note: featured image will be used for the custom image with Chrome's notifications)* will be sent to all of your subscribed readers. That's it. Really. You don't have to do anything else. (It works just like magic.) When enabled, an auto push override check box is also placed on your post's admin page. If for some reason you do not want a notification to go out for that post, just check the box when publishing.
 
 **Manual Post Mode**
 With *Auto Push* disabled, a checkbox will appear just above the Publish button on your post page. Simply check the box *Send Notification with Roost* and a notification will be sent when publishing.
@@ -89,7 +90,7 @@ In some cases, we’ll ask you to use a custom script. Paste it in the text area
 == Frequently Asked Questions ==
 
 = What does Roost cost? =
-Our Starter Plan is $9 per month and supports all features in the plugin. We do have custom plans available with more features or if you need additional included monthly notifications. All plans have 30-day trials and no additional setup fees, no surprises, and no limitations on your site visitors or subscribers.
+Our Starter Plan is $29 per month and supports all features in the plugin. We do have custom plans available with more features or if you need additional included monthly notifications. All plans have 30-day trials and no additional setup fees, no surprises, and no limitations on your site visitors or subscribers.
 
 = Is it really this easy to use push notifications in Chrome, Android, and Safari on my site? =
 Yup! Cool right?
@@ -120,12 +121,26 @@ Nope. Just you.
 12. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.3.4 =
+* Added setting to enable/disable featured images on notifications
+* Bugfix - Added check to prevent JavaScript error on clients with non-support push browsers
+* MAJOR - Bugfix - Old Chrome files need be present until after ServiceWorker upgrade takes place
+* Bugfix - Prevent multiple ServiceWorkers from registering
+* Compatible with PHP < v5.3
+
+= 2.3.3 =
+* Ding-a-ling! [The Bell is here!](https://goroost.com/blog/bell-keep-users-loop) - Roost's on-site notifications
+* Support for custom images on Chrome notifications
+* MAJOR - Chrome files dynamically served - WP friendly fix (Previous versions may have fallen victim to directory and filesystem permissions)
+* Bugfix - Prevent invalid login on multi-site selection
+* Code Cleanup
+
 = 2.3.2 =
 * MAJOR - Bugfix - Chrome files not being regenerated after plugin upgrade
 
 = 2.3.1 =
 * Changed messaging for HTTPS check to a notice not warning (Was throwing false negatives)
-* Added saftey net for accidental Advanced Settings checkboxes
+* Added safety net for accidental Advanced Settings checkboxes
 
 = 2.3.0 =
 * Chrome Push Notifications Now Available!!! (#Boom! So much win... This feels good.)
@@ -250,6 +265,12 @@ Nope. Just you.
 * Initial Release
 
 == Upgrade Notice ==
+= 2.3.4 =
+* MAJOR - Bugfix - Old Chrome files need be present until after ServiceWorker upgrade takes place - Support for older versions of PHP.
+
+= 2.3.3 =
+* The Bell is here!!! & MAJOR - Chrome files dynamically served - Eliminates chance of file / dir permission errors.
+
 = 2.3.2 =
 * MAJOR - Bugfix - Chrome files not generated on plugin upgrade.
 
