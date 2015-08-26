@@ -8,7 +8,7 @@ class Roost {
 
     private static $roost;
 
-    public static $roost_version = '2.3.4';
+    public static $roost_version = '2.3.5';
 
     public static $database_version = 20150824;
 
@@ -42,7 +42,7 @@ class Roost {
 
     public static function init() {
         if ( is_null( self::$roost ) ) {
-            self::$roost = new static();
+            self::$roost = new self();
             self::add_actions();
             $roost_settings = self::roost_settings();
             if ( empty( $roost_settings ) || ( self::$roost_version !== $roost_settings['version'] ) ) {
@@ -188,7 +188,7 @@ class Roost {
 
     public static function byline() {
         $byline = "<!-- Push notifications for this website enabled by Roost. Support for Chrome, Safari, and Firefox. (v ". self::$roost_version .") - https://goroost.com/ -->";
-        echo "\n" . wp_strip_all_tags( $byline ) . "\n";
+        echo "\n" . $byline . "\n";
     }
 
     public static function roostJS() {

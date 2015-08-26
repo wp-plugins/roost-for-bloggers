@@ -3,7 +3,7 @@ Contributors: noticesoftware, danstever
 Tags: Chrome, Chrome Notifications, Android, Safari, push, push notifications, web push notifications, Mavericks, Yosemite, mobile, web push, Roost, goroost, goroost.com Post, plugin, admin, posts, page, links, widget, ajax, social, wordpress, dashboard, news, notifications, services, desktop notifications, mobile notifications, Roost notifications, apple, google, Firefox, new post, osx, mac, Chrome OS
 Requires at least: 3.8
 Tested up to: 4.3
-Stable tag: 2.3.4
+Stable tag: 2.3.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -121,12 +121,14 @@ Nope. Just you.
 12. Powerful control on how your visitors can subscribe and how your notifications are sent.
 
 == Changelog ==
+= 2.3.5 =
+* Compatible with PHP < v5.3
+
 = 2.3.4 =
 * Added setting to enable/disable featured images on notifications
 * Bugfix - Added check to prevent JavaScript error on clients with non-support push browsers
 * MAJOR - Bugfix - Old Chrome files need be present until after ServiceWorker upgrade takes place
 * Bugfix - Prevent multiple ServiceWorkers from registering
-* Compatible with PHP < v5.3
 
 = 2.3.3 =
 * Ding-a-ling! [The Bell is here!](https://goroost.com/blog/bell-keep-users-loop) - Roost's on-site notifications
@@ -265,8 +267,11 @@ Nope. Just you.
 * Initial Release
 
 == Upgrade Notice ==
+= 2.3.5 =
+* Support for older versions of PHP ( Compatible with PHP < v5.3 )
+
 = 2.3.4 =
-* MAJOR - Bugfix - Old Chrome files need be present until after ServiceWorker upgrade takes place - Support for older versions of PHP.
+* MAJOR - Bugfix - Old Chrome files need be present until after ServiceWorker upgrade takes place.
 
 = 2.3.3 =
 * The Bell is here!!! & MAJOR - Chrome files dynamically served - Eliminates chance of file / dir permission errors.
