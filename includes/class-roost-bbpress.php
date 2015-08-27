@@ -25,11 +25,11 @@ class Roost_bbPress {
     }
 
     public static function init() {
-        if ( is_null( static::$roost_bbp ) ) {
-            static::$roost_bbp = new static();
+        if ( is_null( self::$roost_bbp ) ) {
+            self::$roost_bbp = new self();
             self::add_actions();
         }
-        return static::$roost_bbp;
+        return self::$roost_bbp;
     }
 
     public static function add_actions() {
